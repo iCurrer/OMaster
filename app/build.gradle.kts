@@ -6,36 +6,51 @@ plugins {
 }
 
 android {
-    namespace = "com.example.omaster"
+    namespace = "com.silas.omaster"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.omaster"
+        applicationId = "com.silas.omaster"
         minSdk = 34
         targetSdk = 36
+        // 版本号规范：
+        // versionCode: 内部版本号，每次发布必须递增
+        // versionName: 对外显示版本号，格式 主.次.修订
+        // 正式版: 1.0, 1.0.1, 1.1.0, 2.0.0
+        // 测试版: 1.0.0-beta1, 1.0.0-beta2
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         compose = true
+        buildConfig = false
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
 

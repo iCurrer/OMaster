@@ -19,3 +19,66 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# 优化配置 - 减小 APK 体积
+
+# 保留 Compose 相关类
+-keep class androidx.compose.** { *; }
+-keep class kotlin.Metadata { *; }
+
+# 保留 Gson 相关
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.google.gson.** { *; }
+-keep class * implements com.google.gson.TypeAdapter
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+
+# 保留 ViewModel
+-keep class * extends androidx.lifecycle.ViewModel { *; }
+
+# 保留 Parcelable
+-keep class * implements android.os.Parcelable { *; }
+
+# 保留 Serializable
+-keep class * implements java.io.Serializable { *; }
+
+# 优化移除日志
+-assumenosideffects class android.util.Log {
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(java.lang.String, java.lang.String);
+    public static int v(java.lang.String, java.lang.String, java.lang.Throwable);
+    public static int d(java.lang.String, java.lang.String);
+    public static int d(java.lang.String, java.lang.String, java.lang.Throwable);
+    public static int i(java.lang.String, java.lang.String);
+    public static int i(java.lang.String, java.lang.String, java.lang.Throwable);
+    public static int w(java.lang.String, java.lang.String);
+    public static int w(java.lang.String, java.lang.Throwable);
+    public static int w(java.lang.String, java.lang.String, java.lang.Throwable);
+    public static int e(java.lang.String, java.lang.String);
+    public static int e(java.lang.String, java.lang.String, java.lang.Throwable);
+}
+
+# 保留友盟 SDK
+-keep class com.umeng.** { *; }
+-dontwarn com.umeng.**
+
+# 保留 Coil 图片加载
+-keep class coil.** { *; }
+-dontwarn coil.**
+
+# 保留导航序列化
+-keep class kotlinx.serialization.** { *; }
+-keepclassmembers class kotlinx.serialization.** { *; }
+
+# 保留数据模型
+-keep class com.silas.omaster.model.** { *; }
+
+# 优化移除未使用的代码
+-dontwarn java.lang.invoke.**
+-dontwarn sun.misc.**
+
+# 混淆优化
+-optimizationpasses 5
+-allowaccessmodification
+-mergeinterfacesaggressively
