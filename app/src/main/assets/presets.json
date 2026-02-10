@@ -1,0 +1,192 @@
+{
+  "presets": [
+    {
+      "name": "富士胶片",
+      "coverPath": "images/fsjp_01.jpg",
+      "galleryImages": [
+        "images/fsjp_02.jpg",
+        "images/fsjp_03.jpg"
+      ],
+      "author": "@OPPO影像",
+      "mode": "auto",
+      "filter": "复古 100%",
+      "whiteBalance": null,
+      "colorTone": null,
+      "exposureCompensation": null,
+      "softLight": "无",
+      "tone": 0,
+      "saturation": 19,
+      "warmCool": -5,
+      "cyanMagenta": 0,
+      "sharpness": 15,
+      "vignette": "开"
+    },
+    {
+      "name": "胶片感",
+      "coverPath": "images/jpg_01.jpg",
+      "galleryImages": [
+        "images/jpg_02.jpg",
+        "images/jpg_03.jpg"
+      ],
+      "author": "@OPPO影像",
+      "mode": "auto",
+      "filter": "复古 75%",
+      "whiteBalance": null,
+      "colorTone": null,
+      "exposureCompensation": null,
+      "softLight": "柔美",
+      "tone": -5,
+      "saturation": 20,
+      "warmCool": -3,
+      "cyanMagenta": 4,
+      "sharpness": 7,
+      "vignette": "开"
+    },
+    {
+      "name": "童话",
+      "coverPath": "images/th_01.jpg",
+      "galleryImages": [
+        "images/th_02.jpg",
+        "images/th_03.jpg"
+      ],
+      "author": "@OPPO影像",
+      "mode": "auto",
+      "filter": "童话 73%",
+      "whiteBalance": null,
+      "colorTone": null,
+      "exposureCompensation": null,
+      "softLight": "梦幻",
+      "tone": -24,
+      "saturation": 12,
+      "warmCool": 3,
+      "cyanMagenta": 7,
+      "sharpness": 0,
+      "vignette": "开"
+    },
+    {
+      "name": "高对比黑白",
+      "coverPath": "images/gdbhb_01.jpg",
+      "galleryImages": [
+        "images/gdbhb_02.jpg",
+        "images/gdbhb_03.jpg"
+      ],
+      "author": "@OPPO影像",
+      "mode": "auto",
+      "filter": "黑白 100%",
+      "whiteBalance": null,
+      "colorTone": null,
+      "exposureCompensation": null,
+      "softLight": "柔美",
+      "tone": -61,
+      "saturation": 0,
+      "warmCool": 100,
+      "cyanMagenta": -39,
+      "sharpness": 0,
+      "vignette": "关"
+    },
+    {
+      "name": "理光绿",
+      "coverPath": "images/lgl_01.jpg",
+      "galleryImages": [
+        "images/lgl_02.jpg",
+        "images/lgl_03.jpg"
+      ],
+      "author": "@OPPO影像",
+      "mode": "auto",
+      "filter": "清新 100%",
+      "whiteBalance": null,
+      "colorTone": null,
+      "exposureCompensation": null,
+      "softLight": "梦幻",
+      "tone": 39,
+      "saturation": 12,
+      "warmCool": -2,
+      "cyanMagenta": -9,
+      "sharpness": 10,
+      "vignette": "开"
+    },
+    {
+      "name": "理光蓝",
+      "coverPath": "images/lglan_01.jpg",
+      "galleryImages": [
+        "images/lglan_02.jpg",
+        "images/lglan_03.jpg"
+      ],
+      "author": "@OPPO影像",
+      "mode": "auto",
+      "filter": "通透 100%",
+      "whiteBalance": null,
+      "colorTone": null,
+      "exposureCompensation": null,
+      "softLight": "柔美",
+      "tone": 18,
+      "saturation": -2,
+      "warmCool": -8,
+      "cyanMagenta": 19,
+      "sharpness": 11,
+      "vignette": "开"
+    },
+    {
+      "name": "蓝调时刻",
+      "coverPath": "images/ldsk_01.jpg",
+      "galleryImages": [
+        "images/ldsk_02.jpg"
+      ],
+      "author": "@OPPO影像",
+      "mode": "auto",
+      "filter": "复古 100%",
+      "whiteBalance": null,
+      "colorTone": null,
+      "exposureCompensation": null,
+      "softLight": "梦幻",
+      "tone": -5,
+      "saturation": 15,
+      "warmCool": 47,
+      "cyanMagenta": 28,
+      "sharpness": 12,
+      "vignette": "开"
+    },
+    {
+      "name": "梦幻黑柔",
+      "coverPath": "images/mhhr_01.jpg",
+      "galleryImages": [
+        "images/mhhr_02.jpg",
+        "images/mhhr_03.jpg"
+      ],
+      "author": "@OPPO影像",
+      "mode": "auto",
+      "filter": "标准 0%",
+      "whiteBalance": null,
+      "colorTone": null,
+      "exposureCompensation": null,
+      "softLight": "梦幻",
+      "tone": -25,
+      "saturation": 11,
+      "warmCool": 30,
+      "cyanMagenta": -9,
+      "sharpness": 0,
+      "vignette": "开"
+    },
+    {
+      "name": "富士NC",
+      "coverPath": "images/fsnc_01.jpg",
+      "galleryImages": [
+        "images/fsnc_02.jpg",
+        "images/fsnc_03.jpg"
+      ],
+      "author": "@OPPO影像",
+      "mode": "auto",
+      "filter": "复古 60%",
+      "whiteBalance": null,
+      "colorTone": null,
+      "exposureCompensation": null,
+      "softLight": "柔美",
+      "tone": 48,
+      "saturation": 10,
+      "warmCool": -8,
+      "cyanMagenta": 4,
+      "sharpness": 7,
+      "vignette": "开"
+    }
+  ]
+}
