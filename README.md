@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://github.com/iCurrer/OMaster/releases">
-    <img src="https://img.shields.io/badge/版本-v1.0.0-FF6B35.svg?style=flat-square" alt="Version"/>
+    <img src="https://img.shields.io/badge/版本-v1.0.1-FF6B35.svg?style=flat-square" alt="Version"/>
   </a>
   <a href="https://github.com/iCurrer/OMaster/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/许可证-MIT-blue.svg?style=flat-square" alt="License"/>
@@ -102,7 +102,28 @@ OMaster 支持的大师模式参数包括：
 | 参数类别 | 具体参数 |
 |---------|---------|
 | **基础参数** | 滤镜、柔光、影调、饱和度、冷暖、青品、锐度、暗角 |
-| **专业参数** | 曝光补偿、色温、色调、白平衡、色调风格 |
+| **专业参数** | ISO、快门速度、曝光补偿、色温、色调 |
+
+---
+
+## 📝 更新日志
+
+### v1.0.1 (2025-02-11)
+
+#### ✨ 新增预设
+- **人文** - 适合人文街拍，作者：@蘭州白鴿
+- **清新** - 青橙色调，适合自然风光，作者：@蘭州白鴿
+- **氛围雪夜** - 冷暖碰撞，王家卫电影感，作者：@派瑞特凯
+- **美味流芳** - 美食专用，奶油光泽感，作者：@ONESTEP™
+
+#### 🎨 功能优化
+- Pro 模式预设新增 ISO 和快门速度参数
+- 悬浮窗精简显示，只展示基础参数
+- 关于页面新增素材提供者链接
+
+#### 🐛 Bug 修复
+- 修复专业参数重复显示问题
+- 优化预设详情页参数展示逻辑
 
 ---
 
@@ -136,12 +157,14 @@ OMaster 支持的大师模式参数包括：
       "galleryImages": ["images/sample1.jpg"],
       "author": "@作者",
       "mode": "pro",
-      "filter": "滤镜类型",
-      "whiteBalance": "白平衡",
-      "colorTone": "色调风格",
-      "exposureCompensation": "曝光补偿",
+      "iso": "100",
+      "shutterSpeed": "1/125",
+      "exposureCompensation": "0",
       "colorTemperature": 5500,
       "colorHue": 0,
+      "whiteBalance": null,
+      "colorTone": null,
+      "filter": "滤镜类型",
       "softLight": "柔光强度",
       "tone": 0,
       "saturation": 0,
@@ -164,7 +187,11 @@ OMaster 支持的大师模式参数包括：
 
 ## 🙏 致谢
 
-- 素材提供：[@OPPO影像](https://xhslink.com/m/8c2gJYGlCTR)
+- 素材提供：
+  - [@OPPO影像](https://xhslink.com/m/8c2gJYGlCTR)
+  - [@蘭州白鴿](https://xhslink.com/m/4h5lx4Lg37n)
+  - [@派瑞特凯](https://xhslink.com/m/AkrgUI0kgg1)
+  - [@ONESTEP™](https://xhslink.com/m/4LZ8zRdNCSv)
 - 设计灵感：哈苏相机品牌色系
 - 开发框架：Jetpack Compose
 
