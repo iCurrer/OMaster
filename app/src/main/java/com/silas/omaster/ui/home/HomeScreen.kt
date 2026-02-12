@@ -64,6 +64,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -372,6 +376,11 @@ private fun PresetGrid(
                     )
                 }
             }
+
+            // 底部提示
+            item(span = StaggeredGridItemSpan.FullLine) {
+                LoadingMoreTip()
+            }
         }
     }
 }
@@ -466,6 +475,65 @@ private fun EmptyState(tabIndex: Int) {
                     textAlign = TextAlign.Center
                 )
             }
+        }
+    }
+}
+
+/**
+ * 底部加载更多提示 - 持续更新 敬请期待
+ */
+@Composable
+private fun LoadingMoreTip() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 24.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // 装饰线条
+            Box(
+                modifier = Modifier
+                    .width(60.dp)
+                    .height(2.dp)
+                    .background(
+                        brush = androidx.compose.ui.graphics.Brush.horizontalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                HasselbladOrange.copy(alpha = 0.5f),
+                                Color.Transparent
+                            )
+                        )
+                    )
+            )
+
+            // 主文字
+            Text(
+                text = "持续更新 · 敬请期待",
+                style = MaterialTheme.typography.bodyMedium,
+                color = HasselbladOrange.copy(alpha = 0.8f),
+                fontWeight = FontWeight.Medium,
+                letterSpacing = 2.sp
+            )
+
+            // 装饰线条
+            Box(
+                modifier = Modifier
+                    .width(60.dp)
+                    .height(2.dp)
+                    .background(
+                        brush = androidx.compose.ui.graphics.Brush.horizontalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                HasselbladOrange.copy(alpha = 0.5f),
+                                Color.Transparent
+                            )
+                        )
+                    )
+            )
         }
     }
 }
