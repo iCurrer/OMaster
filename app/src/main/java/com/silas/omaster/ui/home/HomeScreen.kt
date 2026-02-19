@@ -405,7 +405,12 @@ private fun PresetGrid(
 
                 if (preset.id != null) {
                     // 使用缓存的 visibleStartIndex 计算延迟
-                    val delayMillis = calculateStaggerDelay(index, visibleStartIndex)
+                    // 优化：只有在列表顶部时才应用交错延迟，滚动时立即显示，避免卡顿感
+                    val delayMillis = if (visibleStartIndex == 0) {
+                        calculateStaggerDelay(index, visibleStartIndex)
+                    } else {
+                        0
+                    }
 
                     PresetCardItem(
                         preset = preset,

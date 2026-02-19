@@ -28,11 +28,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -207,33 +209,72 @@ fun AboutScreen(
             var editUrlText by remember { mutableStateOf("") }
 
             Card(
-                shape = RoundedCornerShape(8.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        width = 1.dp,
+                        color = CardBorderLight,
+                        shape = RoundedCornerShape(16.dp)
+                    ),
+                colors = CardDefaults.cardColors(
+                    containerColor = DarkGray
+                ),
+                shape = RoundedCornerShape(16.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    // Header Row
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "配置更新", style = MaterialTheme.typography.titleMedium)
-                        Button(onClick = {
-                            // 打开设置对话框
-                            editUrlText = UpdateConfigManager.getPresetUrl(context)
-                            showUrlDialog = true
-                        }) {
-                            Icon(imageVector = Icons.Default.Info, contentDescription = null)
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = "设置更新链接")
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CloudDownload,
+                                contentDescription = null,
+                                tint = HasselbladOrange,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Text(
+                                text = "配置更新",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
                         }
+
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "设置更新链接",
+                            tint = Color.White.copy(alpha = 0.6f),
+                            modifier = Modifier
+                                .size(20.dp)
+                                .clickable {
+                                    editUrlText = UpdateConfigManager.getPresetUrl(context)
+                                    showUrlDialog = true
+                                }
+                        )
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    // Description / Status
+                    Text(
+                        text = presetMsg ?: "从远程服务器获取最新预设配置",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if (presetMsg != null && presetMsg!!.contains("失败")) Color(0xFFFF5252)
+                                else if (presetMsg != null && presetMsg!!.contains("成功")) Color(0xFF4CAF50)
+                                else Color.White.copy(alpha = 0.6f),
+                        textAlign = TextAlign.Start
+                    )
 
-                    Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-                        Button(onClick = {
-                            // 触发检查并下载远程 presets
+                    // Action Button
+                    Button(
+                        onClick = {
                             val url = UpdateConfigManager.getPresetUrl(context)
                             scope.launch {
                                 try {
@@ -259,20 +300,32 @@ fun AboutScreen(
                                     isFetchingPresets = false
                                 }
                             }
-                        }) {
-                            Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = "检查配置更新")
-                        }
-
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = HasselbladOrange.copy(alpha = 0.15f),
+                            contentColor = HasselbladOrange
+                        ),
+                        shape = RoundedCornerShape(8.dp),
+                        enabled = !isFetchingPresets,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         if (isFetchingPresets) {
-                            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(16.dp),
+                                strokeWidth = 2.dp,
+                                color = HasselbladOrange
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("正在更新...")
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("立即检查")
                         }
-                    }
-
-                    presetMsg?.let { msg ->
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = msg, style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }

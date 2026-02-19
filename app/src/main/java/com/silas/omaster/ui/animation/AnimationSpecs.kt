@@ -50,10 +50,11 @@ object AnimationSpecs {
 
     /**
      * 卡片弹性动画 - 用于卡片等需要弹性的元素
+     * 优化：提高刚度，减少拖沓感
      */
     val CardSpring = spring<Float>(
         dampingRatio = Spring.DampingRatioMediumBouncy,
-        stiffness = Spring.StiffnessLow,
+        stiffness = Spring.StiffnessMediumLow,
         visibilityThreshold = 0.001f
     )
 

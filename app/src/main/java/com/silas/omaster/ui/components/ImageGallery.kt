@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import coil.request.CachePolicy
 import com.silas.omaster.ui.animation.AnimationSpecs
 import com.silas.omaster.ui.theme.DarkGray
 import com.silas.omaster.ui.theme.HasselbladOrange
@@ -132,6 +133,8 @@ fun ImageGallery(
                     model = ImageRequest.Builder(context)
                         .data(imageUri)
                         .crossfade(true)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
+                        .diskCachePolicy(CachePolicy.ENABLED)
                         .build(),
                     contentDescription = null,
                     contentScale = ContentScale.Fit,

@@ -260,9 +260,38 @@ class FloatingWindowService : Service() {
             // 更新标题
             titleTextView?.text = name
 
-            // 找到内容容器
+            // 尝试直接更新视图内容，避免重建视图
             val contentContainer = mainContainer?.findViewWithTag<LinearLayout>("content_container")
+            if (contentContainer != null) {
+                val tvFilter = contentContainer.findViewWithTag<TextView>("val_filter")
+                val tvSoftLight = contentContainer.findViewWithTag<TextView>("val_soft_light")
+                val tvTone = contentContainer.findViewWithTag<TextView>("val_tone")
+                val tvSaturation = contentContainer.findViewWithTag<TextView>("val_saturation")
+                val tvWarmCool = contentContainer.findViewWithTag<TextView>("val_warm_cool")
+                val tvCyanMagenta = contentContainer.findViewWithTag<TextView>("val_cyan_magenta")
+                val tvSharpness = contentContainer.findViewWithTag<TextView>("val_sharpness")
+                val tvVignette = contentContainer.findViewWithTag<TextView>("val_vignette")
 
+                if (tvFilter != null && tvSoftLight != null && tvTone != null && 
+                    tvSaturation != null && tvWarmCool != null && tvCyanMagenta != null && 
+                    tvSharpness != null && tvVignette != null) {
+                    
+                    // 直接更新文本
+                    tvFilter.text = filter
+                    tvSoftLight.text = softLight
+                    tvTone.text = tone.formatSigned()
+                    tvSaturation.text = saturation.formatSigned()
+                    tvWarmCool.text = warmCool.formatSigned()
+                    tvCyanMagenta.text = cyanMagenta.formatSigned()
+                    tvSharpness.text = sharpness.toString()
+                    tvVignette.text = vignette
+                    
+                    // 仅在必要时请求布局
+                    return
+                }
+            }
+
+            // 如果找不到视图（首次创建或结构变化），则重建内容区域
             // 创建新的内容区域
             val newContent = createContentArea(
                 filter, softLight, tone, saturation, warmCool,
@@ -512,8 +541,8 @@ class FloatingWindowService : Service() {
             // 基础参数区域
             addView(createSectionTitle("基础参数"))
 
-            // 滤镜 - 高亮显示
-            addView(createHighlightedParam("◈", "滤镜风格", filter))
+            // 滤镜 - 高亮显示 - 添加 Tag
+            addView(createHighlightedParam("◈", "滤镜风格", filter, "val_filter"))
 
             // 其他参数网格
             val paramGrid = LinearLayout(context).apply {
@@ -521,19 +550,19 @@ class FloatingWindowService : Service() {
             }
 
             paramGrid.addView(createParamRow(
-                createSmallParamItem("✦", "柔光", softLight),
-                createSmallParamItem("◐", "影调", tone.formatSigned())
+                createSmallParamItem("✦", "柔光", softLight, "val_soft_light"),
+                createSmallParamItem("◐", "影调", tone.formatSigned(), "val_tone")
             ))
             paramGrid.addView(createParamRow(
-                createSmallParamItem("◉", "饱和度", saturation.formatSigned()),
-                createSmallParamItem("◑", "冷暖", warmCool.formatSigned())
+                createSmallParamItem("◉", "饱和度", saturation.formatSigned(), "val_saturation"),
+                createSmallParamItem("◑", "冷暖", warmCool.formatSigned(), "val_warm_cool")
             ))
             paramGrid.addView(createParamRow(
-                createSmallParamItem("◒", "青品", cyanMagenta.formatSigned()),
-                createSmallParamItem("◆", "锐度", sharpness.toString())
+                createSmallParamItem("◒", "青品", cyanMagenta.formatSigned(), "val_cyan_magenta"),
+                createSmallParamItem("◆", "锐度", sharpness.toString(), "val_sharpness")
             ))
             paramGrid.addView(createParamRow(
-                createSmallParamItem("◍", "暗角", vignette),
+                createSmallParamItem("◍", "暗角", vignette, "val_vignette"),
                 null
             ))
 
@@ -703,7 +732,7 @@ class FloatingWindowService : Service() {
     /**
      * 创建高亮参数项（滤镜专用）
      */
-    private fun createHighlightedParam(icon: String, label: String, value: String): LinearLayout {
+    private fun createHighlightedParam(icon: String, label: String, value: String, valueTag: String? = null): LinearLayout {
         return LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -747,6 +776,10 @@ class FloatingWindowService : Service() {
                     cornerRadius = dpToPx(6).toFloat()
                     setColor(Color.parseColor("#30FF6B35"))
                 }
+                // 设置 Tag 方便查找更新
+                if (valueTag != null) {
+                    tag = valueTag
+                }
             })
         }
     }
@@ -789,7 +822,7 @@ class FloatingWindowService : Service() {
     /**
      * 创建小型参数项（用于网格）
      */
-    private fun createSmallParamItem(icon: String, label: String, value: String): LinearLayout {
+    private fun createSmallParamItem(icon: String, label: String, value: String, valueTag: String? = null): LinearLayout {
         return LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -820,6 +853,10 @@ class FloatingWindowService : Service() {
                 text = value
                 textSize = 12f
                 setTextColor(textPrimary)
+                // 设置 Tag 方便查找更新
+                if (valueTag != null) {
+                    tag = valueTag
+                }
             })
         }
     }
