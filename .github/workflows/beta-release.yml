@@ -43,23 +43,13 @@ jobs:
       - name: Build APK (assembleRelease)
         run: ./gradlew assembleRelease --no-daemon
 
-      # 快速安装 git-cliff（使用预编译二进制，避免 cargo 编译耗时）
-      - name: Install git-cliff
-        run: |
-          curl -L https://github.com/orhun/git-cliff/releases/latest/download/git-cliff-x86_64-unknown-linux-gnu.tar.gz -o git-cliff.tar.gz
-          tar -xzf git-cliff.tar.gz
-          sudo mv git-cliff-x86_64-unknown-linux-gnu/git-cliff /usr/local/bin/
-          git-cliff --version
-
-      - name: Generate changelog with git-cliff
-        id: gen_changelog
-        run: |
-          # 如果提供了 tag，则传递给 git-cliff，否则直接生成
-          if [ -n "${{ github.event.inputs.tag }}" ]; then
-            git-cliff --tag "${{ github.event.inputs.tag }}" --output CHANGELOG.md || echo "No changelog generated" > CHANGELOG.md
-          else
-            git-cliff --output CHANGELOG.md || echo "No changelog generated" > CHANGELOG.md
-          fi
+      # 使用 orhun/git-cliff-action 生成 changelog
+      - name: Generate changelog
+        uses: orhun/git-cliff-action@v4.7.0
+        with:
+          # 自动处理标签：如果手动触发时提供了 tag，则传递 --tag；同时使用 --unreleased 确保始终生成内容
+          args: --unreleased --output CHANGELOG.md ${{ github.event.inputs.tag && format('--tag {0}', github.event.inputs.tag) || '' }}
+          github_token: ${{ github.token }}
 
       - name: Create GitHub Release and upload build assets
         uses: ncipollo/release-action@v1
