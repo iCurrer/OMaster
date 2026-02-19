@@ -76,6 +76,17 @@ import com.silas.omaster.util.UpdateChecker
 import com.silas.omaster.util.VersionInfo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import android.widget.Toast
+import com.silas.omaster.util.UpdateConfigManager
+import com.silas.omaster.network.PresetRemoteManager
+import com.silas.omaster.data.repository.PresetRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 fun AboutScreen(
@@ -186,6 +197,113 @@ fun AboutScreen(
                     checkForUpdate()
                 }
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 远程预设更新卡片
+            var isFetchingPresets by remember { mutableStateOf(false) }
+            var presetMsg by remember { mutableStateOf<String?>(null) }
+            var showUrlDialog by remember { mutableStateOf(false) }
+            var editUrlText by remember { mutableStateOf("") }
+
+            Card(
+                shape = RoundedCornerShape(8.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "配置更新", style = MaterialTheme.typography.titleMedium)
+                        Button(onClick = {
+                            // 打开设置对话框
+                            editUrlText = UpdateConfigManager.getPresetUrl(context)
+                            showUrlDialog = true
+                        }) {
+                            Icon(imageVector = Icons.Default.Info, contentDescription = null)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(text = "设置更新链接")
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                        Button(onClick = {
+                            // 触发检查并下载远程 presets
+                            val url = UpdateConfigManager.getPresetUrl(context)
+                            scope.launch {
+                                try {
+                                    isFetchingPresets = true
+                                    presetMsg = null
+                                    android.util.Log.d("AboutScreen", "Fetching presets from $url")
+                                    val success = PresetRemoteManager.fetchAndSave(context, url)
+                                    if (success) {
+                                        // 刷新仓库
+                                        val repo = PresetRepository.getInstance(context)
+                                        repo.reloadDefaultPresets()
+                                        presetMsg = "配置更新成功"
+                                        Toast.makeText(context, "配置更新成功", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        presetMsg = "配置更新失败"
+                                        Toast.makeText(context, "配置更新失败", Toast.LENGTH_SHORT).show()
+                                    }
+                                } catch (e: Exception) {
+                                    android.util.Log.e("AboutScreen", "Preset update failed", e)
+                                    presetMsg = e.message
+                                    Toast.makeText(context, "配置更新失败: ${e.message}", Toast.LENGTH_SHORT).show()
+                                } finally {
+                                    isFetchingPresets = false
+                                }
+                            }
+                        }) {
+                            Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(text = "检查配置更新")
+                        }
+
+                        if (isFetchingPresets) {
+                            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                        }
+                    }
+
+                    presetMsg?.let { msg ->
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = msg, style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
+
+            if (showUrlDialog) {
+                AlertDialog(
+                    onDismissRequest = { showUrlDialog = false },
+                    confirmButton = {
+                        Button(onClick = {
+                            UpdateConfigManager.setPresetUrl(context, editUrlText)
+                            showUrlDialog = false
+                            Toast.makeText(context, "已保存更新链接", Toast.LENGTH_SHORT).show()
+                        }) {
+                            Text(text = stringResource(id = R.string.save))
+                        }
+                    },
+                    dismissButton = {
+                        Button(onClick = { showUrlDialog = false }) {
+                            Text(text = stringResource(id = R.string.cancel))
+                        }
+                    },
+                    title = { Text(text = "设置更新链接") },
+                    text = {
+                        OutlinedTextField(
+                            value = editUrlText,
+                            onValueChange = { editUrlText = it },
+                            singleLine = true
+                        )
+                    }
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 

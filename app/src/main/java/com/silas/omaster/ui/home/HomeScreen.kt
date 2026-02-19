@@ -2,6 +2,8 @@ package com.silas.omaster.ui.home
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
+// pullrefresh experimental annotation not available in this compose version
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -66,12 +68,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.layout.width
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.sp
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     onNavigateToDetail: (MasterPreset) -> Unit,
@@ -218,6 +223,8 @@ fun HomeScreen(
                                 showDeleteConfirm = true
                             },
                             onScrollStateChanged = onScrollStateChanged
+                            ,
+                            onRefresh = { viewModel.refresh() }
                         )
                         1 -> PresetGrid(
                             presets = favorites,
@@ -230,6 +237,8 @@ fun HomeScreen(
                             },
                             onScrollStateChanged = onScrollStateChanged,
                             showLoadingTip = false
+                            ,
+                            onRefresh = { viewModel.refresh() }
                         )
                         2 -> PresetGrid(
                             presets = customPresets,
@@ -242,6 +251,8 @@ fun HomeScreen(
                             },
                             showLoadingTip = false,
                             onScrollStateChanged = onScrollStateChanged
+                            ,
+                            onRefresh = { viewModel.refresh() }
                         )
                     }
                 }
@@ -310,6 +321,7 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun PresetGrid(
     presets: List<MasterPreset>,
@@ -318,9 +330,22 @@ private fun PresetGrid(
     onToggleFavorite: (String) -> Unit,
     onDeletePreset: (String) -> Unit,
     onScrollStateChanged: (Boolean) -> Unit = {},
-    showLoadingTip: Boolean = true
+    showLoadingTip: Boolean = true,
+    onRefresh: () -> Unit = {}
 ) {
     val listState = rememberLazyStaggeredGridState()
+
+    // Pull-to-refresh state
+    var refreshing by remember { mutableStateOf(false) }
+    val pullRefreshState = rememberPullRefreshState(refreshing, onRefresh = {
+        refreshing = true
+        onRefresh()
+    })
+
+    // When presets list updates, stop the refreshing indicator
+    LaunchedEffect(presets) {
+        if (refreshing) refreshing = false
+    }
 
     // 修复：使用 snapshotFlow 安全地检测滚动方向
     // 避免在 derivedStateOf 中修改外部状态
@@ -362,7 +387,9 @@ private fun PresetGrid(
             ),
             horizontalArrangement = Arrangement.spacedBy(16.dp),  // 优化：水平间距从 12dp 增加到 16dp
             verticalItemSpacing = 16.dp,  // 优化：垂直间距从 12dp 增加到 16dp
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState)
         ) {
             itemsIndexed(
                 items = presets,
@@ -403,6 +430,15 @@ private fun PresetGrid(
                     LoadingMoreTip()
                 }
             }
+        }
+        // Pull refresh indicator overlay
+        Box(modifier = Modifier.fillMaxWidth()) {
+            PullRefreshIndicator(
+                refreshing = refreshing,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+                contentColor = HasselbladOrange
+            )
         }
     }
 }

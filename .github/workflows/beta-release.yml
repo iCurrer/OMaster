@@ -1,0 +1,160 @@
+name: Build Beta & Release
+
+on:
+  push:
+    branches: [ main, master ]          # 可根据需要调整分支
+  pull_request:
+    branches: [ main, master ]          # 可选，增加 PR 验证
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: '创建 Release (勾选后需填写标签)'
+        required: false
+        default: false
+        type: boolean
+      release_tag:
+        description: 'Release 标签 (例如: v1.2.3)'
+        required: false
+        type: string
+      release_name:
+        description: 'Release 名称 (留空则使用标签)'
+        required: false
+        type: string
+      prerelease:
+        description: '标记为预发布版本'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*','**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Upload APK as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: app/build/outputs/apk/release/*.apk
+          retention-days: 30
+
+  release:
+    needs: build
+    if: github.event.inputs.create_release == 'true' && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write          # 需要推送标签和创建 Release
+
+    steps:
+      - name: Checkout repository (with full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate release inputs
+        run: |
+          if [[ -z "${{ github.event.inputs.release_tag }}" ]]; then
+            echo "❌ 错误: 创建 Release 时必须提供 release_tag"
+            exit 1
+          fi
+          if [[ ! "${{ github.event.inputs.release_tag }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+            echo "❌ 错误: 标签格式不正确，请使用 vX.Y.Z 格式（例如 v1.2.3）"
+            exit 1
+          fi
+          if git tag --list | grep -q "^${{ github.event.inputs.release_tag }}$"; then
+            echo "❌ 错误: 标签 ${{ github.event.inputs.release_tag }} 已存在"
+            exit 1
+          fi
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Install git-cliff
+        uses: taiki-e/install-action@v2
+        with:
+          tool: git-cliff
+
+      - name: Generate release notes (from previous tag to HEAD)
+        id: changelog
+        run: |
+          PREVIOUS_TAG=$(git tag --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "📝 首个版本，生成所有提交的更新日志"
+            git-cliff --unreleased --output RELEASE_NOTES.md
+          else
+            echo "📝 生成从 $PREVIOUS_TAG 到当前提交的更新日志"
+            git-cliff ${PREVIOUS_TAG}..HEAD --unreleased --output RELEASE_NOTES.md
+          fi
+          echo "📋 生成的 Release 说明："
+          cat RELEASE_NOTES.md
+
+      - name: Create and push tag
+        run: |
+          git tag ${{ github.event.inputs.release_tag }}
+          git push origin ${{ github.event.inputs.release_tag }}
+
+      - name: Update full CHANGELOG.md (optional)
+        run: |
+          git-cliff --output CHANGELOG.md
+          if [ -n "$(git status --porcelain CHANGELOG.md)" ]; then
+            git add CHANGELOG.md
+            git commit -m "docs: 更新 CHANGELOG.md 为 ${{ github.event.inputs.release_tag }}"
+            git push origin HEAD:${GITHUB_REF#refs/heads/}
+            echo "✅ CHANGELOG.md 已更新并推送"
+          else
+            echo "ℹ️ CHANGELOG.md 无变化，跳过提交"
+          fi
+
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-apk
+          path: ./apk
+
+      - name: Create GitHub Release (draft)
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.release_tag }}
+          name: ${{ github.event.inputs.release_name || github.event.inputs.release_tag }}
+          body_path: RELEASE_NOTES.md
+          draft: true
+          prerelease: ${{ github.event.inputs.prerelease }}
+          files: ./apk/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release summary
+        run: |
+          echo "🎉 Release 草稿创建成功！"
+          echo "  标签: ${{ github.event.inputs.release_tag }}"
+          echo "  名称: ${{ github.event.inputs.release_name || github.event.inputs.release_tag }}"
+          echo "  预发布: ${{ github.event.inputs.prerelease }}"
+          echo "🔗 查看地址: https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.release_tag }}"

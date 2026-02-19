@@ -70,6 +70,16 @@ class PresetRepository(
     }
 
     /**
+     * 重新从 JsonUtil（会优先读取远程保存文件）加载内置预设
+     */
+    fun reloadDefaultPresets() {
+        android.util.Log.d("PresetRepository", "Reloading default presets from JsonUtil")
+        val presets = JsonUtil.loadPresets(appContext)
+        _defaultPresets.value = presets
+        android.util.Log.d("PresetRepository", "Reloaded ${presets.size} default presets")
+    }
+
+    /**
      * 【数据合并方法】
      * 获取所有预设（默认 + 自定义），并标记收藏状态
      * 

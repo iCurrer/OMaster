@@ -20,8 +20,8 @@ android {
         // versionName: 对外显示版本号，格式 主.次.修订
         // 正式版: 1.0, 1.0.1, 1.1.0, 2.0.0
         // 测试版: 1.0.0-beta1, 1.0.0-beta2
-        versionCode = 7
-        versionName = "1.1.2"
+        versionCode = 8
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
+    // Material (for pull-to-refresh support)
+    implementation("androidx.compose.material:material:1.4.3")
 
     // 导航组件 - 类型安全导航
     implementation(libs.androidx.navigation.compose)
@@ -74,6 +76,11 @@ dependencies {
     // Kotlin Serialization - 用于导航参数序列化
     implementation(libs.kotlinx.serialization.json)
 
+    // Ktor HTTP client for fetching remote presets
+    implementation("io.ktor:ktor-client-core:2.3.0")
+    implementation("io.ktor:ktor-client-cio:2.3.0")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.0")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.0")
     // Coil - 图片加载库，用于加载本地 assets 图片
     implementation(libs.coil.compose)
 

@@ -2,6 +2,7 @@ package com.silas.omaster.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.serialization.Serializable
 
 /**
  * 大师模式调色预设数据类
@@ -29,7 +30,8 @@ import android.os.Parcelable
  * @param sharpness 锐度，数字 0-100
  * @param vignette 暗角开关，"开" 或 "关"
  * @param isNew 是否为新预设，用于显示 NEW 标签和置顶（手动控制）
- */
+*/
+@Serializable
 data class MasterPreset(
     val id: String? = null,
     val name: String,
@@ -150,6 +152,7 @@ data class MasterPreset(
  * 预设列表包装类
  * 用于 Gson 解析 JSON 数据
  */
+@Serializable
 data class PresetList(
     val presets: List<MasterPreset> = emptyList()
 )

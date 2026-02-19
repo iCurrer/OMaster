@@ -66,3 +66,10 @@
 -optimizationpasses 5
 -allowaccessmodification
 -mergeinterfacesaggressively
+
+# 忽略 Ktor 调试检测引用的 ManagementFactory 类（Android 不支持）
+-dontwarn java.lang.management.ManagementFactory
+-dontwarn java.lang.management.RuntimeMXBean
+
+# 忽略 SLF4J 静态绑定器缺失警告
+-dontwarn org.slf4j.impl.StaticLoggerBinder

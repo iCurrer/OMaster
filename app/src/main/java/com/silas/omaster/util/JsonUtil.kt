@@ -58,28 +58,55 @@ object JsonUtil {
             return it
         }
 
+        // 优先检查应用 private files 目录中是否存在远程更新文件
+        try {
+            val remoteFile = java.io.File(context.filesDir, "presets_remote.json")
+            if (remoteFile.exists()) {
+                android.util.Log.d("JsonUtil", "Found remote presets file: ${remoteFile.absolutePath}")
+                remoteFile.inputStream().use { inputStream ->
+                    InputStreamReader(inputStream).use { reader ->
+                        val presetListType = object : TypeToken<PresetList>() {}.type
+                        val presetList: PresetList? = gson.fromJson(reader, presetListType)
+                        if (presetList == null) {
+                            android.util.Log.e("JsonUtil", "Failed to parse remote presets: result is null")
+                            return emptyList()
+                        }
+                        val presets = presetList.presets ?: emptyList()
+                        val processedPresets = presets.mapIndexed { index, preset ->
+                            if (preset.id == null) {
+                                val newId = generatePresetId(preset.name, index)
+                                android.util.Log.d("JsonUtil", "Generated id for preset: ${preset.name}, id: $newId")
+                                preset.copy(id = newId)
+                            } else {
+                                preset
+                            }
+                        }
+                        cachedPresets = processedPresets
+                        android.util.Log.d("JsonUtil", "Loaded and cached ${processedPresets.size} presets from remote file")
+                        return processedPresets
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("JsonUtil", "Failed to load presets from remote file", e)
+        }
+
+        // Fall back to bundled assets
         return try {
-            // 打开 assets 目录下的文件（只读）
             context.assets.open(fileName).use { inputStream ->
                 InputStreamReader(inputStream).use { reader ->
                     // 使用 Gson 解析 JSON 数据
                     val presetListType = object : TypeToken<PresetList>() {}.type
                     val presetList: PresetList? = gson.fromJson(reader, presetListType)
 
-                    // 处理 null 情况
                     if (presetList == null) {
                         android.util.Log.e("JsonUtil", "Failed to parse presets: result is null")
                         return emptyList()
                     }
 
-                    // 处理 presets 为 null 的情况
                     val presets = presetList.presets ?: emptyList()
-
-                    // 【ID 生成逻辑】为没有 id 的预设生成基于 name 的 ID
-                    // 这是为了兼容旧版本数据或手动编辑的 JSON
                     val processedPresets = presets.mapIndexed { index, preset ->
                         if (preset.id == null) {
-                            // 使用 name 生成简洁的 ID
                             val newId = generatePresetId(preset.name, index)
                             android.util.Log.d("JsonUtil", "Generated id for preset: ${preset.name}, id: $newId")
                             preset.copy(id = newId)
@@ -89,18 +116,15 @@ object JsonUtil {
                         }
                     }
 
-                    // 缓存结果
                     cachedPresets = processedPresets
                     android.util.Log.d("JsonUtil", "Loaded and cached ${processedPresets.size} presets")
                     processedPresets
                 }
             }
         } catch (e: IOException) {
-            // 文件读取失败时返回空列表（不会崩溃）
             android.util.Log.e("JsonUtil", "Failed to load presets from assets", e)
             emptyList()
         } catch (e: Exception) {
-            // JSON 解析失败时返回空列表（不会崩溃）
             android.util.Log.e("JsonUtil", "Failed to parse presets JSON", e)
             emptyList()
         }
@@ -156,4 +180,13 @@ object JsonUtil {
     fun presetsToJson(presets: List<MasterPreset>): String {
         return gson.toJson(PresetList(presets))
     }
+    /**
+     * Clear in-memory cache so subsequent calls will re-read remote or asset files.
+     * Call this after remote presets file is updated.
+     */
+    fun invalidateCache() {
+        cachedPresets = null
+        android.util.Log.d("JsonUtil", "Cache invalidated")
+    }
+
 }
