@@ -15,7 +15,7 @@
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">
     <img src="https://img.shields.io/badge/协议-CC%20BY--NC--SA%204.0-orange.svg?style=flat-square" alt="License"/>
   </a>
-  <img src="https://img.shields.io/badge/平台-Android%2014+-brightgreen.svg?style=flat-square" alt="Platform"/>
+  <img src="https://img.shields.io/badge/平台-Android%206+-brightgreen.svg?style=flat-square" alt="Platform"/>
   <img src="https://img.shields.io/badge/技术-Jetpack%20Compose-4285F4.svg?style=flat-square" alt="Tech"/>
 </p>
 
@@ -87,7 +87,7 @@
 - 蓝奏云：（待添加）
 
 ### 系统要求
-- Android 14 (API 34) 及以上
+- Android 6 (API 23) 及以上
 - 支持 OPPO / 一加 / Realme 手机的大师模式
 
 ---
