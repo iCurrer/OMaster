@@ -37,6 +37,20 @@ android {
         }
     }
 
+    // 添加 splits 配置，按 ABI 拆分 APK
+    splits {
+        abi {
+            // 启用 ABI 拆分
+            isEnable = true
+            // 重置当前支持的 ABI 列表（如果不调用 reset()，include 会追加到默认列表）
+            reset()
+            // 指定需要拆分的 ABI 类型，可根据项目实际支持的 ABI 调整
+            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            // 生成一个包含所有 ABI 的通用 APK（用于不支持拆分的场景）
+            isUniversalApk = true
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
