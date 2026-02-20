@@ -162,17 +162,17 @@ jobs:
           git tag ${{ github.event.inputs.release_tag }}
           git push origin ${{ github.event.inputs.release_tag }}
 
-      - name: Update full CHANGELOG.md (optional)
-        run: |
-          git-cliff --output CHANGELOG.md
-          if [ -n "$(git status --porcelain CHANGELOG.md)" ]; then
-            git add CHANGELOG.md
-            git commit -m "docs: 更新 CHANGELOG.md 为 ${{ github.event.inputs.release_tag }}"
-            git push origin HEAD:${GITHUB_REF#refs/heads/}
-            echo "✅ CHANGELOG.md 已更新并推送"
-          else
-            echo "ℹ️ CHANGELOG.md 无变化，跳过提交"
-          fi
+      # - name: Update full CHANGELOG.md (optional)
+      #   run: |
+      #     git-cliff --output CHANGELOG.md
+      #     if [ -n "$(git status --porcelain CHANGELOG.md)" ]; then
+      #       git add CHANGELOG.md
+      #       git commit -m "docs: 更新 CHANGELOG.md 为 ${{ github.event.inputs.release_tag }}"
+      #       git push origin HEAD:${GITHUB_REF#refs/heads/}
+      #       echo "✅ CHANGELOG.md 已更新并推送"
+      #     else
+      #       echo "ℹ️ CHANGELOG.md 无变化，跳过提交"
+      #     fi
 
       - name: Download APK artifacts
         uses: actions/download-artifact@v4
