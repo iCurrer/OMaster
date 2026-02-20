@@ -159,32 +159,49 @@ Welcome to submit Issues and Pull Requests!
 ### Submit New Presets
 
 > [!IMPORTANT]
-> Rules have been migrated to independent repository maintenance
+> Cloud presets have been migrated to an independent repository for maintenance
+>
+> If you are only updating cloud presets, do not submit Pull Requests directly to the OMaster main repository
 
 If you want to contribute new color tuning presets:
 1. Go to [OMaster Community](https://github.com/fengyec2/OMaster-Community)
-2. Add preset data in `presets.json`
-3. ~~*Add sample images in `app/src/main/assets/images/`*~~ (to be determined)
-4. Submit Pull Request
+2. Fork the community repository
+3. Add preset data in `presets.json`
+4. ~~*Add sample images in `app/src/main/assets/images/`*~~ (to be determined)
+5. Submit Pull Request
 
 ### Preset Data Format
 
 ```json
 {
-  "name": "Preset Name",
-  "coverPath": "images/cover.webp",
-  "galleryImages": ["images/sample1.webp"],
-  "author": "@Author",
-  "mode": "auto",
-  "filter": "Filter Type",
-  "softLight": "Soft Light Intensity",
-  "tone": 0,
-  "saturation": 0,
-  "warmCool": 0,
-  "cyanMagenta": 0,
-  "sharpness": 0,
-  "vignette": "Off",
-  "isNew": true
+  "presets": [
+    {
+      "name": "New Preset",
+      "coverPath": "images/new_preset_01.webp",
+      "galleryImages": [
+        "images/new_preset_02.webp",
+        "images/new_preset_03.webp"
+      ],
+      "author": "@Author",
+      "mode": "auto",
+      "iso": null,
+      "shutterSpeed": null,
+      "exposureCompensation": null,
+      "colorTemperature": null,
+      "colorHue": null,
+      "whiteBalance": null,
+      "colorTone": null,
+      "filter": "Filter Type",
+      "softLight": "Soft Light Intensity",
+      "tone": 0,
+      "saturation": 19,
+      "warmCool": -5,
+      "cyanMagenta": 0,
+      "sharpness": 15,
+      "vignette": "On",
+      "shootingTips": "[Environment] XXXX\n[Scenes] XX, XX, XX, XX\n[Tips] Suitable for XXXX scenes, XXXX colors, recommended XXXX"
+    }
+  ]
 }
 ```
 
