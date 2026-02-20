@@ -53,14 +53,55 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease --no-daemon
+      - name: Determine Build Variant
+        id: variant
+        run: |
+          if [[ "${{ github.event.inputs.create_release }}" == "true" ]]; then
+            echo "BUILD_TASK=assembleRelease" >> $GITHUB_ENV
+            echo "APK_PATH=app/build/outputs/apk/release" >> $GITHUB_ENV
+            echo "ARTIFACT_NAME=release-apk" >> $GITHUB_ENV
+          else
+            echo "BUILD_TASK=assembleDebug" >> $GITHUB_ENV
+            echo "APK_PATH=app/build/outputs/apk/debug" >> $GITHUB_ENV
+            echo "ARTIFACT_NAME=debug-apk" >> $GITHUB_ENV
+          fi
 
-      - name: Upload APK as artifact
+      - name: Build APK
+        run: ./gradlew ${{ env.BUILD_TASK }} --no-daemon
+
+      - name: Upload Universal APK
         uses: actions/upload-artifact@v4
         with:
-          name: release-apk
-          path: app/build/outputs/apk/release/*.apk
+          name: ${{ env.ARTIFACT_NAME }}-universal
+          path: ${{ env.APK_PATH }}/*-universal-*.apk
+          retention-days: 30
+
+      - name: Upload armeabi-v7a APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-armeabi-v7a
+          path: ${{ env.APK_PATH }}/*-armeabi-v7a-*.apk
+          retention-days: 30
+
+      - name: Upload arm64-v8a APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-arm64-v8a
+          path: ${{ env.APK_PATH }}/*-arm64-v8a-*.apk
+          retention-days: 30
+
+      - name: Upload x86 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-x86
+          path: ${{ env.APK_PATH }}/*-x86-*.apk
+          retention-days: 30
+
+      - name: Upload x86_64 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-x86_64
+          path: ${{ env.APK_PATH }}/*-x86_64-*.apk
           retention-days: 30
 
   release:
@@ -121,23 +162,23 @@ jobs:
           git tag ${{ github.event.inputs.release_tag }}
           git push origin ${{ github.event.inputs.release_tag }}
 
-      - name: Update full CHANGELOG.md (optional)
-        run: |
-          git-cliff --output CHANGELOG.md
-          if [ -n "$(git status --porcelain CHANGELOG.md)" ]; then
-            git add CHANGELOG.md
-            git commit -m "docs: 更新 CHANGELOG.md 为 ${{ github.event.inputs.release_tag }}"
-            git push origin HEAD:${GITHUB_REF#refs/heads/}
-            echo "✅ CHANGELOG.md 已更新并推送"
-          else
-            echo "ℹ️ CHANGELOG.md 无变化，跳过提交"
-          fi
+      # - name: Update full CHANGELOG.md (optional)
+      #   run: |
+      #     git-cliff --output CHANGELOG.md
+      #     if [ -n "$(git status --porcelain CHANGELOG.md)" ]; then
+      #       git add CHANGELOG.md
+      #       git commit -m "docs: 更新 CHANGELOG.md 为 ${{ github.event.inputs.release_tag }}"
+      #       git push origin HEAD:${GITHUB_REF#refs/heads/}
+      #       echo "✅ CHANGELOG.md 已更新并推送"
+      #     else
+      #       echo "ℹ️ CHANGELOG.md 无变化，跳过提交"
+      #     fi
 
-      - name: Download APK artifact
+      - name: Download APK artifacts
         uses: actions/download-artifact@v4
         with:
-          name: release-apk
           path: ./apk
+          merge-multiple: true
 
       - name: Create GitHub Release (draft)
         uses: softprops/action-gh-release@v1
@@ -147,7 +188,7 @@ jobs:
           body_path: RELEASE_NOTES.md
           draft: true
           prerelease: ${{ github.event.inputs.prerelease }}
-          files: ./apk/*.apk
+          files: ./apk/**/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
