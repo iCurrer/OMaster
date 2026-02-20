@@ -39,6 +39,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.silas.omaster.R
 import com.silas.omaster.ui.theme.DarkGray
 import com.silas.omaster.ui.theme.HasselbladOrange
 import com.silas.omaster.ui.theme.PureBlack
@@ -81,7 +83,7 @@ fun WelcomeDialog(
                     Spacer(modifier = Modifier.height(48.dp))
 
                     Text(
-                        text = "欢迎使用 OMaster",
+                        text = stringResource(R.string.welcome_dialog_title),
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
@@ -91,7 +93,7 @@ fun WelcomeDialog(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "大师模式调色参数库 v1.0",
+                        text = stringResource(R.string.welcome_version),
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White.copy(alpha = 0.6f),
                         textAlign = TextAlign.Center
@@ -101,24 +103,24 @@ fun WelcomeDialog(
 
                     FeatureCard(
                         icon = "📷",
-                        title = "专业参数",
-                        description = "查看大师模式的专业摄影调色参数"
+                        title = stringResource(R.string.feature_1_title),
+                        description = stringResource(R.string.feature_1_desc)
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
 
                     FeatureCard(
                         icon = "🎨",
-                        title = "多种风格",
-                        description = "支持多种预设风格，满足不同拍摄需求"
+                        title = stringResource(R.string.feature_2_title),
+                        description = stringResource(R.string.feature_2_desc)
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
 
                     FeatureCard(
                         icon = "🔒",
-                        title = "本地存储",
-                        description = "纯本地化运作，数据存储在本地"
+                        title = stringResource(R.string.feature_3_title),
+                        description = stringResource(R.string.feature_3_desc)
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -148,13 +150,13 @@ fun WelcomeDialog(
                                 Spacer(modifier = Modifier.width(8.dp))
 
                                 Text(
-                                    text = "我已阅读并同意",
+                                    text = stringResource(R.string.agree_prefix),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = Color.White
                                 )
 
                                 Text(
-                                    text = "《用户协议和隐私政策》",
+                                    text = stringResource(R.string.privacy_policy),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = HasselbladOrange,
                                     fontWeight = FontWeight.Bold,
@@ -167,7 +169,7 @@ fun WelcomeDialog(
                             Spacer(modifier = Modifier.height(8.dp))
 
                             Text(
-                                text = "• 我们使用友盟 SDK 进行统计分析\n• 收集设备信息以优化应用体验",
+                                text = stringResource(R.string.umeng_notice),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color.White.copy(alpha = 0.6f),
                                 lineHeight = 18.sp
@@ -178,7 +180,7 @@ fun WelcomeDialog(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "点击《用户协议和隐私政策》查看详细信息",
+                        text = stringResource(R.string.privacy_hint),
                         style = MaterialTheme.typography.bodySmall,
                         color = HasselbladOrange,
                         textAlign = TextAlign.Center,
@@ -211,7 +213,7 @@ fun WelcomeDialog(
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
-                            text = "不同意",
+                            text = stringResource(R.string.disagree),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -238,12 +240,13 @@ fun WelcomeDialog(
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
-                            text = "同意并开始",
+                            text = stringResource(R.string.agree_and_start),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
+
             }
         }
     }

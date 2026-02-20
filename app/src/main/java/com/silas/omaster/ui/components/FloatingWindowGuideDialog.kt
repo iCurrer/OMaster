@@ -37,10 +37,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.silas.omaster.R
 import com.silas.omaster.ui.theme.DarkGray
 import com.silas.omaster.ui.theme.HasselbladOrange
 import com.silas.omaster.ui.theme.NearBlack
@@ -140,7 +142,7 @@ fun FloatingWindowGuideDialog(
 
                     // 标题
                     Text(
-                        text = "开启悬浮窗权限",
+                        text = stringResource(R.string.guide_title),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
@@ -151,7 +153,7 @@ fun FloatingWindowGuideDialog(
 
                     // 说明文字
                     Text(
-                        text = "为了在拍摄时方便查看参数，OMaster 需要悬浮窗权限",
+                        text = stringResource(R.string.guide_desc),
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White.copy(alpha = 0.7f),
                         textAlign = TextAlign.Center,
@@ -187,7 +189,7 @@ fun FloatingWindowGuideDialog(
                                 )
                                 Spacer(modifier = Modifier.padding(start = 8.dp))
                                 Text(
-                                    text = "如果遇到权限开启失败：",
+                                    text = stringResource(R.string.guide_fail_title),
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.SemiBold,
                                     color = HasselbladOrange
@@ -195,10 +197,10 @@ fun FloatingWindowGuideDialog(
                             }
 
                             // 步骤列表
-                            GuideStep(number = "1", text = "前往「设置 → 应用管理」")
-                            GuideStep(number = "2", text = "找到 OMaster 应用")
-                            GuideStep(number = "3", text = "点击右上角 ⋮ 菜单")
-                            GuideStep(number = "4", text = "选择「解除所有授权限制」")
+                            GuideStep(number = "1", text = stringResource(R.string.guide_fail_step_1))
+                            GuideStep(number = "2", text = stringResource(R.string.guide_fail_step_2))
+                            GuideStep(number = "3", text = stringResource(R.string.guide_fail_step_3))
+                            GuideStep(number = "4", text = stringResource(R.string.guide_fail_step_4))
                         }
                     }
 
@@ -215,7 +217,7 @@ fun FloatingWindowGuideDialog(
                         )
                         Spacer(modifier = Modifier.padding(start = 6.dp))
                         Text(
-                            text = "提示：解除限制后，请确保只授予「悬浮窗」权限",
+                            text = stringResource(R.string.guide_tip),
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.White.copy(alpha = 0.5f),
                             lineHeight = 16.sp
@@ -254,7 +256,7 @@ fun FloatingWindowGuideDialog(
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    text = if (canClick) "去开启权限" else "去开启权限",
+                                    text = if (canClick) stringResource(R.string.guide_btn_open) else stringResource(R.string.guide_btn_open),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -287,7 +289,7 @@ fun FloatingWindowGuideDialog(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                text = "以后再说",
+                                text = stringResource(R.string.guide_later),
                                 color = Color.White.copy(alpha = 0.5f),
                                 fontSize = 14.sp
                             )

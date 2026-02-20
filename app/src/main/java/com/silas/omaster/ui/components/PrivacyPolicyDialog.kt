@@ -15,10 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.silas.omaster.R
 import com.silas.omaster.ui.theme.HasselbladOrange
 import com.silas.omaster.ui.theme.NearBlack
 
@@ -49,7 +51,7 @@ fun PrivacyPolicyDialog(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "用户协议和隐私政策",
+                        text = stringResource(R.string.privacy_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -72,7 +74,7 @@ fun PrivacyPolicyDialog(
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Text(
-                        text = "关闭",
+                        text = stringResource(R.string.close),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold
                     )

@@ -54,6 +54,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.res.stringResource
+import com.silas.omaster.R
 import com.silas.omaster.data.repository.PresetRepository
 import com.silas.omaster.model.MasterPreset
 import com.silas.omaster.ui.animation.AnimationSpecs
@@ -137,7 +139,7 @@ fun HomeScreen(
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Text(
-                    text = "OMaster",
+                    text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -163,9 +165,9 @@ fun HomeScreen(
                 divider = {} // 移除默认分割线
             ) {
                 val tabs = listOf(
-                    "全部" to allPresets.size,
-                    "收藏" to favorites.size,
-                    "我的" to customPresets.size
+                    stringResource(R.string.tab_all) to allPresets.size,
+                    stringResource(R.string.tab_favorites) to favorites.size,
+                    stringResource(R.string.tab_my) to customPresets.size
                 )
                 
                 tabs.forEachIndexed { index, (title, count) ->
@@ -277,47 +279,47 @@ fun HomeScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "新建预设",
-                    modifier = Modifier.size(32.dp)
-                )
-            }
-        }
-
-        // 删除确认对话框
-        if (showDeleteConfirm) {
-            AlertDialog(
-                onDismissRequest = {
-                    showDeleteConfirm = false
-                    presetToDelete = null
-                },
-                title = { Text("确认删除") },
-                text = { Text("确定要删除这个预设吗？此操作无法撤销。") },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            val id = presetToDelete
-                            if (id != null) {
-                                viewModel.deleteCustomPreset(id)
-                            }
-                            showDeleteConfirm = false
-                            presetToDelete = null
-                        }
-                    ) {
-                        Text("删除", color = HasselbladOrange)
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = {
-                            showDeleteConfirm = false
-                            presetToDelete = null
-                        }
-                    ) {
-                        Text("取消")
-                    }
-                }
+                    contentDescription = stringResource(R.string.create_preset),
+                modifier = Modifier.size(32.dp)
             )
         }
+    }
+
+    // 删除确认对话框
+    if (showDeleteConfirm) {
+        AlertDialog(
+            onDismissRequest = {
+                showDeleteConfirm = false
+                presetToDelete = null
+            },
+            title = { Text(stringResource(R.string.delete_preset_title)) },
+            text = { Text(stringResource(R.string.delete_preset_message)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val id = presetToDelete
+                        if (id != null) {
+                            viewModel.deleteCustomPreset(id)
+                        }
+                        showDeleteConfirm = false
+                        presetToDelete = null
+                    }
+                ) {
+                    Text(stringResource(R.string.delete), color = HasselbladOrange)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteConfirm = false
+                        presetToDelete = null
+                    }
+                ) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
     }
 }
 
@@ -505,16 +507,16 @@ private fun PresetCardItem(
 @Composable
 private fun EmptyState(tabIndex: Int) {
     val message = when (tabIndex) {
-        0 -> "暂无预设数据"
-        1 -> "暂无收藏预设"
-        2 -> "暂无自定义预设"
-        else -> "暂无数据"
+        0 -> stringResource(R.string.empty_no_presets)
+        1 -> stringResource(R.string.empty_no_favorites)
+        2 -> stringResource(R.string.empty_no_custom)
+        else -> stringResource(R.string.empty_no_data)
     }
 
     val subMessage = when (tabIndex) {
-        0 -> "请在 assets/presets.json 中添加数据"
-        1 -> "点击心形图标收藏预设"
-        2 -> "点击右下角按钮创建预设"
+        0 -> stringResource(R.string.empty_hint_add_presets)
+        1 -> stringResource(R.string.empty_hint_favorite)
+        2 -> stringResource(R.string.empty_hint_create)
         else -> ""
     }
 
@@ -575,7 +577,7 @@ private fun LoadingMoreTip() {
 
             // 主文字
             Text(
-                text = "持续更新 · 敬请期待",
+                text = stringResource(R.string.load_more_hint),
                 style = MaterialTheme.typography.bodyMedium,
                 color = HasselbladOrange.copy(alpha = 0.8f),
                 fontWeight = FontWeight.Medium,

@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -40,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.silas.omaster.R
 import com.silas.omaster.model.MasterPreset
 import com.silas.omaster.ui.animation.AnimationSpecs
 import com.silas.omaster.ui.theme.DarkGray
@@ -82,7 +84,7 @@ fun OMasterTopAppBar(
                 IconButton(onClick = it) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "返回",
+                        contentDescription = stringResource(R.string.back),
                         tint = Color.White
                     )
                 }
@@ -215,7 +217,7 @@ fun ModeBadge(
 ) {
     val isPro = mode.lowercase() == "pro"
     val backgroundColor = if (isPro) HasselbladOrange else DarkGray
-    val text = if (isPro) "Pro 模式" else "Auto 模式"
+    val text = if (isPro) stringResource(R.string.mode_pro) else stringResource(R.string.mode_auto)
 
     Box(
         modifier = modifier
@@ -354,7 +356,7 @@ fun ShootingTipsCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "拍摄建议",
+                    text = stringResource(R.string.shooting_tips),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = HasselbladOrange
