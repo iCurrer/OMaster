@@ -84,7 +84,7 @@
 
 ### 方式二：国内镜像
 - 蒲公英：[https://www.pgyer.com/omaster-android](https://www.pgyer.com/omaster-android)
-- 蓝奏云：（待添加）
+- 蓝奏云：[https://wwbwy.lanzouu.com/b016klqmib](https://wwbwy.lanzouu.com/b016klqmib)
 
 ### 系统要求
 - Android 6 (API 23) 及以上
