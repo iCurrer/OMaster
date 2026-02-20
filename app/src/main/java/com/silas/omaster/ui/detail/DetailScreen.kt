@@ -53,7 +53,10 @@ import com.silas.omaster.ui.components.SectionTitle
 import com.silas.omaster.ui.components.ShootingTipsCard
 import com.silas.omaster.ui.service.FloatingWindowController
 import com.silas.omaster.ui.service.FloatingWindowService
+import androidx.compose.ui.res.stringResource
+import com.silas.omaster.R
 import com.silas.omaster.ui.theme.HasselbladOrange
+import com.silas.omaster.util.PresetI18n
 import com.silas.omaster.util.formatSigned
 
 @Composable
@@ -91,7 +94,7 @@ fun DetailScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         OMasterTopAppBar(
-            title = preset?.name ?: "预设详情",
+            title = preset?.name ?: stringResource(R.string.detail_title),
             subtitle = preset?.author,
             onBack = onBack,
             actions = {
@@ -115,7 +118,7 @@ fun DetailScreen(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
-                        contentDescription = "悬浮窗",
+                        contentDescription = stringResource(R.string.floating_window),
                         tint = HasselbladOrange
                     )
                 }
@@ -131,7 +134,7 @@ fun DetailScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Edit,
-                            contentDescription = "编辑",
+                            contentDescription = stringResource(R.string.edit),
                             tint = Color.White
                         )
                     }
@@ -144,7 +147,7 @@ fun DetailScreen(
                             Icons.Filled.Favorite
                         else
                             Icons.Outlined.FavoriteBorder,
-                        contentDescription = if (isFavorite) "已收藏" else "收藏",
+                        contentDescription = if (isFavorite) stringResource(R.string.preset_favorited) else stringResource(R.string.preset_favorite),
                         tint = if (isFavorite) HasselbladOrange else Color.White
                     )
                 }
@@ -161,7 +164,7 @@ fun DetailScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "预设数据加载失败",
+                        text = stringResource(R.string.detail_load_failed),
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.White.copy(alpha = 0.6f)
                     )
@@ -252,7 +255,7 @@ private fun handleFloatingWindowClick(
 private fun ProModeParameters(preset: MasterPreset?) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text = "专业参数（具体视环境调整）",
+            text = stringResource(R.string.param_pro_adjust),
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Medium,
             color = Color.White.copy(alpha = 0.8f)
@@ -265,14 +268,14 @@ private fun ProModeParameters(preset: MasterPreset?) {
         ) {
             preset?.iso?.let {
                 ParameterCard(
-                    label = "ISO",
+                    label = stringResource(R.string.param_iso),
                     value = it,
                     modifier = Modifier.weight(1f)
                 )
             }
             preset?.shutterSpeed?.let {
                 ParameterCard(
-                    label = "快门",
+                    label = stringResource(R.string.param_shutter),
                     value = it,
                     modifier = Modifier.weight(1f)
                 )
@@ -286,7 +289,7 @@ private fun ProModeParameters(preset: MasterPreset?) {
         ) {
             preset?.exposureCompensation?.let {
                 ParameterCard(
-                    label = "曝光补偿",
+                    label = stringResource(R.string.param_exposure),
                     value = it,
                     modifier = Modifier.weight(1f)
                 )
@@ -295,14 +298,14 @@ private fun ProModeParameters(preset: MasterPreset?) {
             when {
                 preset?.colorTemperature != null -> {
                     ParameterCard(
-                        label = "色温",
+                        label = stringResource(R.string.param_color_temp),
                         value = "${preset.colorTemperature}K",
                         modifier = Modifier.weight(1f)
                     )
                 }
                 preset?.whiteBalance != null -> {
                     ParameterCard(
-                        label = "白平衡",
+                        label = stringResource(R.string.param_white_balance),
                         value = preset.whiteBalance,
                         modifier = Modifier.weight(1f)
                     )
@@ -319,14 +322,14 @@ private fun ProModeParameters(preset: MasterPreset?) {
             when {
                 preset?.colorHue != null -> {
                     ParameterCard(
-                        label = "色调",
+                        label = stringResource(R.string.param_tone),
                         value = preset.colorHue.formatSigned(),
                         modifier = Modifier.weight(1f)
                     )
                 }
                 preset?.colorTone != null -> {
                     ParameterCard(
-                        label = "色调风格",
+                        label = stringResource(R.string.param_tone_style),
                         value = preset.colorTone,
                         modifier = Modifier.weight(1f)
                     )
@@ -340,14 +343,14 @@ private fun ProModeParameters(preset: MasterPreset?) {
 private fun CommonParameters(preset: MasterPreset?, isProMode: Boolean) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         // 调色参数标题放在滤镜上方
-        SectionTitle(title = "调色参数")
+        SectionTitle(title = stringResource(R.string.section_color_grading))
         Spacer(modifier = Modifier.height(8.dp))
 
         // 滤镜类型
         preset?.let {
             ParameterCard(
-                label = "滤镜",
-                value = it.filter,
+                label = stringResource(R.string.param_filter),
+                value = PresetI18n.getLocalizedFilter(it.filter),
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -361,12 +364,12 @@ private fun CommonParameters(preset: MasterPreset?, isProMode: Boolean) {
         ) {
             preset?.let {
                 ParameterCard(
-                    label = "柔光",
-                    value = it.softLight,
+                    label = stringResource(R.string.param_soft_light),
+                    value = PresetI18n.getLocalizedSoftLight(it.softLight),
                     modifier = Modifier.weight(1f)
                 )
                 ParameterCard(
-                    label = "影调",
+                    label = stringResource(R.string.param_tone_curve),
                     value = it.tone.formatSigned(),
                     modifier = Modifier.weight(1f)
                 )
@@ -380,12 +383,12 @@ private fun CommonParameters(preset: MasterPreset?, isProMode: Boolean) {
         ) {
             preset?.let {
                 ParameterCard(
-                    label = "饱和度",
+                    label = stringResource(R.string.param_saturation),
                     value = it.saturation.formatSigned(),
                     modifier = Modifier.weight(1f)
                 )
                 ParameterCard(
-                    label = "冷暖",
+                    label = stringResource(R.string.param_warm_cool),
                     value = it.warmCool.formatSigned(),
                     modifier = Modifier.weight(1f)
                 )
@@ -399,12 +402,12 @@ private fun CommonParameters(preset: MasterPreset?, isProMode: Boolean) {
         ) {
             preset?.let {
                 ParameterCard(
-                    label = "青品",
+                    label = stringResource(R.string.param_cyan_magenta),
                     value = it.cyanMagenta.formatSigned(),
                     modifier = Modifier.weight(1f)
                 )
                 ParameterCard(
-                    label = "锐度",
+                    label = stringResource(R.string.param_sharpness),
                     value = "${it.sharpness}",
                     modifier = Modifier.weight(1f)
                 )
@@ -414,8 +417,8 @@ private fun CommonParameters(preset: MasterPreset?, isProMode: Boolean) {
         // 暗角
         preset?.let {
             ParameterCard(
-                label = "暗角",
-                value = it.vignette,
+                label = stringResource(R.string.param_vignette),
+                value = PresetI18n.getLocalizedVignette(it.vignette),
                 modifier = Modifier.fillMaxWidth()
             )
         }

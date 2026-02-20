@@ -9,6 +9,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
+import com.silas.omaster.R
 
 /**
  * GitHub 更新检查工具
@@ -55,7 +56,7 @@ object UpdateChecker {
      * @param currentVersionCode 当前版本号
      * @return 版本信息，如果失败返回 null
      */
-    suspend fun checkUpdate(currentVersionCode: Int): UpdateInfo? = withContext(Dispatchers.IO) {
+    suspend fun checkUpdate(context: Context, currentVersionCode: Int): UpdateInfo? = withContext(Dispatchers.IO) {
         try {
             val url = URL(GITHUB_API_URL)
             val connection = url.openConnection() as HttpURLConnection
@@ -91,7 +92,7 @@ object UpdateChecker {
                 }
 
                 // 获取原始更新日志
-                val rawReleaseNotes = json.optString("body", "暂无更新说明")
+                val rawReleaseNotes = json.optString("body", context.getString(R.string.no_release_notes))
                 
                 // 【新增】解析国内下载链接
                 val domesticUrl = extractDomesticUrl(rawReleaseNotes)

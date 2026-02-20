@@ -62,16 +62,19 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.silas.omaster.R
 import com.silas.omaster.ui.animation.AnimationSpecs
 import com.silas.omaster.ui.components.ModernSlider
 import com.silas.omaster.ui.theme.DarkGray
 import com.silas.omaster.ui.theme.HasselbladOrange
 import com.silas.omaster.ui.theme.NearBlack
 import com.silas.omaster.ui.theme.PureBlack
+import com.silas.omaster.util.PresetI18n
 import com.silas.omaster.util.formatFilterWithIntensity
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -117,14 +120,14 @@ fun CreatePresetScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "新建预设",
+                        text = stringResource(R.string.create_preset_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold
                     )
                 },
                 navigationIcon = {
                     Text(
-                        text = "取消",
+                        text = stringResource(R.string.cancel),
                         color = Color.White.copy(alpha = 0.6f),
                         modifier = Modifier
                             .padding(start = 16.dp)
@@ -133,7 +136,7 @@ fun CreatePresetScreen(
                 },
                 actions = {
                     Text(
-                        text = "保存",
+                        text = stringResource(R.string.save),
                         color = if (isFormValid) HasselbladOrange else Color.White.copy(alpha = 0.3f),
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier
@@ -163,7 +166,7 @@ fun CreatePresetScreen(
                                         // 显示错误提示（可以在这里添加 Toast 或 Snackbar）
                                         android.widget.Toast.makeText(
                                             context,
-                                            "保存失败，请重试",
+                                            context.getString(R.string.save_failed),
                                             android.widget.Toast.LENGTH_SHORT
                                         ).show()
                                     }
@@ -222,7 +225,7 @@ fun CreatePresetScreen(
                             Box(modifier = Modifier.fillMaxSize()) {
                                 AsyncImage(
                                     model = uri,
-                                    contentDescription = "封面图片",
+                                    contentDescription = stringResource(R.string.cover_image),
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier.fillMaxSize()
                                 )
@@ -255,7 +258,7 @@ fun CreatePresetScreen(
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Text(
-                                        text = "点击更换图片",
+                                        text = stringResource(R.string.change_image),
                                         color = Color.White,
                                         fontSize = 14.sp
                                     )
@@ -293,14 +296,14 @@ fun CreatePresetScreen(
                             }
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = "选择封面图片",
+                                text = stringResource(R.string.select_image),
                                 color = Color.White.copy(alpha = 0.9f),
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
-                                text = "建议使用 16:9 比例的图片",
+                                text = stringResource(R.string.image_ratio_hint),
                                 color = Color.White.copy(alpha = 0.5f),
                                 fontSize = 13.sp
                             )
@@ -313,8 +316,8 @@ fun CreatePresetScreen(
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("预设名称", color = Color.White.copy(alpha = 0.6f)) },
-                placeholder = { Text("给你的预设起个名字", color = Color.White.copy(alpha = 0.3f)) },
+                label = { Text(stringResource(R.string.preset_name), color = Color.White.copy(alpha = 0.6f)) },
+                placeholder = { Text(stringResource(R.string.preset_name_hint), color = Color.White.copy(alpha = 0.3f)) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -328,11 +331,11 @@ fun CreatePresetScreen(
             )
 
             // 基础参数卡片
-            ParameterCard(title = "基础参数") {
+            ParameterCard(title = stringResource(R.string.section_basic)) {
                 // 模式选择 - 使用 Chip
                 Column(modifier = Modifier.padding(bottom = 16.dp)) {
                     Text(
-                        text = "拍摄模式",
+                        text = stringResource(R.string.shooting_mode),
                         color = Color.White.copy(alpha = 0.6f),
                         fontSize = 13.sp,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -354,7 +357,7 @@ fun CreatePresetScreen(
                 // 滤镜选择
                 Column(modifier = Modifier.padding(bottom = 16.dp)) {
                     Text(
-                        text = "滤镜风格",
+                        text = stringResource(R.string.filter_style),
                         color = Color.White.copy(alpha = 0.6f),
                         fontSize = 13.sp,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -370,7 +373,7 @@ fun CreatePresetScreen(
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 rowOptions.forEach { option ->
                                     SelectableChip(
-                                        text = option,
+                                        text = PresetI18n.getLocalizedFilterNameOnly(option),
                                         selected = filter == option,
                                         onClick = { filter = option }
                                     )
@@ -383,7 +386,7 @@ fun CreatePresetScreen(
                     if (filter != "标准") {
                         Spacer(modifier = Modifier.height(16.dp))
                         ModernSlider(
-                            label = "滤镜强度",
+                            label = stringResource(R.string.filter_intensity),
                             value = filterIntensity,
                             range = 0f..100f,
                             onValueChange = { filterIntensity = it }
@@ -399,7 +402,7 @@ fun CreatePresetScreen(
                 ) {
                     Column(modifier = Modifier.padding(bottom = 16.dp)) {
                         Text(
-                            text = "专业参数",
+                            text = stringResource(R.string.section_pro),
                             color = Color.White.copy(alpha = 0.6f),
                             fontSize = 13.sp,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -407,7 +410,7 @@ fun CreatePresetScreen(
 
                         // 曝光补偿
                         ModernSlider(
-                            label = "曝光补偿",
+                            label = stringResource(R.string.param_exposure),
                             value = exposure,
                             range = -3f..3f,
                             onValueChange = { exposure = it }
@@ -421,7 +424,7 @@ fun CreatePresetScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "色温",
+                                    text = stringResource(R.string.param_color_temp),
                                     color = Color.White.copy(alpha = 0.7f),
                                     fontSize = 14.sp
                                 )
@@ -456,7 +459,7 @@ fun CreatePresetScreen(
 
                         // 色调
                         ModernSlider(
-                            label = "色调",
+                            label = stringResource(R.string.param_tone),
                             value = colorHue,
                             range = -150f..150f,
                             onValueChange = { colorHue = it }
@@ -467,7 +470,7 @@ fun CreatePresetScreen(
                 // 柔光选择
                 Column {
                     Text(
-                        text = "柔光效果",
+                        text = stringResource(R.string.soft_light_effect),
                         color = Color.White.copy(alpha = 0.6f),
                         fontSize = 13.sp,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -475,7 +478,7 @@ fun CreatePresetScreen(
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         listOf("无", "柔美", "梦幻", "朦胧").forEach { option ->
                             SelectableChip(
-                                text = option,
+                                text = PresetI18n.getLocalizedSoftLight(option),
                                 selected = softLight == option,
                                 onClick = { softLight = option }
                             )
@@ -485,34 +488,34 @@ fun CreatePresetScreen(
             }
 
             // 调色参数卡片
-            ParameterCard(title = "调色参数") {
-                ModernSlider(label = "影调", value = tone, range = -100f..100f, onValueChange = { tone = it })
-                ModernSlider(label = "饱和度", value = saturation, range = -100f..100f, onValueChange = { saturation = it })
-                ModernSlider(label = "冷暖", value = warmCool, range = -100f..100f, onValueChange = { warmCool = it })
-                ModernSlider(label = "青品", value = cyanMagenta, range = -100f..100f, onValueChange = { cyanMagenta = it })
-                ModernSlider(label = "锐度", value = sharpness, range = 0f..100f, onValueChange = { sharpness = it })
+            ParameterCard(title = stringResource(R.string.section_color_grading)) {
+                ModernSlider(label = stringResource(R.string.param_tone_curve), value = tone, range = -100f..100f, onValueChange = { tone = it })
+                ModernSlider(label = stringResource(R.string.param_saturation), value = saturation, range = -100f..100f, onValueChange = { saturation = it })
+                ModernSlider(label = stringResource(R.string.param_warm_cool), value = warmCool, range = -100f..100f, onValueChange = { warmCool = it })
+                ModernSlider(label = stringResource(R.string.param_cyan_magenta), value = cyanMagenta, range = -100f..100f, onValueChange = { cyanMagenta = it })
+                ModernSlider(label = stringResource(R.string.param_sharpness), value = sharpness, range = 0f..100f, onValueChange = { sharpness = it })
             }
 
             // 暗角选择
-            ParameterCard(title = "其他") {
+            ParameterCard(title = stringResource(R.string.section_other)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "暗角",
+                        text = stringResource(R.string.param_vignette),
                         color = Color.White.copy(alpha = 0.8f),
                         fontSize = 15.sp
                     )
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         SelectableChip(
-                            text = "开启",
+                            text = PresetI18n.getLocalizedVignette("开"),
                             selected = vignette == "开",
                             onClick = { vignette = "开" }
                         )
                         SelectableChip(
-                            text = "关闭",
+                            text = PresetI18n.getLocalizedVignette("关"),
                             selected = vignette == "关",
                             onClick = { vignette = "关" }
                         )
@@ -546,7 +549,7 @@ fun CreatePresetScreen(
                         } else {
                             android.widget.Toast.makeText(
                                 context,
-                                "保存失败，请重试",
+                                context.getString(R.string.save_failed),
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -574,7 +577,7 @@ fun CreatePresetScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "保存预设",
+                        text = stringResource(R.string.save_preset),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold
                     )

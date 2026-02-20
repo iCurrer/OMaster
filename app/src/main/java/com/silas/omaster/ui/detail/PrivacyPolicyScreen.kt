@@ -23,10 +23,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.silas.omaster.R
 import com.silas.omaster.ui.components.OMasterTopAppBar
 import com.silas.omaster.ui.components.PolicyItem
 import com.silas.omaster.ui.components.PolicySection
@@ -43,7 +45,7 @@ fun PrivacyPolicyScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         OMasterTopAppBar(
-            title = "用户协议和隐私政策",
+            title = stringResource(R.string.privacy_title),
             onBack = onBack,
             modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars)
         )
@@ -56,24 +58,24 @@ fun PrivacyPolicyScreen(
         ) {
             // 欢迎语
             PolicySection(
-                title = "欢迎使用 OMaster",
-                content = "OMaster 是一款专为 OPPO/一加/Realme 手机摄影爱好者设计的调色参数管理工具。在这里，您可以查看、收藏和复现大师模式的摄影调色参数。"
+                title = stringResource(R.string.welcome_title),
+                content = stringResource(R.string.welcome_desc)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // 功能介绍
             PolicySection(
-                title = "功能介绍",
-                content = "• 查看大师模式调色参数\n• 支持多种预设风格\n• 纯本地化运作，数据存储在本地\n• 无需联网即可使用"
+                title = stringResource(R.string.features_title),
+                content = stringResource(R.string.features_list)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // 数据收集说明
             PolicySection(
-                title = "数据收集说明",
-                content = "为了提供更好的服务，我们使用了友盟统计分析 SDK 来收集应用使用数据。"
+                title = stringResource(R.string.data_collection_title),
+                content = stringResource(R.string.data_collection_desc)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -90,30 +92,30 @@ fun PrivacyPolicyScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "友盟 SDK 信息",
+                        text = stringResource(R.string.sdk_info_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = HasselbladOrange
                     )
 
                     PolicyItem(
-                        label = "使用 SDK 名称",
-                        value = "友盟 SDK"
+                        label = stringResource(R.string.sdk_name_label),
+                        value = stringResource(R.string.sdk_name)
                     )
 
                     PolicyItem(
-                        label = "服务类型",
-                        value = "统计分析"
+                        label = stringResource(R.string.service_type_label),
+                        value = stringResource(R.string.service_type)
                     )
 
                     PolicyItem(
-                        label = "收集个人信息类型",
-                        value = "设备信息（MAC/Android ID/IDFA/GUID/IP信息等）"
+                        label = stringResource(R.string.collect_info_label),
+                        value = stringResource(R.string.collect_info)
                     )
 
                     Column {
                         Text(
-                            text = "隐私权政策链接：",
+                            text = stringResource(R.string.privacy_link_label),
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.White.copy(alpha = 0.7f)
                         )
@@ -135,22 +137,22 @@ fun PrivacyPolicyScreen(
 
             // 用户权利
             PolicySection(
-                title = "用户权利",
-                content = "您有权访问、更正、删除您的个人信息。如需行使这些权利，请通过应用内的联系方式与我们联系。"
+                title = stringResource(R.string.user_rights_title),
+                content = stringResource(R.string.user_rights_desc)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // 联系我们
             PolicySection(
-                title = "联系我们",
-                content = "如果您对本隐私政策有任何疑问，请联系：\n开发者：Silas \n邮箱：iboy66lee@qq.com"
+                title = stringResource(R.string.contact_title),
+                content = stringResource(R.string.contact_info)
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "最后更新日期：2026-02-09",
+                text = stringResource(R.string.last_updated, "2026-02-09"),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.White.copy(alpha = 0.4f),
                 textAlign = TextAlign.Center,

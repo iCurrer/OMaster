@@ -128,7 +128,7 @@ fun AboutScreen(
             isChecking = true
             checkError = null
             try {
-                val result = UpdateChecker.checkUpdate(currentVersionCode)
+                val result = UpdateChecker.checkUpdate(context, currentVersionCode)
                 if (result != null) {
                     updateInfo = result
                     lastCheckTime = System.currentTimeMillis()
@@ -148,7 +148,7 @@ fun AboutScreen(
             isChecking = true
             checkError = null
             try {
-                val result = UpdateChecker.checkUpdate(currentVersionCode)
+                val result = UpdateChecker.checkUpdate(context, currentVersionCode)
                 if (result != null) {
                     updateInfo = result
                     lastCheckTime = System.currentTimeMillis()
@@ -205,6 +205,7 @@ fun AboutScreen(
             // 远程预设更新卡片
             var isFetchingPresets by remember { mutableStateOf(false) }
             var presetMsg by remember { mutableStateOf<String?>(null) }
+            var updateSuccess by remember { mutableStateOf<Boolean?>(null) }
             var showUrlDialog by remember { mutableStateOf(false) }
             var editUrlText by remember { mutableStateOf("") }
 
@@ -242,7 +243,7 @@ fun AboutScreen(
                                 modifier = Modifier.size(20.dp)
                             )
                             Text(
-                                text = "配置更新",
+                                text = stringResource(R.string.config_update_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
@@ -251,7 +252,7 @@ fun AboutScreen(
 
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = "设置更新链接",
+                            contentDescription = stringResource(R.string.set_update_url),
                             tint = Color.White.copy(alpha = 0.6f),
                             modifier = Modifier
                                 .size(20.dp)
@@ -264,11 +265,13 @@ fun AboutScreen(
 
                     // Description / Status
                     Text(
-                        text = presetMsg ?: "从远程服务器获取最新预设配置",
+                        text = presetMsg ?: stringResource(R.string.fetch_presets_desc),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = if (presetMsg != null && presetMsg!!.contains("失败")) Color(0xFFFF5252)
-                                else if (presetMsg != null && presetMsg!!.contains("成功")) Color(0xFF4CAF50)
-                                else Color.White.copy(alpha = 0.6f),
+                        color = when (updateSuccess) {
+                            true -> Color(0xFF4CAF50)
+                            false -> Color(0xFFFF5252)
+                            else -> Color.White.copy(alpha = 0.6f)
+                        },
                         textAlign = TextAlign.Start
                     )
 
@@ -280,22 +283,26 @@ fun AboutScreen(
                                 try {
                                     isFetchingPresets = true
                                     presetMsg = null
+                                    updateSuccess = null
                                     android.util.Log.d("AboutScreen", "Fetching presets from $url")
                                     val success = PresetRemoteManager.fetchAndSave(context, url)
                                     if (success) {
                                         // 刷新仓库
                                         val repo = PresetRepository.getInstance(context)
                                         repo.reloadDefaultPresets()
-                                        presetMsg = "配置更新成功"
-                                        Toast.makeText(context, "配置更新成功", Toast.LENGTH_SHORT).show()
+                                        presetMsg = context.getString(R.string.config_update_success)
+                                        updateSuccess = true
+                                        Toast.makeText(context, context.getString(R.string.config_update_success), Toast.LENGTH_SHORT).show()
                                     } else {
-                                        presetMsg = "配置更新失败"
-                                        Toast.makeText(context, "配置更新失败", Toast.LENGTH_SHORT).show()
+                                        presetMsg = context.getString(R.string.config_update_failed)
+                                        updateSuccess = false
+                                        Toast.makeText(context, context.getString(R.string.config_update_failed), Toast.LENGTH_SHORT).show()
                                     }
                                 } catch (e: Exception) {
                                     android.util.Log.e("AboutScreen", "Preset update failed", e)
                                     presetMsg = e.message
-                                    Toast.makeText(context, "配置更新失败: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    updateSuccess = false
+                                    Toast.makeText(context, "${context.getString(R.string.config_update_failed_prefix)}${e.message}", Toast.LENGTH_SHORT).show()
                                 } finally {
                                     isFetchingPresets = false
                                 }
@@ -316,7 +323,7 @@ fun AboutScreen(
                                 color = HasselbladOrange
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("正在更新...")
+                            Text(stringResource(R.string.updating))
                         } else {
                             Icon(
                                 imageVector = Icons.Default.Refresh,
@@ -324,7 +331,7 @@ fun AboutScreen(
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("立即检查")
+                            Text(stringResource(R.string.check_now))
                         }
                     }
                 }
@@ -337,7 +344,7 @@ fun AboutScreen(
                         Button(onClick = {
                             UpdateConfigManager.setPresetUrl(context, editUrlText)
                             showUrlDialog = false
-                            Toast.makeText(context, "已保存更新链接", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.update_url_saved), Toast.LENGTH_SHORT).show()
                         }) {
                             Text(text = stringResource(id = R.string.save))
                         }
@@ -347,7 +354,7 @@ fun AboutScreen(
                             Text(text = stringResource(id = R.string.cancel))
                         }
                     },
-                    title = { Text(text = "设置更新链接") },
+                    title = { Text(text = stringResource(R.string.set_update_url)) },
                     text = {
                         OutlinedTextField(
                             value = editUrlText,

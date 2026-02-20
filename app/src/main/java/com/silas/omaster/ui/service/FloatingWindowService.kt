@@ -17,6 +17,8 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.silas.omaster.R
+import com.silas.omaster.util.PresetI18n
 import com.silas.omaster.util.formatSigned
 
 /**
@@ -166,15 +168,15 @@ class FloatingWindowService : Service() {
         }
 
         val action = intent.getStringExtra(EXTRA_ACTION) ?: ACTION_SHOW
-        val name = intent.getStringExtra(EXTRA_NAME) ?: "预设"
-        val filter = intent.getStringExtra(EXTRA_FILTER) ?: "原图"
-        val softLight = intent.getStringExtra(EXTRA_SOFT_LIGHT) ?: "无"
+        val name = intent.getStringExtra(EXTRA_NAME) ?: getString(R.string.floating_preset)
+        val filter = intent.getStringExtra(EXTRA_FILTER) ?: getString(R.string.floating_original)
+        val softLight = intent.getStringExtra(EXTRA_SOFT_LIGHT) ?: getString(R.string.soft_none)
         val tone = intent.getIntExtra(EXTRA_TONE, 0)
         val saturation = intent.getIntExtra(EXTRA_SATURATION, 0)
         val warmCool = intent.getIntExtra(EXTRA_WARM_COOL, 0)
         val cyanMagenta = intent.getIntExtra(EXTRA_CYAN_MAGENTA, 0)
         val sharpness = intent.getIntExtra(EXTRA_SHARPNESS, 0)
-        val vignette = intent.getStringExtra(EXTRA_VIGNETTE) ?: "关"
+        val vignette = intent.getStringExtra(EXTRA_VIGNETTE) ?: getString(R.string.vignette_off)
         val whiteBalance = intent.getStringExtra(EXTRA_WHITE_BALANCE) ?: ""
         val colorTone = intent.getStringExtra(EXTRA_COLOR_TONE) ?: ""
         val exposure = intent.getStringExtra(EXTRA_EXPOSURE) ?: ""
@@ -277,14 +279,14 @@ class FloatingWindowService : Service() {
                     tvSharpness != null && tvVignette != null) {
                     
                     // 直接更新文本
-                    tvFilter.text = filter
-                    tvSoftLight.text = softLight
+                    tvFilter.text = PresetI18n.getLocalizedFilter(this@FloatingWindowService, filter)
+                    tvSoftLight.text = PresetI18n.getLocalizedSoftLight(this@FloatingWindowService, softLight)
                     tvTone.text = tone.formatSigned()
                     tvSaturation.text = saturation.formatSigned()
                     tvWarmCool.text = warmCool.formatSigned()
                     tvCyanMagenta.text = cyanMagenta.formatSigned()
                     tvSharpness.text = sharpness.toString()
-                    tvVignette.text = vignette
+                    tvVignette.text = PresetI18n.getLocalizedVignette(this@FloatingWindowService, vignette)
                     
                     // 仅在必要时请求布局
                     return
@@ -539,10 +541,10 @@ class FloatingWindowService : Service() {
             orientation = LinearLayout.VERTICAL
 
             // 基础参数区域
-            addView(createSectionTitle("基础参数"))
+            addView(createSectionTitle(getString(R.string.floating_basic_params)))
 
             // 滤镜 - 高亮显示 - 添加 Tag
-            addView(createHighlightedParam("◈", "滤镜风格", filter, "val_filter"))
+            addView(createHighlightedParam(getString(R.string.floating_filter_icon), getString(R.string.floating_filter_label), PresetI18n.getLocalizedFilter(this@FloatingWindowService, filter), "val_filter"))
 
             // 其他参数网格
             val paramGrid = LinearLayout(context).apply {
@@ -550,19 +552,19 @@ class FloatingWindowService : Service() {
             }
 
             paramGrid.addView(createParamRow(
-                createSmallParamItem("✦", "柔光", softLight, "val_soft_light"),
-                createSmallParamItem("◐", "影调", tone.formatSigned(), "val_tone")
+                createSmallParamItem(getString(R.string.floating_soft_icon), getString(R.string.floating_soft_label), PresetI18n.getLocalizedSoftLight(this@FloatingWindowService, softLight), "val_soft_light"),
+                createSmallParamItem(getString(R.string.floating_tone_icon), getString(R.string.floating_tone_label), tone.formatSigned(), "val_tone")
             ))
             paramGrid.addView(createParamRow(
-                createSmallParamItem("◉", "饱和度", saturation.formatSigned(), "val_saturation"),
-                createSmallParamItem("◑", "冷暖", warmCool.formatSigned(), "val_warm_cool")
+                createSmallParamItem(getString(R.string.floating_saturation_icon), getString(R.string.floating_saturation_label), saturation.formatSigned(), "val_saturation"),
+                createSmallParamItem(getString(R.string.floating_warm_icon), getString(R.string.floating_warm_label), warmCool.formatSigned(), "val_warm_cool")
             ))
             paramGrid.addView(createParamRow(
-                createSmallParamItem("◒", "青品", cyanMagenta.formatSigned(), "val_cyan_magenta"),
-                createSmallParamItem("◆", "锐度", sharpness.toString(), "val_sharpness")
+                createSmallParamItem(getString(R.string.floating_cyan_icon), getString(R.string.floating_cyan_label), cyanMagenta.formatSigned(), "val_cyan_magenta"),
+                createSmallParamItem(getString(R.string.floating_sharpness_icon), getString(R.string.floating_sharpness_label), sharpness.toString(), "val_sharpness")
             ))
             paramGrid.addView(createParamRow(
-                createSmallParamItem("◍", "暗角", vignette, "val_vignette"),
+                createSmallParamItem(getString(R.string.floating_vignette_icon), getString(R.string.floating_vignette_label), PresetI18n.getLocalizedVignette(this@FloatingWindowService, vignette), "val_vignette"),
                 null
             ))
 

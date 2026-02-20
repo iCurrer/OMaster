@@ -6,6 +6,7 @@
     <!-- Common Buttons -->
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
@@ -39,6 +40,19 @@
     <string name="empty_hint_favorite">Tap the heart icon to favorite presets</string>
     <string name="empty_hint_create">Tap the bottom right button to create a preset</string>
     <string name="load_more_hint">More coming soon · Stay tuned</string>
+    <string name="loading_more">Loading more…</string>
+    <string name="no_more_data">No more data</string>
+
+    <!-- Config Update -->
+    <string name="config_update_title">Config Update</string>
+    <string name="set_update_url">Set Update URL</string>
+    <string name="fetch_presets_desc">Fetch latest preset config from remote server</string>
+    <string name="config_update_success">Config update successful</string>
+    <string name="config_update_failed">Config update failed</string>
+    <string name="config_update_failed_prefix">Config update failed: </string>
+    <string name="updating">Updating...</string>
+    <string name="check_now">Check Now</string>
+    <string name="update_url_saved">Update URL saved</string>
 
     <!-- Preset Card -->
     <string name="preset_favorite">Favorite</string>
@@ -99,6 +113,7 @@
     <string name="section_color">Color</string>
     <string name="section_other">Other</string>
     <string name="shooting_mode">Shooting Mode</string>
+    <string name="shooting_tips">Shooting Tips</string>
     <string name="filter_style">Filter Style</string>
     <string name="filter_intensity">Filter Intensity</string>
     <string name="soft_light_effect">Soft Light Effect</string>
@@ -183,9 +198,25 @@
     <string name="privacy_link_label">Privacy Policy Link:</string>
     <string name="user_rights_title">User Rights</string>
     <string name="user_rights_desc">You have the right to access, correct, and delete your personal information. To exercise these rights, please contact us through the in-app contact information.</string>
+
+    <!-- Floating Window Guide -->
+    <string name="guide_title">Open Floating Window Permission</string>
+    <string name="guide_desc">To conveniently view parameters while shooting, OMaster needs floating window permission</string>
+    <string name="guide_step_1">1. Find "Allow display over other apps" or similar option in settings page</string>
+    <string name="guide_step_2">2. Turn on the switch</string>
+    <string name="guide_step_3">3. Return to OMaster</string>
+    <string name="guide_fail_title">If you encounter permission activation failure:</string>
+    <string name="guide_fail_step_1">Go to "Settings -> App Management"</string>
+    <string name="guide_fail_step_2">Find OMaster app</string>
+    <string name="guide_fail_step_3">Tap the ⋮ menu in the top right</string>
+    <string name="guide_fail_step_4">Select "Remove all permission restrictions"</string>
+    <string name="guide_tip">Tip: After removing restrictions, please ensure only "Floating Window" permission is granted</string>
+    <string name="guide_btn_open">Open Permission</string>
+    <string name="guide_later">Maybe Later</string>
     <string name="contact_title">Contact Us</string>
     <string name="contact_info">If you have any questions about this privacy policy, please contact:\nDeveloper: Silas\nEmail: iboy66lee@qq.com</string>
     <string name="last_updated">Last Updated: %1$s</string>
+    <string name="no_release_notes">No release notes available</string>
 
     <!-- Welcome Dialog -->
     <string name="welcome_dialog_title">Welcome to OMaster</string>

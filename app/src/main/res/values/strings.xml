@@ -6,6 +6,7 @@
     <!-- 通用按钮 -->
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
+    <string name="close">关闭</string>
     <string name="save">保存</string>
     <string name="delete">删除</string>
     <string name="edit">编辑</string>
@@ -39,6 +40,19 @@
     <string name="empty_hint_favorite">点击心形图标收藏预设</string>
     <string name="empty_hint_create">点击右下角按钮创建预设</string>
     <string name="load_more_hint">持续更新 · 敬请期待</string>
+    <string name="loading_more">正在加载更多...</string>
+    <string name="no_more_data">没有更多数据了</string>
+
+    <!-- Config Update -->
+    <string name="config_update_title">配置更新</string>
+    <string name="set_update_url">设置更新链接</string>
+    <string name="fetch_presets_desc">从远程服务器获取最新预设配置</string>
+    <string name="config_update_success">配置更新成功</string>
+    <string name="config_update_failed">配置更新失败</string>
+    <string name="config_update_failed_prefix">配置更新失败: </string>
+    <string name="updating">正在更新...</string>
+    <string name="check_now">立即检查</string>
+    <string name="update_url_saved">已保存更新链接</string>
 
     <!-- 预设卡片 -->
     <string name="preset_favorite">收藏</string>
@@ -99,6 +113,7 @@
     <string name="section_color">调色参数</string>
     <string name="section_other">其他</string>
     <string name="shooting_mode">拍摄模式</string>
+    <string name="shooting_tips">拍摄建议</string>
     <string name="filter_style">滤镜风格</string>
     <string name="filter_intensity">滤镜强度</string>
     <string name="soft_light_effect">柔光效果</string>
@@ -183,9 +198,25 @@
     <string name="privacy_link_label">隐私权政策链接：</string>
     <string name="user_rights_title">用户权利</string>
     <string name="user_rights_desc">您有权访问、更正、删除您的个人信息。如需行使这些权利，请通过应用内的联系方式与我们联系。</string>
+
+    <!-- 悬浮窗引导 -->
+    <string name="guide_title">开启悬浮窗权限</string>
+    <string name="guide_desc">为了在拍摄时方便查看参数，OMaster 需要悬浮窗权限</string>
+    <string name="guide_step_1">1. 在设置页面找到“允许显示在其他应用上层”或类似选项</string>
+    <string name="guide_step_2">2. 开启开关</string>
+    <string name="guide_step_3">3. 返回 OMaster</string>
+    <string name="guide_fail_title">如果遇到权限开启失败：</string>
+    <string name="guide_fail_step_1">前往「设置 → 应用管理」</string>
+    <string name="guide_fail_step_2">找到 OMaster 应用</string>
+    <string name="guide_fail_step_3">点击右上角 ⋮ 菜单</string>
+    <string name="guide_fail_step_4">选择「解除所有授权限制」</string>
+    <string name="guide_tip">提示：解除限制后，请确保只授予「悬浮窗」权限</string>
+    <string name="guide_btn_open">去开启权限</string>
+    <string name="guide_later">以后再说</string>
     <string name="contact_title">联系我们</string>
     <string name="contact_info">如果您对本隐私政策有任何疑问，请联系：\n开发者：Silas \n邮箱：iboy66lee@qq.com</string>
     <string name="last_updated">最后更新日期：%1$s</string>
+    <string name="no_release_notes">暂无更新说明</string>
 
     <!-- 欢迎对话框 -->
     <string name="welcome_dialog_title">欢迎使用 OMaster</string>
