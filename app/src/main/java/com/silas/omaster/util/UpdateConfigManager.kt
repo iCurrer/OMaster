@@ -6,7 +6,7 @@ object UpdateConfigManager {
     private const val PREFS_NAME = "omaster_update_prefs"
     private const val KEY_PRESET_URL = "preset_update_url"
 
-    const val DEFAULT_PRESET_URL = "https://raw.github.com/fengyec2/OMaster-Community/main/presets.json"
+    const val DEFAULT_PRESET_URL = "https://cdn.jsdelivr.net/gh/fengyec2/OMaster-Community@main/presets.json"
 
     fun getPresetUrl(context: Context): String {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
