@@ -41,7 +41,7 @@ class FloatingWindowService : Service() {
     // 配色方案
     private val primaryColor = Color.parseColor("#FF6B35")      // 品牌橙色
     private val primaryDark = Color.parseColor("#E55A2B")       // 深橙色
-    private val backgroundColor = Color.parseColor("#CC1A1A1A") // 毛玻璃背景
+    private val backgroundColor = Color.parseColor("#801A1A1A") // 毛玻璃背景（50%透明度，更透明便于取景）
     private val cardBackground = Color.parseColor("#26FFFFFF")  // 卡片背景
     private val textPrimary = Color.parseColor("#FFFFFF")       // 主文字
     private val textSecondary = Color.parseColor("#B3FFFFFF")   // 次要文字
