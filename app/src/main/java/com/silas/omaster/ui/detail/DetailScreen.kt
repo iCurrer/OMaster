@@ -94,7 +94,7 @@ fun DetailScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         OMasterTopAppBar(
-            title = preset?.name ?: stringResource(R.string.detail_title),
+            title = preset?.let { PresetI18n.getLocalizedPresetName(it.name) } ?: stringResource(R.string.detail_title),
             subtitle = preset?.author,
             onBack = onBack,
             actions = {
@@ -201,7 +201,9 @@ fun DetailScreen(
                         // 拍摄建议
                         it.shootingTips?.let { tips ->
                             Spacer(modifier = Modifier.height(24.dp))
-                            ShootingTipsCard(tips = tips)
+                            ShootingTipsCard(
+                                tips = PresetI18n.getLocalizedShootingTips(it.name, tips)
+                            )
                         }
                     }
                 }

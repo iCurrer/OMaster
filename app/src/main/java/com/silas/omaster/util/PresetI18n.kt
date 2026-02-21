@@ -163,6 +163,51 @@ object PresetI18n {
             else -> null
         }
     }
+
+    /**
+     * 获取预设名称对应的资源 ID
+     */
+    fun getPresetNameResId(name: String): Int? {
+        return when (name) {
+            "富士胶片" -> R.string.preset_fuji_film
+            "胶片感" -> R.string.preset_film_feel
+            "童话" -> R.string.preset_fairy_tale
+            "高对比黑白" -> R.string.preset_high_contrast_bw
+            "理光绿" -> R.string.preset_ricoh_green
+            "理光蓝" -> R.string.preset_ricoh_blue
+            "蓝调时刻" -> R.string.preset_blue_hour
+            "梦幻黑柔" -> R.string.preset_dreamy_blackmist
+            "富士NC" -> R.string.preset_fuji_nc
+            "人文" -> R.string.preset_humanities
+            "清新人文" -> R.string.preset_fresh_humanities
+            "氛围雪夜" -> R.string.preset_snowy_night
+            "美味流芳" -> R.string.preset_delicious
+            "手机徕卡" -> R.string.preset_mobile_leica
+            "梦幻富士" -> R.string.preset_dreamy_fuji
+            "哈苏浓郁" -> R.string.preset_hasselblad_rich
+            "假日清新" -> R.string.preset_holiday_fresh
+            "梦幻黑白" -> R.string.preset_dreamy_bw
+            "美味梦境" -> R.string.preset_delicious_dream
+            else -> null
+        }
+    }
+
+    /**
+     * 获取本地化的预设名称
+     */
+    @Composable
+    fun getLocalizedPresetName(name: String): String {
+        val resId = getPresetNameResId(name)
+        return if (resId != null) stringResource(resId) else name
+    }
+
+    /**
+     * 获取本地化的预设名称（Context 版本）
+     */
+    fun getLocalizedPresetName(context: android.content.Context, name: String): String {
+        val resId = getPresetNameResId(name)
+        return if (resId != null) context.getString(resId) else name
+    }
     
     /**
      * 获取本地化的拍摄模式
@@ -179,5 +224,50 @@ object PresetI18n {
     fun getLocalizedMode(context: android.content.Context, mode: String): String {
         val resId = getModeResId(mode)
         return if (resId != null) context.getString(resId) else mode
+    }
+
+    /**
+     * 获取拍摄建议对应的资源 ID
+     */
+    fun getShootingTipsResId(presetName: String): Int? {
+        return when (presetName) {
+            "富士胶片" -> R.string.tips_fuji_film
+            "胶片感" -> R.string.tips_film_feel
+            "童话" -> R.string.tips_fairy_tale
+            "高对比黑白" -> R.string.tips_high_contrast_bw
+            "理光绿" -> R.string.tips_ricoh_green
+            "理光蓝" -> R.string.tips_ricoh_blue
+            "蓝调时刻" -> R.string.tips_blue_hour
+            "梦幻黑柔" -> R.string.tips_dreamy_blackmist
+            "富士NC" -> R.string.tips_fuji_nc
+            "人文" -> R.string.tips_humanities
+            "清新人文" -> R.string.tips_fresh_humanities
+            "氛围雪夜" -> R.string.tips_snowy_night
+            "美味流芳" -> R.string.tips_delicious
+            "手机徕卡" -> R.string.tips_mobile_leica
+            "梦幻富士" -> R.string.tips_dreamy_fuji
+            "哈苏浓郁" -> R.string.tips_hasselblad_rich
+            "假日清新" -> R.string.tips_holiday_fresh
+            "梦幻黑白" -> R.string.tips_dreamy_bw
+            "美味梦境" -> R.string.tips_delicious_dream
+            else -> null
+        }
+    }
+
+    /**
+     * 获取本地化的拍摄建议
+     */
+    @Composable
+    fun getLocalizedShootingTips(presetName: String, defaultTips: String?): String {
+        val resId = getShootingTipsResId(presetName)
+        return if (resId != null) stringResource(resId) else (defaultTips ?: "")
+    }
+
+    /**
+     * 获取本地化的拍摄建议（Context 版本）
+     */
+    fun getLocalizedShootingTips(context: android.content.Context, presetName: String, defaultTips: String?): String {
+        val resId = getShootingTipsResId(presetName)
+        return if (resId != null) context.getString(resId) else (defaultTips ?: "")
     }
 }

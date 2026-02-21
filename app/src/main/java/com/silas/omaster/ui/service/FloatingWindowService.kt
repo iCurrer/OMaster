@@ -168,7 +168,8 @@ class FloatingWindowService : Service() {
         }
 
         val action = intent.getStringExtra(EXTRA_ACTION) ?: ACTION_SHOW
-        val name = intent.getStringExtra(EXTRA_NAME) ?: getString(R.string.floating_preset)
+        val rawName = intent.getStringExtra(EXTRA_NAME) ?: getString(R.string.floating_preset)
+        val name = PresetI18n.getLocalizedPresetName(this, rawName)
         val filter = intent.getStringExtra(EXTRA_FILTER) ?: getString(R.string.floating_original)
         val softLight = intent.getStringExtra(EXTRA_SOFT_LIGHT) ?: getString(R.string.soft_none)
         val tone = intent.getIntExtra(EXTRA_TONE, 0)

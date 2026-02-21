@@ -147,6 +147,48 @@
     <string name="vignette_on">On</string>
     <string name="vignette_off">Off</string>
 
+    <!-- Preset Names -->
+    <string name="preset_fuji_film">Fuji Classic</string>
+    <string name="preset_film_feel">Film Soul</string>
+    <string name="preset_fairy_tale">Wonderland</string>
+    <string name="preset_high_contrast_bw">Noir Contrast</string>
+    <string name="preset_ricoh_green">Ricoh Verdant</string>
+    <string name="preset_ricoh_blue">Ricoh Azure</string>
+    <string name="preset_blue_hour">Blue Moment</string>
+    <string name="preset_dreamy_blackmist">Dreamy Mist</string>
+    <string name="preset_fuji_nc">Fuji NC</string>
+    <string name="preset_humanities">Street Soul</string>
+    <string name="preset_fresh_humanities">Fresh Life</string>
+    <string name="preset_snowy_night">Winter Glow</string>
+    <string name="preset_delicious">Gourmet Art</string>
+    <string name="preset_mobile_leica">Leica Touch</string>
+    <string name="preset_dreamy_fuji">Dreamy Fuji</string>
+    <string name="preset_hasselblad_rich">Hasselblad Hue</string>
+    <string name="preset_holiday_fresh">Vacation Vibes</string>
+    <string name="preset_dreamy_bw">Dreamy Noir</string>
+    <string name="preset_delicious_dream">Sweet Dreams</string>
+
+    <!-- Shooting Tips -->
+    <string name="tips_fuji_film">[Environment] Daylight outdoor or well-lit indoor\n[Scenes] Street, portrait, landscape, architecture\n[Tips] Classic film aesthetic with rich, vintage colors. Look for scenes with light-shadow contrast to enhance depth</string>
+    <string name="tips_film_feel">[Environment] Natural or soft artificial light\n[Scenes] Portraits, still life, cafés, artistic scenes\n[Tips] Soft light creates dreamy atmosphere. Perfect for emotional photos. Keep the subject in sharp focus</string>
+    <string name="tips_fairy_tale">[Environment] Morning, dusk or overcast diffused light\n[Scenes] Children, gardens, parks, romantic scenes\n[Tips] Darker tones create mystery. Dreamy soft light for fairy tale vibes. Seek colorful scenes</string>
+    <string name="tips_high_contrast_bw">[Environment] Strong light-shadow contrast, direct sunlight or spotlights\n[Scenes] Architecture, documentary, street, artistic portraits\n[Tips] Use contrast to highlight subject contours. Perfect for geometric lines and rich textures. Keep composition clean</string>
+    <string name="tips_ricoh_green">[Environment] Natural outdoor light, forests, meadows, plant-rich scenes\n[Scenes] Plants, forest walks, spring outdoors, fresh portraits\n[Tips] Bright tones highlight freshness. Greens appear natural and transparent. Perfect for plants and nature</string>
+    <string name="tips_ricoh_blue">[Environment] Sunny weather or blue sky background\n[Scenes] Seaside, urban architecture, sky, cool-toned scenes\n[Tips] Cool tones enhance blue performance. Perfect for sky, water and urban architecture. Creates transparent, calm atmosphere</string>
+    <string name="tips_blue_hour">[Environment] 20 minutes before sunrise or after sunset\n[Scenes] City night views, bright lights, water reflections\n[Tips] Strong warm-cool contrast. Perfect for city lights and night scenes. Seek water surfaces for reflection effects</string>
+    <string name="tips_dreamy_blackmist">[Environment] Backlit or side-lit scenes\n[Scenes] Portraits, emotional photography, artistic scenes, soft beauty\n[Tips] Black mist filter creates dreamy atmosphere. Perfect for beautiful portraits. Use backlight for halo effects</string>
+    <string name="tips_fuji_nc">[Environment] Daylight outdoor or ample natural light\n[Scenes] Japanese-style portraits, street, daily records, travel\n[Tips] Simulates Fuji NC film. Bright tones, soft natural colors. Perfect for daily records and Japanese aesthetics</string>
+    <string name="tips_humanities">[Environment] Natural or soft artificial light\n[Scenes] Street documentary, humanistic photography, life records, storytelling\n[Tips] Pro mode with fixed parameters. ISO 50 ensures pure image quality. Slight underexposure preserves details. Perfect for capturing real life moments</string>
+    <string name="tips_fresh_humanities">[Environment] Bright outdoor or indoor natural light\n[Scenes] Fresh Japanese portraits, campus, travel, daily life\n[Tips] Bright tones, higher saturation. Perfect for fresh, bright portraits and scenes. Seek well-lit scenes</string>
+    <string name="tips_snowy_night">[Environment] Snowy, overcast or low color temperature scenes\n[Scenes] Snow scenes, winter streets, warm indoor, festive atmosphere\n[Tips] Warm tones balance snow\'s coolness. Creates cozy atmosphere. Perfect for winter scenes and warm light environments</string>
+    <string name="tips_delicious">[Environment] Restaurants, kitchens, food photography scenes\n[Scenes] Food photography, beverages, baking, fine cuisine\n[Tips] Darker tones highlight food texture. Moderate saturation keeps food\'s true colors. Perfect for fine food and beverages</string>
+    <string name="tips_mobile_leica">[Environment] Daylight outdoor or ample light\n[Scenes] Street, architecture, landscape, daily records\n[Tips] Simulates Leica\'s German style. Deep tones, restrained colors. Perfect for photography enthusiasts seeking Leica aesthetics</string>
+    <string name="tips_dreamy_fuji">[Environment] Daylight outdoor or soft light\n[Scenes] Portraits, landscapes, Japanese scenes, artistic photography\n[Tips] Pro mode auto exposure. Slight overexposure creates dreamy feel. Vintage tones with dreamy soft light. Perfect for beautiful portraits and landscapes</string>
+    <string name="tips_hasselblad_rich">[Environment] Well-lit outdoor or indoor\n[Scenes] Landscapes, architecture, portraits, artistic photography\n[Tips] Simulates Hasselblad Natural Color Solution. Rich but true-to-life colors. Perfect for high-quality color performance</string>
+    <string name="tips_holiday_fresh">[Environment] Sunny weather or bright vacation scenes\n[Scenes] Seaside, vacation, travel, summer outdoors\n[Tips] Bright and transparent tones. Lower saturation creates freshness. Perfect for vacation and travel scenes. Capture joyful moments</string>
+    <string name="tips_dreamy_bw">[Environment] Soft light or overcast\n[Scenes] Emotional portraits, artistic photography, still life, architecture\n[Tips] Retains slight color information. Dreamy soft light creates artistic feel. Perfect for expressive black and white photography</string>
+    <string name="tips_delicious_dream">[Environment] Restaurants, cafés, cozy indoor\n[Scenes] Food, desserts, beverages, delicate items\n[Tips] Dreamy soft light creates warm atmosphere. Darker tones highlight texture. Perfect for fine food and cozy scenes</string>
+
     <!-- About Page -->
     <string name="about_title">About</string>
     <string name="version_current">Current Version: v%1$s</string>

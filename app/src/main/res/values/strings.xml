@@ -147,6 +147,48 @@
     <string name="vignette_on">开启</string>
     <string name="vignette_off">关闭</string>
 
+    <!-- 预设名称 -->
+    <string name="preset_fuji_film">富士胶片</string>
+    <string name="preset_film_feel">胶片感</string>
+    <string name="preset_fairy_tale">童话</string>
+    <string name="preset_high_contrast_bw">高对比黑白</string>
+    <string name="preset_ricoh_green">理光绿</string>
+    <string name="preset_ricoh_blue">理光蓝</string>
+    <string name="preset_blue_hour">蓝调时刻</string>
+    <string name="preset_dreamy_blackmist">梦幻黑柔</string>
+    <string name="preset_fuji_nc">富士NC</string>
+    <string name="preset_humanities">人文</string>
+    <string name="preset_fresh_humanities">清新人文</string>
+    <string name="preset_snowy_night">氛围雪夜</string>
+    <string name="preset_delicious">美味流芳</string>
+    <string name="preset_mobile_leica">手机徕卡</string>
+    <string name="preset_dreamy_fuji">梦幻富士</string>
+    <string name="preset_hasselblad_rich">哈苏浓郁</string>
+    <string name="preset_holiday_fresh">假日清新</string>
+    <string name="preset_dreamy_bw">梦幻黑白</string>
+    <string name="preset_delicious_dream">美味梦境</string>
+
+    <!-- 拍摄建议 -->
+    <string name="tips_fuji_film">【环境建议】日间户外或光线充足的室内\n【场景推荐】街拍、人像、风景、建筑\n【拍摄要点】适合追求经典胶片质感的场景，色彩浓郁复古，建议寻找有光影对比的场景增强层次感</string>
+    <string name="tips_film_feel">【环境建议】自然光或柔和人工光源\n【场景推荐】人像写真、静物、咖啡馆、文艺场景\n【拍摄要点】柔光效果营造梦幻氛围，适合拍摄情绪感照片，建议对焦主体保持清晰</string>
+    <string name="tips_fairy_tale">【环境建议】清晨、黄昏或阴天散射光\n【场景推荐】儿童摄影、花园、公园、浪漫场景\n【拍摄要点】影调偏暗营造神秘感，梦幻柔光适合营造童话氛围，建议寻找色彩丰富的场景</string>
+    <string name="tips_high_contrast_bw">【环境建议】强烈光影对比场景，如阳光直射或聚光灯\n【场景推荐】建筑、纪实摄影、街头、艺术人像\n【拍摄要点】利用明暗对比突出主体轮廓，适合几何线条和纹理丰富的场景，注意构图简洁有力</string>
+    <string name="tips_ricoh_green">【环境建议】户外自然光，森林、草地、植物丰富的场景\n【场景推荐】植物摄影、森林漫步、春日户外、清新人像\n【拍摄要点】影调偏亮突出清新感，绿色表现自然通透，适合拍摄植物和户外自然场景</string>
+    <string name="tips_ricoh_blue">【环境建议】晴朗天气或蓝天背景\n【场景推荐】海边、城市建筑、天空、冷色调场景\n【拍摄要点】偏冷色调增强蓝色表现力，适合拍摄天空、水面和城市建筑，营造通透冷静的氛围</string>
+    <string name="tips_blue_hour">【环境建议】日出前或日落后20分钟的蓝调时刻\n【场景推荐】城市夜景、灯光璀璨的场景、水面倒影\n【拍摄要点】冷暖对比强烈，适合拍摄城市灯光和夜景，建议寻找有水面的场景增强倒影效果</string>
+    <string name="tips_dreamy_blackmist">【环境建议】逆光或侧逆光场景\n【场景推荐】人像写真、情绪摄影、艺术场景、柔美人像\n【拍摄要点】黑柔滤镜效果营造梦幻氛围，适合拍摄唯美人像，建议利用逆光创造光晕效果</string>
+    <string name="tips_fuji_nc">【环境建议】日间户外或充足自然光\n【场景推荐】日系人像、街拍、日常记录、旅行摄影\n【拍摄要点】模拟富士NC胶片效果，影调偏亮，色彩柔和自然，适合日常记录和日系风格拍摄</string>
+    <string name="tips_humanities">【环境建议】自然光或柔和人工光源\n【场景推荐】街头纪实、人文摄影、生活记录、故事性场景\n【拍摄要点】Pro模式参数固定，ISO 50保证画质纯净，轻微欠曝保留细节，适合捕捉真实生活瞬间</string>
+    <string name="tips_fresh_humanities">【环境建议】明亮的户外或室内自然光\n【场景推荐】日系清新人像、校园、旅行、日常生活\n【拍摄要点】影调明亮，饱和度较高，适合清新明亮的人像和场景，建议寻找光线充足的场景拍摄</string>
+    <string name="tips_snowy_night">【环境建议】雪天、阴天或低色温场景\n【场景推荐】雪景、冬日街景、暖光室内、节日氛围\n【拍摄要点】偏暖色调平衡雪景冷色，营造温馨氛围，适合拍摄冬日场景和暖光环境</string>
+    <string name="tips_delicious">【环境建议】餐厅、厨房、美食拍摄场景\n【场景推荐】美食摄影、饮品、烘焙、精致料理\n【拍摄要点】影调偏暗突出食物质感，饱和度适中保持食物本色，适合拍摄精致美食和饮品</string>
+    <string name="tips_mobile_leica">【环境建议】日间户外或充足光线\n【场景推荐】街拍、建筑、风景、日常记录\n【拍摄要点】模拟徕卡德味风格，影调深沉，色彩克制，适合追求德味质感的摄影爱好者</string>
+    <string name="tips_dreamy_fuji">【环境建议】日间户外或柔和光线\n【场景推荐】人像、风景、日系场景、文艺摄影\n【拍摄要点】Pro模式自动曝光，轻微过曝营造梦幻感，复古色调配合梦幻柔光，适合唯美人像和风景</string>
+    <string name="tips_hasselblad_rich">【环境建议】光线充足的户外或室内\n【场景推荐】风景、建筑、人像、艺术摄影\n【拍摄要点】模拟哈苏自然色彩解决方案，色彩浓郁但不失真，适合追求高品质色彩表现的场景</string>
+    <string name="tips_holiday_fresh">【环境建议】晴朗天气或明亮的度假场景\n【场景推荐】海边、度假、旅行、夏日户外\n【拍摄要点】影调明亮通透，饱和度略低营造清新感，适合度假和旅行场景，记录轻松愉快的时光</string>
+    <string name="tips_dreamy_bw">【环境建议】柔和光线或阴天\n【场景推荐】情绪人像、艺术摄影、静物、建筑\n【拍摄要点】保留轻微色彩信息，梦幻柔光营造艺术感，适合追求艺术表达的黑白摄影</string>
+    <string name="tips_delicious_dream">【环境建议】餐厅、咖啡馆、温馨室内\n【场景推荐】美食、甜品、饮品、精致小物\n【拍摄要点】梦幻柔光营造温馨氛围，影调略暗突出质感，适合拍摄精致美食和温馨场景</string>
+
     <!-- 关于页 -->
     <string name="about_title">关于</string>
     <string name="version_current">当前版本：v%1$s</string>

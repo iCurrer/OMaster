@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.silas.omaster.R
 import com.silas.omaster.model.MasterPreset
 import com.silas.omaster.ui.theme.CardBorderHighlight
+import com.silas.omaster.util.PresetI18n
 import com.silas.omaster.ui.theme.CardBorderLight
 import com.silas.omaster.ui.theme.DarkGray
 import com.silas.omaster.ui.theme.GradientOrangeEnd
@@ -183,7 +184,7 @@ fun PresetCard(
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Text(
-                    text = preset.name,
+                    text = PresetI18n.getLocalizedPresetName(preset.name),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White,
                     maxLines = 1,
