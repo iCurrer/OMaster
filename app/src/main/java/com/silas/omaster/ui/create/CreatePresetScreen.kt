@@ -50,8 +50,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -76,6 +78,10 @@ import com.silas.omaster.ui.theme.NearBlack
 import com.silas.omaster.ui.theme.PureBlack
 import com.silas.omaster.util.PresetI18n
 import com.silas.omaster.util.formatFilterWithIntensity
+import com.silas.omaster.util.hapticClickable
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import com.silas.omaster.util.perform
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,6 +92,31 @@ fun CreatePresetScreen(
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+    val haptic = LocalHapticFeedback.current
+
+    // 滚动到顶/底部震感
+    var lastScrollValue by remember { mutableIntStateOf(0) }
+    var hasHapticAtTop by remember { mutableStateOf(false) }
+    var hasHapticAtBottom by remember { mutableStateOf(false) }
+
+    LaunchedEffect(scrollState.value) {
+        val currentValue = scrollState.value
+        val maxValue = scrollState.maxValue
+
+        if (currentValue == 0 && !hasHapticAtTop) {
+            haptic.perform(HapticFeedbackType.TextHandleMove)
+            hasHapticAtTop = true
+            hasHapticAtBottom = false
+        } else if (maxValue > 0 && currentValue >= maxValue && !hasHapticAtBottom) {
+            haptic.perform(HapticFeedbackType.TextHandleMove)
+            hasHapticAtBottom = true
+            hasHapticAtTop = false
+        } else if (currentValue > 0 && currentValue < maxValue) {
+            hasHapticAtTop = false
+            hasHapticAtBottom = false
+        }
+        lastScrollValue = currentValue
+    }
 
     // 表单状态
     var name by remember { mutableStateOf("") }
@@ -131,7 +162,7 @@ fun CreatePresetScreen(
                         color = Color.White.copy(alpha = 0.6f),
                         modifier = Modifier
                             .padding(start = 16.dp)
-                            .clickable { onBack() }
+                            .hapticClickable { onBack() }
                     )
                 },
                 actions = {
@@ -141,7 +172,10 @@ fun CreatePresetScreen(
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier
                             .padding(end = 16.dp)
-                            .clickable(enabled = isFormValid) {
+                            .hapticClickable(
+                                type = HapticFeedbackType.Confirm,
+                                enabled = isFormValid
+                            ) {
                                 selectedImageUri?.let { uri ->
                                     val filterWithIntensity = formatFilterWithIntensity(filter, filterIntensity.toInt())
                                     val success = viewModel.createPreset(
@@ -163,7 +197,7 @@ fun CreatePresetScreen(
                                     if (success) {
                                         onSave()
                                     } else {
-                                        // 显示错误提示（可以在这里添加 Toast 或 Snackbar）
+                                        haptic.perform(HapticFeedbackType.Reject)
                                         android.widget.Toast.makeText(
                                             context,
                                             context.getString(R.string.save_failed),
@@ -207,7 +241,7 @@ fun CreatePresetScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .clickable { imagePicker.launch("image/*") }
+                        .hapticClickable { imagePicker.launch("image/*") }
                         .border(
                             width = if (selectedImageUri == null) 2.dp else 0.dp,
                             color = if (selectedImageUri == null) DarkGray else Color.Transparent,
@@ -344,12 +378,18 @@ fun CreatePresetScreen(
                         SelectableChip(
                             text = "Auto",
                             selected = mode == "auto",
-                            onClick = { mode = "auto" }
+                            onClick = {
+                                haptic.perform(HapticFeedbackType.ToggleOn)
+                                mode = "auto"
+                            }
                         )
                         SelectableChip(
                             text = "Pro",
                             selected = mode == "pro",
-                            onClick = { mode = "pro" }
+                            onClick = {
+                                haptic.perform(HapticFeedbackType.ToggleOn)
+                                mode = "pro"
+                            }
                         )
                     }
                 }
@@ -375,7 +415,10 @@ fun CreatePresetScreen(
                                     SelectableChip(
                                         text = PresetI18n.getLocalizedFilterNameOnly(option),
                                         selected = filter == option,
-                                        onClick = { filter = option }
+                                        onClick = {
+                                            haptic.perform(HapticFeedbackType.ToggleOn)
+                                            filter = option
+                                        }
                                     )
                                 }
                             }
@@ -480,7 +523,10 @@ fun CreatePresetScreen(
                             SelectableChip(
                                 text = PresetI18n.getLocalizedSoftLight(option),
                                 selected = softLight == option,
-                                onClick = { softLight = option }
+                                onClick = {
+                                    haptic.perform(HapticFeedbackType.ToggleOn)
+                                    softLight = option
+                                }
                             )
                         }
                     }
@@ -512,12 +558,18 @@ fun CreatePresetScreen(
                         SelectableChip(
                             text = PresetI18n.getLocalizedVignette("开"),
                             selected = vignette == "开",
-                            onClick = { vignette = "开" }
+                            onClick = {
+                                haptic.perform(HapticFeedbackType.ToggleOn)
+                                vignette = "开"
+                            }
                         )
                         SelectableChip(
                             text = PresetI18n.getLocalizedVignette("关"),
                             selected = vignette == "关",
-                            onClick = { vignette = "关" }
+                            onClick = {
+                                haptic.perform(HapticFeedbackType.ToggleOn)
+                                vignette = "关"
+                            }
                         )
                     }
                 }
@@ -526,6 +578,7 @@ fun CreatePresetScreen(
             // 底部保存按钮
             Button(
                 onClick = {
+                    haptic.perform(HapticFeedbackType.Confirm)
                     selectedImageUri?.let { uri ->
                         val filterWithIntensity = formatFilterWithIntensity(filter, filterIntensity.toInt())
                         val success = viewModel.createPreset(
@@ -547,6 +600,7 @@ fun CreatePresetScreen(
                         if (success) {
                             onSave()
                         } else {
+                            haptic.perform(HapticFeedbackType.Reject)
                             android.widget.Toast.makeText(
                                 context,
                                 context.getString(R.string.save_failed),

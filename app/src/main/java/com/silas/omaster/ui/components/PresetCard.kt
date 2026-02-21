@@ -38,12 +38,15 @@ import androidx.compose.ui.unit.sp
 import com.silas.omaster.R
 import com.silas.omaster.model.MasterPreset
 import com.silas.omaster.ui.theme.CardBorderHighlight
-import com.silas.omaster.util.PresetI18n
 import com.silas.omaster.ui.theme.CardBorderLight
 import com.silas.omaster.ui.theme.DarkGray
 import com.silas.omaster.ui.theme.GradientOrangeEnd
 import com.silas.omaster.ui.theme.GradientOrangeStart
 import com.silas.omaster.ui.theme.HasselbladOrange
+import com.silas.omaster.util.PresetI18n
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import com.silas.omaster.util.perform
 
 @Composable
 fun PresetCard(
@@ -58,6 +61,7 @@ fun PresetCard(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
+    val haptic = LocalHapticFeedback.current
     
     val borderColor = if (isPressed) CardBorderHighlight else CardBorderLight
     val borderWidth = if (isPressed) 1.5.dp else 1.dp
@@ -73,7 +77,10 @@ fun PresetCard(
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
-                onClick = onClick
+                onClick = {
+                    haptic.perform(HapticFeedbackType.TextHandleMove)
+                    onClick()
+                }
             ),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
@@ -97,7 +104,10 @@ fun PresetCard(
 
                 if (showFavoriteButton) {
                     IconButton(
-                        onClick = onFavoriteClick,
+                        onClick = {
+                            haptic.perform(HapticFeedbackType.ToggleOn)
+                            onFavoriteClick()
+                        },
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .padding(8.dp)
@@ -130,7 +140,10 @@ fun PresetCard(
 
                 if (showDeleteButton && preset.isCustom) {
                     IconButton(
-                        onClick = onDeleteClick,
+                        onClick = {
+                            haptic.perform(HapticFeedbackType.Confirm)
+                            onDeleteClick()
+                        },
                         modifier = Modifier
                             .align(Alignment.TopStart)
                             .padding(8.dp)

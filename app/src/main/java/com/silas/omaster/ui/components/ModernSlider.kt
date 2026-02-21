@@ -13,14 +13,21 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.silas.omaster.ui.theme.DarkGray
 import com.silas.omaster.ui.theme.HasselbladOrange
+import com.silas.omaster.util.perform
 
 /**
  * 现代化滑块组件
@@ -34,6 +41,10 @@ fun ModernSlider(
     onValueChange: (Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val haptic = LocalHapticFeedback.current
+    var lastHapticValue by remember { mutableFloatStateOf(value) }
+    val stepSize = (range.endInclusive - range.start) / 20
+
     Column(
         modifier = modifier.padding(vertical = 8.dp)
     ) {
@@ -63,7 +74,13 @@ fun ModernSlider(
         Spacer(modifier = Modifier.height(8.dp))
         Slider(
             value = value,
-            onValueChange = onValueChange,
+            onValueChange = { newValue ->
+                onValueChange(newValue)
+                if (kotlin.math.abs(newValue - lastHapticValue) >= stepSize) {
+                    haptic.perform(HapticFeedbackType.TextHandleMove)
+                    lastHapticValue = newValue
+                }
+            },
             valueRange = range,
             colors = SliderDefaults.colors(
                 thumbColor = HasselbladOrange,

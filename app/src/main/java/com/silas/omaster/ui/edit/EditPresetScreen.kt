@@ -53,6 +53,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -79,6 +80,10 @@ import com.silas.omaster.R
 import com.silas.omaster.util.PresetI18n
 import com.silas.omaster.util.formatFilterWithIntensity
 import java.io.File
+import com.silas.omaster.util.hapticClickable
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import com.silas.omaster.util.perform
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,6 +95,31 @@ fun EditPresetScreen(
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+    val haptic = LocalHapticFeedback.current
+
+    // 滚动到顶/底部震感
+    var lastScrollValue by remember { mutableIntStateOf(0) }
+    var hasHapticAtTop by remember { mutableStateOf(false) }
+    var hasHapticAtBottom by remember { mutableStateOf(false) }
+
+    LaunchedEffect(scrollState.value) {
+        val currentValue = scrollState.value
+        val maxValue = scrollState.maxValue
+
+        if (currentValue == 0 && !hasHapticAtTop) {
+            haptic.perform(HapticFeedbackType.TextHandleMove)
+            hasHapticAtTop = true
+            hasHapticAtBottom = false
+        } else if (maxValue > 0 && currentValue >= maxValue && !hasHapticAtBottom) {
+            haptic.perform(HapticFeedbackType.TextHandleMove)
+            hasHapticAtBottom = true
+            hasHapticAtTop = false
+        } else if (currentValue > 0 && currentValue < maxValue) {
+            hasHapticAtTop = false
+            hasHapticAtBottom = false
+        }
+        lastScrollValue = currentValue
+    }
 
     LaunchedEffect(presetId) {
         viewModel.loadPreset(presetId)
@@ -162,7 +192,7 @@ fun EditPresetScreen(
                         color = Color.White.copy(alpha = 0.6f),
                         modifier = Modifier
                             .padding(start = 16.dp)
-                            .clickable { onBack() }
+                            .hapticClickable { onBack() }
                     )
                 },
                 actions = {
@@ -172,7 +202,10 @@ fun EditPresetScreen(
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier
                             .padding(end = 16.dp)
-                            .clickable(enabled = isFormValid) {
+                            .hapticClickable(
+                                type = HapticFeedbackType.Confirm,
+                                enabled = isFormValid
+                            ) {
                                 val filterWithIntensity = formatFilterWithIntensity(filter, filterIntensity.toInt())
                                 val success = viewModel.updatePreset(
                                     name = name,
@@ -193,6 +226,7 @@ fun EditPresetScreen(
                                 if (success) {
                                     onSave()
                                 } else {
+                                    haptic.perform(HapticFeedbackType.Reject)
                                     android.widget.Toast.makeText(
                                         context,
                                         context.getString(R.string.save_failed),
@@ -234,7 +268,7 @@ fun EditPresetScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .clickable { imagePicker.launch("image/*") }
+                        .hapticClickable { imagePicker.launch("image/*") }
                         .border(
                             width = if (selectedImageUri == null && currentCoverPath == null) 2.dp else 0.dp,
                             color = if (selectedImageUri == null && currentCoverPath == null) DarkGray else Color.Transparent,
@@ -376,12 +410,18 @@ fun EditPresetScreen(
                         SelectableChip(
                             text = "Auto",
                             selected = mode == "auto",
-                            onClick = { mode = "auto" }
+                            onClick = {
+                                haptic.perform(HapticFeedbackType.ToggleOn)
+                                mode = "auto"
+                            }
                         )
                         SelectableChip(
                             text = "Pro",
                             selected = mode == "pro",
-                            onClick = { mode = "pro" }
+                            onClick = {
+                                haptic.perform(HapticFeedbackType.ToggleOn)
+                                mode = "pro"
+                            }
                         )
                     }
                 }
@@ -405,7 +445,10 @@ fun EditPresetScreen(
                                     SelectableChip(
                                         text = PresetI18n.getLocalizedFilterNameOnly(option),
                                         selected = filter == option,
-                                        onClick = { filter = option }
+                                        onClick = {
+                                            haptic.perform(HapticFeedbackType.ToggleOn)
+                                            filter = option
+                                        }
                                     )
                                 }
                             }
@@ -504,7 +547,10 @@ fun EditPresetScreen(
                             SelectableChip(
                                 text = PresetI18n.getLocalizedSoftLight(option),
                                 selected = softLight == option,
-                                onClick = { softLight = option }
+                                onClick = {
+                                    haptic.perform(HapticFeedbackType.ToggleOn)
+                                    softLight = option
+                                }
                             )
                         }
                     }
@@ -534,12 +580,18 @@ fun EditPresetScreen(
                         SelectableChip(
                             text = PresetI18n.getLocalizedVignette("开"),
                             selected = vignette == "开",
-                            onClick = { vignette = "开" }
+                            onClick = {
+                                haptic.perform(HapticFeedbackType.ToggleOn)
+                                vignette = "开"
+                            }
                         )
                         SelectableChip(
                             text = PresetI18n.getLocalizedVignette("关"),
                             selected = vignette == "关",
-                            onClick = { vignette = "关" }
+                            onClick = {
+                                haptic.perform(HapticFeedbackType.ToggleOn)
+                                vignette = "关"
+                            }
                         )
                     }
                 }
@@ -547,6 +599,7 @@ fun EditPresetScreen(
 
             Button(
                 onClick = {
+                    haptic.perform(HapticFeedbackType.Confirm)
                     val filterWithIntensity = formatFilterWithIntensity(filter, filterIntensity.toInt())
                     val success = viewModel.updatePreset(
                         name = name,
@@ -567,6 +620,7 @@ fun EditPresetScreen(
                     if (success) {
                         onSave()
                     } else {
+                        haptic.perform(HapticFeedbackType.Reject)
                         android.widget.Toast.makeText(
                             context,
                             context.getString(R.string.save_failed),

@@ -66,6 +66,10 @@ import com.silas.omaster.ui.components.PresetCard
 import com.silas.omaster.ui.service.FloatingWindowController
 import com.silas.omaster.ui.theme.HasselbladOrange
 import com.silas.omaster.ui.theme.PureBlack
+import com.silas.omaster.util.hapticClickable
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import com.silas.omaster.util.perform
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.material3.AlertDialog
@@ -91,6 +95,7 @@ fun HomeScreen(
     val viewModel: HomeViewModel = viewModel(
         factory = HomeViewModelFactory(repository)
     )
+    val haptic = LocalHapticFeedback.current
 
     val allPresets by viewModel.allPresets.collectAsState()
     val favorites by viewModel.favorites.collectAsState()
@@ -175,7 +180,7 @@ fun HomeScreen(
                     Tab(
                         selected = isSelected,
                         onClick = {
-                            // 直接滚动到目标页面，不经过中间页面
+                            haptic.perform(HapticFeedbackType.ToggleOn)
                             scope.launch {
                                 pagerState.scrollToPage(index)
                             }
@@ -264,7 +269,10 @@ fun HomeScreen(
         // 悬浮添加按钮（只在"我的"Tab显示）
         if (selectedTab == 2) {
             FloatingActionButton(
-                onClick = onNavigateToCreate,
+                onClick = {
+                    haptic.perform(HapticFeedbackType.Confirm)
+                    onNavigateToCreate()
+                },
                 containerColor = HasselbladOrange,
                 contentColor = Color.White,
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
@@ -297,6 +305,7 @@ fun HomeScreen(
             confirmButton = {
                 TextButton(
                     onClick = {
+                        haptic.perform(HapticFeedbackType.Confirm)
                         val id = presetToDelete
                         if (id != null) {
                             viewModel.deleteCustomPreset(id)
@@ -311,6 +320,7 @@ fun HomeScreen(
             dismissButton = {
                 TextButton(
                     onClick = {
+                        haptic.perform(HapticFeedbackType.TextHandleMove)
                         showDeleteConfirm = false
                         presetToDelete = null
                     }
@@ -336,6 +346,7 @@ private fun PresetGrid(
     onRefresh: () -> Unit = {}
 ) {
     val listState = rememberLazyStaggeredGridState()
+    val haptic = LocalHapticFeedback.current
 
     // Pull-to-refresh state
     var refreshing by remember { mutableStateOf(false) }
@@ -354,6 +365,8 @@ private fun PresetGrid(
     var isScrollingUp by remember { mutableStateOf(false) }
     var previousIndex by remember { mutableIntStateOf(0) }
     var previousScrollOffset by remember { mutableIntStateOf(0) }
+    var hasHapticAtTop by remember { mutableStateOf(false) }
+    var hasHapticAtBottom by remember { mutableStateOf(false) }
 
     LaunchedEffect(listState) {
         snapshotFlow {
@@ -365,6 +378,27 @@ private fun PresetGrid(
             previousIndex = currentIndex
             previousScrollOffset = currentOffset
             onScrollStateChanged(isUp)
+
+            // 滚动到顶部或底部时触发震感
+            val layoutInfo = listState.layoutInfo
+            val totalItems = layoutInfo.totalItemsCount
+            val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+
+            if (currentIndex == 0 && !hasHapticAtTop) {
+                // 滚动到顶部
+                haptic.perform(HapticFeedbackType.TextHandleMove)
+                hasHapticAtTop = true
+                hasHapticAtBottom = false
+            } else if (lastVisibleItem >= totalItems - 1 && totalItems > 0 && !hasHapticAtBottom) {
+                // 滚动到底部（最后一个可见 item 是最后一个 item）
+                haptic.perform(HapticFeedbackType.TextHandleMove)
+                hasHapticAtBottom = true
+                hasHapticAtTop = false
+            } else if (currentIndex > 0 && lastVisibleItem < totalItems - 1) {
+                // 在中间位置，重置状态
+                hasHapticAtTop = false
+                hasHapticAtBottom = false
+            }
         }
     }
 

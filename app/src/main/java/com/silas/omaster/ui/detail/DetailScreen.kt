@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -58,6 +59,10 @@ import com.silas.omaster.R
 import com.silas.omaster.ui.theme.HasselbladOrange
 import com.silas.omaster.util.PresetI18n
 import com.silas.omaster.util.formatSigned
+import com.silas.omaster.util.hapticClickable
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import com.silas.omaster.util.perform
 
 @Composable
 fun DetailScreen(
@@ -67,6 +72,7 @@ fun DetailScreen(
 ) {
     val context = LocalContext.current
     val repository = remember { PresetRepository.getInstance(context) }
+    val haptic = LocalHapticFeedback.current
     
     // 使用 presetId 作为 key，确保每个预设有独立的 ViewModel
     val viewModel: DetailViewModel = viewModel(
@@ -96,11 +102,15 @@ fun DetailScreen(
         OMasterTopAppBar(
             title = preset?.let { PresetI18n.getLocalizedPresetName(it.name) } ?: stringResource(R.string.detail_title),
             subtitle = preset?.author,
-            onBack = onBack,
+            onBack = {
+                haptic.perform(HapticFeedbackType.TextHandleMove)
+                onBack()
+            },
             actions = {
                 // 悬浮窗按钮
                 IconButton(
                     onClick = {
+                        haptic.perform(HapticFeedbackType.Confirm)
                         preset?.let { p ->
                             val isFirstTime = guideManager.isFirstTimeUseFloatingWindow()
                             android.util.Log.d("DetailScreen", "悬浮窗按钮点击，是否首次使用: $isFirstTime")
@@ -127,6 +137,7 @@ fun DetailScreen(
                 if (preset?.isCustom == true && onEdit != null) {
                     IconButton(
                         onClick = {
+                            haptic.perform(HapticFeedbackType.Confirm)
                             preset?.id?.let { presetId ->
                                 onEdit(presetId)
                             }
@@ -141,7 +152,10 @@ fun DetailScreen(
                 }
 
                 // 收藏按钮
-                IconButton(onClick = { viewModel.toggleFavorite() }) {
+                IconButton(onClick = {
+                    haptic.perform(HapticFeedbackType.ToggleOn)
+                    viewModel.toggleFavorite()
+                }) {
                     Icon(
                         imageVector = if (isFavorite)
                             Icons.Filled.Favorite
@@ -170,10 +184,36 @@ fun DetailScreen(
                     )
                 }
             } else {
+                val scrollState = rememberScrollState()
+
+                // 滚动到顶/底部震感
+                var lastScrollValue by remember { mutableIntStateOf(0) }
+                var hasHapticAtTop by remember { mutableStateOf(false) }
+                var hasHapticAtBottom by remember { mutableStateOf(false) }
+
+                LaunchedEffect(scrollState.value) {
+                    val currentValue = scrollState.value
+                    val maxValue = scrollState.maxValue
+
+                    if (currentValue == 0 && !hasHapticAtTop) {
+                        haptic.perform(HapticFeedbackType.TextHandleMove)
+                        hasHapticAtTop = true
+                        hasHapticAtBottom = false
+                    } else if (maxValue > 0 && currentValue >= maxValue && !hasHapticAtBottom) {
+                        haptic.perform(HapticFeedbackType.TextHandleMove)
+                        hasHapticAtBottom = true
+                        hasHapticAtTop = false
+                    } else if (currentValue > 0 && currentValue < maxValue) {
+                        hasHapticAtTop = false
+                        hasHapticAtBottom = false
+                    }
+                    lastScrollValue = currentValue
+                }
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
+                        .verticalScroll(scrollState)
                         .padding(16.dp)
                 ) {
                     // 图片画廊（支持自动轮播和手动切换）
