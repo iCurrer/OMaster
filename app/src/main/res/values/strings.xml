@@ -219,7 +219,7 @@
     <string name="material_provider">素材提供</string>
 
     <!-- 页脚 -->
-    <string name="footer_local">纯本地化运作，数据存储在本地</string>
+    <string name="footer_local"></string>
     <string name="privacy_policy">《用户协议和隐私政策》</string>
 
     <!-- 隐私政策页 -->
@@ -227,7 +227,7 @@
     <string name="welcome_title">欢迎使用 OMaster</string>
     <string name="welcome_desc">OMaster 是一款专为 OPPO/一加/Realme 手机摄影爱好者设计的调色参数管理工具。在这里，您可以查看、收藏和复现大师模式的摄影调色参数。</string>
     <string name="features_title">功能介绍</string>
-    <string name="features_list">• 查看大师模式调色参数\n• 支持多种预设风格\n• 纯本地化运作，数据存储在本地\n• 无需联网即可使用</string>
+    <string name="features_list">• 查看大师模式调色参数\n• 支持多种预设风格\n• 无需联网即可使用</string>
     <string name="data_collection_title">数据收集说明</string>
     <string name="data_collection_desc">为了提供更好的服务，我们使用了友盟统计分析 SDK 来收集应用使用数据。</string>
     <string name="sdk_info_title">友盟 SDK 信息</string>
@@ -267,8 +267,8 @@
     <string name="feature_1_desc">查看大师模式的专业摄影调色参数</string>
     <string name="feature_2_title">多种风格</string>
     <string name="feature_2_desc">支持多种预设风格，满足不同拍摄需求</string>
-    <string name="feature_3_title">本地存储</string>
-    <string name="feature_3_desc">纯本地化运作，数据存储在本地</string>
+    <string name="feature_3_title">无需联网</string>
+    <string name="feature_3_desc">无需联网即可使用</string>
     <string name="agree_prefix">我已阅读并同意</string>
     <string name="umeng_notice">• 我们使用友盟 SDK 进行统计分析\n• 收集设备信息以优化应用体验</string>
     <string name="privacy_hint">点击《用户协议和隐私政策》查看详细信息</string>

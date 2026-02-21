@@ -89,6 +89,9 @@ import com.silas.omaster.data.repository.PresetRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import com.silas.omaster.util.perform
 
 @Composable
 fun AboutScreen(
@@ -101,6 +104,7 @@ fun AboutScreen(
     var previousScrollValue by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val haptic = LocalHapticFeedback.current
 
     val isScrollingUp by remember {
         derivedStateOf {
@@ -109,6 +113,30 @@ fun AboutScreen(
             previousScrollValue = currentScroll
             isUp
         }
+    }
+
+    // 滚动到顶/底部震感
+    var lastScrollValue by remember { mutableIntStateOf(0) }
+    var hasHapticAtTop by remember { mutableStateOf(false) }
+    var hasHapticAtBottom by remember { mutableStateOf(false) }
+
+    LaunchedEffect(scrollState.value) {
+        val currentValue = scrollState.value
+        val maxValue = scrollState.maxValue
+
+        if (currentValue == 0 && !hasHapticAtTop) {
+            haptic.perform(HapticFeedbackType.TextHandleMove)
+            hasHapticAtTop = true
+            hasHapticAtBottom = false
+        } else if (maxValue > 0 && currentValue >= maxValue && !hasHapticAtBottom) {
+            haptic.perform(HapticFeedbackType.TextHandleMove)
+            hasHapticAtBottom = true
+            hasHapticAtTop = false
+        } else if (currentValue > 0 && currentValue < maxValue) {
+            hasHapticAtTop = false
+            hasHapticAtBottom = false
+        }
+        lastScrollValue = currentValue
     }
 
     var isChecking by remember { mutableStateOf(false) }
@@ -762,15 +790,23 @@ private fun CreditsCard(context: android.content.Context) {
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White.copy(alpha = 0.6f)
                 )
-                Text(
-                    text = stringResource(R.string.developer_name),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White,
-                    fontWeight = FontWeight.Medium
-                )
             }
 
-            Spacer(modifier = Modifier.height(4.dp))
+            // 开发者标签
+            val developers = listOf(
+                "Silas" to "https://github.com/iCurrer",
+                "fengyec2" to "https://github.com/fengyec2"
+            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(start = 24.dp)
+            ) {
+                developers.forEach { (name, url) ->
+                    DeveloperChip(name = name, url = url, context = context)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = stringResource(R.string.material_provider),
@@ -844,15 +880,41 @@ private fun ContributorItem(
 }
 
 @Composable
+private fun DeveloperChip(name: String, url: String, context: android.content.Context) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(16.dp))
+            .background(HasselbladOrange.copy(alpha = 0.15f))
+            .border(
+                width = 1.dp,
+                color = HasselbladOrange.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(16.dp)
+            )
+            .clickable {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                context.startActivity(intent)
+            }
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+    ) {
+        Text(
+            text = "@$name",
+            style = MaterialTheme.typography.bodyMedium,
+            color = HasselbladOrange,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
+@Composable
 private fun FooterSection(context: android.content.Context) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = stringResource(R.string.footer_local),
+            text = "© 2026 OMaster",
             style = MaterialTheme.typography.bodySmall,
-            color = Color.White.copy(alpha = 0.5f)
+            color = Color.White.copy(alpha = 0.4f)
         )
 
         Text(
