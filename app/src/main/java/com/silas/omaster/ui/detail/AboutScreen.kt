@@ -795,7 +795,7 @@ private fun CreditsCard(context: android.content.Context) {
             // 开发者标签
             val developers = listOf(
                 "Silas" to "https://github.com/iCurrer",
-                "fengyec2" to "https://github.com/fengyec2"
+                "Luminary" to "https://github.com/fengyec2"
             )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
