@@ -176,13 +176,13 @@ OMaster 支持的大师模式参数包括：
 {
   "presets": [
     {
-      "name": "新预设",
-      "coverPath": "images/新预设_01.webp",
+      "name": "富士胶片",
+      "coverPath": "images/fsjp_01.webp",
       "galleryImages": [
-        "images/新预设_02.webp",
-        "images/新预设_03.webp"
+        "images/fsjp_02.webp",
+        "images/fsjp_03.webp"
       ],
-      "author": "@作者",
+      "author": "@OPPO影像",
       "mode": "auto",
       "iso": null,
       "shutterSpeed": null,
@@ -191,15 +191,71 @@ OMaster 支持的大师模式参数包括：
       "colorHue": null,
       "whiteBalance": null,
       "colorTone": null,
-      "filter": "滤镜类型",
-      "softLight": "柔光强度",
+      "filter": "复古 100%",
+      "softLight": "无",
       "tone": 0,
       "saturation": 19,
       "warmCool": -5,
       "cyanMagenta": 0,
       "sharpness": 15,
       "vignette": "开",
-      "shootingTips": "【环境建议】XXXX\n【场景推荐】XX、XX、XX、XX\n【拍摄要点】适合追求XXXX感的场景，色彩XXXX，建议XXXX"
+      "sections": [
+        {
+          "title": "@string/section_color_grading",
+          "items": [
+            {
+              "label": "@string/param_filter",
+              "value": "复古 100%",
+              "span": 2
+            },
+            {
+              "label": "@string/param_soft_light",
+              "value": "无",
+              "span": 1
+            },
+            {
+              "label": "@string/param_tone_curve",
+              "value": "0",
+              "span": 1
+            },
+            {
+              "label": "@string/param_saturation",
+              "value": "+19",
+              "span": 1
+            },
+            {
+              "label": "@string/param_warm_cool",
+              "value": "-5",
+              "span": 1
+            },
+            {
+              "label": "@string/param_cyan_magenta",
+              "value": "0",
+              "span": 1
+            },
+            {
+              "label": "@string/param_sharpness",
+              "value": "15",
+              "span": 1
+            },
+            {
+              "label": "@string/param_vignette",
+              "value": "开",
+              "span": 2
+            }
+          ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】日间户外或光线充足的室内\n【场景推荐】街拍、人像、风景、建筑\n【拍摄要点】适合追求经典胶片质感的场景，色彩浓郁复古，建议寻找有光影对比的场景增强层次感",
+              "span": 2
+            }
+          ]
+        }
+      ]
     }
   ]
 }
