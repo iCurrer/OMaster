@@ -98,7 +98,7 @@ data class PresetSection(
  * @param sharpness 锐度，数字 0-100
  * @param vignette 暗角开关，"开" 或 "关"
  * @param isNew 是否为新预设，用于显示 NEW 标签和置顶（手动控制）
- * @param shootingTips 拍摄建议，包含环境及场景建议
+ * @param shootingTips 拍摄建议，包含环境及场景建议（已废弃，仅用于兼容旧版本自定义预设）
  * @param sections 动态参数分组列表，用于替代硬编码的参数显示
  */
 @Serializable
@@ -190,6 +190,24 @@ data class MasterPreset(
 
     fun getDisplaySections(context: Context): List<PresetSection> {
         if (!sections.isNullOrEmpty()) {
+            // 检查 sections 中是否包含 shootingTips（兼容旧版自定义预设）
+            val hasTips = sections.any { section ->
+                section.items.any { it.label == "@string/shooting_tips" }
+            }
+
+            // 如果没有包含且 shootingTips 字段有值，则追加
+            if (!hasTips && !shootingTips.isNullOrEmpty()) {
+                val tipsItem = PresetItem(
+                    label = "@string/shooting_tips",
+                    value = shootingTips,
+                    span = 2
+                )
+                // 创建新列表以避免修改不可变列表
+                val newSections = sections.toMutableList()
+                newSections.add(PresetSection(items = listOf(tipsItem)))
+                return newSections
+            }
+
             return sections
         }
 
@@ -283,6 +301,17 @@ data class MasterPreset(
         ))
 
         generatedSections.add(PresetSection(context.getString(R.string.section_color_grading), colorItems))
+
+        // 3. 拍摄建议 (兼容旧版)
+        if (!shootingTips.isNullOrEmpty()) {
+            generatedSections.add(PresetSection(items = listOf(
+                PresetItem(
+                    label = "@string/shooting_tips",
+                    value = shootingTips,
+                    span = 2
+                )
+            )))
+        }
 
         return generatedSections
     }

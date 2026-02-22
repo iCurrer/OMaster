@@ -248,15 +248,10 @@ fun DetailScreen(
                         Spacer(modifier = Modifier.height(16.dp))
                         
                         // 动态参数展示
-                        DynamicParameters(sections = it.getDisplaySections(context))
-
-                        // 拍摄建议
-                        it.shootingTips?.let { tips ->
-                            Spacer(modifier = Modifier.height(24.dp))
-                            ShootingTipsCard(
-                                tips = PresetI18n.getLocalizedShootingTips(it.name, tips)
-                            )
-                        }
+                        DynamicParameters(
+                            sections = it.getDisplaySections(context),
+                            presetName = it.name
+                        )
                     }
                 }
             }
@@ -306,7 +301,10 @@ private fun handleFloatingWindowClick(
 }
 
 @Composable
-private fun DynamicParameters(sections: List<PresetSection>) {
+private fun DynamicParameters(
+    sections: List<PresetSection>,
+    presetName: String
+) {
     Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
         sections.forEach { section ->
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -325,11 +323,18 @@ private fun DynamicParameters(sections: List<PresetSection>) {
                     val item = items[i]
                     if (item.span == 2) {
                         // Full width
-                        ParameterCard(
-                            label = PresetI18n.resolveStringComposable(item.label),
-                            value = item.value,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        if (item.label == "@string/shooting_tips") {
+                            ShootingTipsCard(
+                                tips = PresetI18n.getLocalizedShootingTips(presetName, item.value),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        } else {
+                            ParameterCard(
+                                label = PresetI18n.resolveStringComposable(item.label),
+                                value = item.value,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                         i++
                     } else {
                         // Half width

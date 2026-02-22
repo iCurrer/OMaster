@@ -24,7 +24,6 @@
       "cyanMagenta": 0,
       "sharpness": 15,
       "vignette": "开",
-      "shootingTips": "【环境建议】日间户外或光线充足的室内\n【场景推荐】街拍、人像、风景、建筑\n【拍摄要点】适合追求经典胶片质感的场景，色彩浓郁复古，建议寻找有光影对比的场景增强层次感",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -70,6 +69,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】日间户外或光线充足的室内\n【场景推荐】街拍、人像、风景、建筑\n【拍摄要点】适合追求经典胶片质感的场景，色彩浓郁复古，建议寻找有光影对比的场景增强层次感",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -97,7 +106,6 @@
       "cyanMagenta": 4,
       "sharpness": 7,
       "vignette": "开",
-      "shootingTips": "【环境建议】自然光或柔和人工光源\n【场景推荐】人像写真、静物、咖啡馆、文艺场景\n【拍摄要点】柔光效果营造梦幻氛围，适合拍摄情绪感照片，建议对焦主体保持清晰",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -143,6 +151,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】自然光或柔和人工光源\n【场景推荐】人像写真、静物、咖啡馆、文艺场景\n【拍摄要点】柔光效果营造梦幻氛围，适合拍摄情绪感照片，建议对焦主体保持清晰",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -170,7 +188,6 @@
       "cyanMagenta": 7,
       "sharpness": 0,
       "vignette": "开",
-      "shootingTips": "【环境建议】清晨、黄昏或阴天散射光\n【场景推荐】儿童摄影、花园、公园、浪漫场景\n【拍摄要点】影调偏暗营造神秘感，梦幻柔光适合营造童话氛围，建议寻找色彩丰富的场景",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -216,6 +233,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】清晨、黄昏或阴天散射光\n【场景推荐】儿童摄影、花园、公园、浪漫场景\n【拍摄要点】影调偏暗营造神秘感，梦幻柔光适合营造童话氛围，建议寻找色彩丰富的场景",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -243,7 +270,6 @@
       "cyanMagenta": -39,
       "sharpness": 0,
       "vignette": "关",
-      "shootingTips": "【环境建议】强烈光影对比场景，如阳光直射或聚光灯\n【场景推荐】建筑、纪实摄影、街头、艺术人像\n【拍摄要点】利用明暗对比突出主体轮廓，适合几何线条和纹理丰富的场景，注意构图简洁有力",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -289,6 +315,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】强烈光影对比场景，如阳光直射或聚光灯\n【场景推荐】建筑、纪实摄影、街头、艺术人像\n【拍摄要点】利用明暗对比突出主体轮廓，适合几何线条和纹理丰富的场景，注意构图简洁有力",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -316,7 +352,6 @@
       "cyanMagenta": -9,
       "sharpness": 10,
       "vignette": "开",
-      "shootingTips": "【环境建议】户外自然光，森林、草地、植物丰富的场景\n【场景推荐】植物摄影、森林漫步、春日户外、清新人像\n【拍摄要点】影调偏亮突出清新感，绿色表现自然通透，适合拍摄植物和户外自然场景",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -362,6 +397,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】户外自然光，森林、草地、植物丰富的场景\n【场景推荐】植物摄影、森林漫步、春日户外、清新人像\n【拍摄要点】影调偏亮突出清新感，绿色表现自然通透，适合拍摄植物和户外自然场景",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -389,7 +434,6 @@
       "cyanMagenta": 19,
       "sharpness": 11,
       "vignette": "开",
-      "shootingTips": "【环境建议】晴朗天气或蓝天背景\n【场景推荐】海边、城市建筑、天空、冷色调场景\n【拍摄要点】偏冷色调增强蓝色表现力，适合拍摄天空、水面和城市建筑，营造通透冷静的氛围",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -435,6 +479,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】晴朗天气或蓝天背景\n【场景推荐】海边、城市建筑、天空、冷色调场景\n【拍摄要点】偏冷色调增强蓝色表现力，适合拍摄天空、水面和城市建筑，营造通透冷静的氛围",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -461,7 +515,6 @@
       "cyanMagenta": 28,
       "sharpness": 12,
       "vignette": "开",
-      "shootingTips": "【环境建议】日出前或日落后20分钟的蓝调时刻\n【场景推荐】城市夜景、灯光璀璨的场景、水面倒影\n【拍摄要点】冷暖对比强烈，适合拍摄城市灯光和夜景，建议寻找有水面的场景增强倒影效果",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -507,6 +560,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】日出前或日落后20分钟的蓝调时刻\n【场景推荐】城市夜景、灯光璀璨的场景、水面倒影\n【拍摄要点】冷暖对比强烈，适合拍摄城市灯光和夜景，建议寻找有水面的场景增强倒影效果",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -534,7 +597,6 @@
       "cyanMagenta": -9,
       "sharpness": 0,
       "vignette": "开",
-      "shootingTips": "【环境建议】逆光或侧逆光场景\n【场景推荐】人像写真、情绪摄影、艺术场景、柔美人像\n【拍摄要点】黑柔滤镜效果营造梦幻氛围，适合拍摄唯美人像，建议利用逆光创造光晕效果",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -580,6 +642,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】逆光或侧逆光场景\n【场景推荐】人像写真、情绪摄影、艺术场景、柔美人像\n【拍摄要点】黑柔滤镜效果营造梦幻氛围，适合拍摄唯美人像，建议利用逆光创造光晕效果",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -607,7 +679,6 @@
       "cyanMagenta": 4,
       "sharpness": 7,
       "vignette": "开",
-      "shootingTips": "【环境建议】日间户外或充足自然光\n【场景推荐】日系人像、街拍、日常记录、旅行摄影\n【拍摄要点】模拟富士NC胶片效果，影调偏亮，色彩柔和自然，适合日常记录和日系风格拍摄",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -653,6 +724,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】日间户外或充足自然光\n【场景推荐】日系人像、街拍、日常记录、旅行摄影\n【拍摄要点】模拟富士NC胶片效果，影调偏亮，色彩柔和自然，适合日常记录和日系风格拍摄",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -680,7 +761,6 @@
       "cyanMagenta": 6,
       "sharpness": 0,
       "vignette": "开",
-      "shootingTips": "【环境建议】自然光或柔和人工光源\n【场景推荐】街头纪实、人文摄影、生活记录、故事性场景\n【拍摄要点】Pro模式参数固定，ISO 50保证画质纯净，轻微欠曝保留细节，适合捕捉真实生活瞬间",
       "sections": [
         {
           "title": "@string/param_pro_adjust",
@@ -756,6 +836,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】自然光或柔和人工光源\n【场景推荐】街头纪实、人文摄影、生活记录、故事性场景\n【拍摄要点】Pro模式参数固定，ISO 50保证画质纯净，轻微欠曝保留细节，适合捕捉真实生活瞬间",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -783,7 +873,6 @@
       "cyanMagenta": -2,
       "sharpness": 3,
       "vignette": "开",
-      "shootingTips": "【环境建议】明亮的户外或室内自然光\n【场景推荐】日系清新人像、校园、旅行、日常生活\n【拍摄要点】影调明亮，饱和度较高，适合清新明亮的人像和场景，建议寻找光线充足的场景拍摄",
       "sections": [
         {
           "title": "@string/param_pro_adjust",
@@ -859,6 +948,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】明亮的户外或室内自然光\n【场景推荐】日系清新人像、校园、旅行、日常生活\n【拍摄要点】影调明亮，饱和度较高，适合清新明亮的人像和场景，建议寻找光线充足的场景拍摄",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -886,7 +985,6 @@
       "cyanMagenta": -15,
       "sharpness": 5,
       "vignette": "开",
-      "shootingTips": "【环境建议】雪天、阴天或低色温场景\n【场景推荐】雪景、冬日街景、暖光室内、节日氛围\n【拍摄要点】偏暖色调平衡雪景冷色，营造温馨氛围，适合拍摄冬日场景和暖光环境",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -932,6 +1030,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】雪天、阴天或低色温场景\n【场景推荐】雪景、冬日街景、暖光室内、节日氛围\n【拍摄要点】偏暖色调平衡雪景冷色，营造温馨氛围，适合拍摄冬日场景和暖光环境",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -958,7 +1066,6 @@
       "cyanMagenta": 0,
       "sharpness": 5,
       "vignette": "开",
-      "shootingTips": "【环境建议】餐厅、厨房、美食拍摄场景\n【场景推荐】美食摄影、饮品、烘焙、精致料理\n【拍摄要点】影调偏暗突出食物质感，饱和度适中保持食物本色，适合拍摄精致美食和饮品",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -1004,6 +1111,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】餐厅、厨房、美食拍摄场景\n【场景推荐】美食摄影、饮品、烘焙、精致料理\n【拍摄要点】影调偏暗突出食物质感，饱和度适中保持食物本色，适合拍摄精致美食和饮品",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -1031,7 +1148,6 @@
       "cyanMagenta": -7,
       "sharpness": 3,
       "vignette": "开",
-      "shootingTips": "【环境建议】日间户外或充足光线\n【场景推荐】街拍、建筑、风景、日常记录\n【拍摄要点】模拟徕卡德味风格，影调深沉，色彩克制，适合追求德味质感的摄影爱好者",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -1077,6 +1193,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】日间户外或充足光线\n【场景推荐】街拍、建筑、风景、日常记录\n【拍摄要点】模拟徕卡德味风格，影调深沉，色彩克制，适合追求德味质感的摄影爱好者",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -1104,7 +1230,6 @@
       "cyanMagenta": -20,
       "sharpness": 3,
       "vignette": "开",
-      "shootingTips": "【环境建议】日间户外或柔和光线\n【场景推荐】人像、风景、日系场景、文艺摄影\n【拍摄要点】Pro模式自动曝光，轻微过曝营造梦幻感，复古色调配合梦幻柔光，适合唯美人像和风景",
       "sections": [
         {
           "title": "@string/param_pro_adjust",
@@ -1170,6 +1295,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】日间户外或柔和光线\n【场景推荐】人像、风景、日系场景、文艺摄影\n【拍摄要点】Pro模式自动曝光，轻微过曝营造梦幻感，复古色调配合梦幻柔光，适合唯美人像和风景",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -1198,7 +1333,6 @@
       "sharpness": 0,
       "vignette": "开",
       "isNew": true,
-      "shootingTips": "【环境建议】光线充足的户外或室内\n【场景推荐】风景、建筑、人像、艺术摄影\n【拍摄要点】模拟哈苏自然色彩解决方案，色彩浓郁但不失真，适合追求高品质色彩表现的场景",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -1244,6 +1378,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】光线充足的户外或室内\n【场景推荐】风景、建筑、人像、艺术摄影\n【拍摄要点】模拟哈苏自然色彩解决方案，色彩浓郁但不失真，适合追求高品质色彩表现的场景",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -1272,7 +1416,6 @@
       "sharpness": 0,
       "vignette": "开",
       "isNew": true,
-      "shootingTips": "【环境建议】晴朗天气或明亮的度假场景\n【场景推荐】海边、度假、旅行、夏日户外\n【拍摄要点】影调明亮通透，饱和度略低营造清新感，适合度假和旅行场景，记录轻松愉快的时光",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -1318,6 +1461,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】晴朗天气或明亮的度假场景\n【场景推荐】海边、度假、旅行、夏日户外\n【拍摄要点】影调明亮通透，饱和度略低营造清新感，适合度假和旅行场景，记录轻松愉快的时光",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -1345,7 +1498,6 @@
       "sharpness": 10,
       "vignette": "开",
       "isNew": true,
-      "shootingTips": "【环境建议】柔和光线或阴天\n【场景推荐】情绪人像、艺术摄影、静物、建筑\n【拍摄要点】保留轻微色彩信息，梦幻柔光营造艺术感，适合追求艺术表达的黑白摄影",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -1391,6 +1543,16 @@
               "span": 2
             }
           ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】柔和光线或阴天\n【场景推荐】情绪人像、艺术摄影、静物、建筑\n【拍摄要点】保留轻微色彩信息，梦幻柔光营造艺术感，适合追求艺术表达的黑白摄影",
+              "span": 2
+            }
+          ]
         }
       ]
     },
@@ -1418,7 +1580,6 @@
       "sharpness": 0,
       "vignette": "开",
       "isNew": true,
-      "shootingTips": "【环境建议】餐厅、咖啡馆、温馨室内\n【场景推荐】美食、甜品、饮品、精致小物\n【拍摄要点】梦幻柔光营造温馨氛围，影调略暗突出质感，适合拍摄精致美食和温馨场景",
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -1461,6 +1622,16 @@
             {
               "label": "@string/param_vignette",
               "value": "开",
+              "span": 2
+            }
+          ]
+        },
+        {
+          "title": null,
+          "items": [
+            {
+              "label": "@string/shooting_tips",
+              "value": "【环境建议】餐厅、咖啡馆、温馨室内\n【场景推荐】美食、甜品、饮品、精致小物\n【拍摄要点】梦幻柔光营造温馨氛围，影调略暗突出质感，适合拍摄精致美食和温馨场景",
               "span": 2
             }
           ]
