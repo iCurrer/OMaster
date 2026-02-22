@@ -108,7 +108,7 @@ data class MasterPreset(
     val coverPath: String,
     val galleryImages: List<String>? = null,
     val author: String = "@OPPO影像",
-    val mode: String,
+    val mode: String? = null,
     val filter: String? = null,
     val whiteBalance: String? = null,
     val colorTone: String? = null,
@@ -128,7 +128,8 @@ data class MasterPreset(
     val isCustom: Boolean = false,
     val isNew: Boolean = false,
     val shootingTips: String? = null,
-    val sections: List<PresetSection>? = null
+    val sections: List<PresetSection>? = null,
+    val tags: List<String> = emptyList()
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         id = parcel.readString(),
@@ -156,7 +157,8 @@ data class MasterPreset(
         isCustom = parcel.readByte() != 0.toByte(),
         isNew = parcel.readByte() != 0.toByte(),
         shootingTips = parcel.readString(),
-        sections = parcel.createTypedArrayList(PresetSection.CREATOR)
+        sections = parcel.createTypedArrayList(PresetSection.CREATOR),
+        tags = parcel.createStringArrayList() ?: emptyList()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -186,6 +188,7 @@ data class MasterPreset(
         parcel.writeByte(if (isNew) 1 else 0)
         parcel.writeString(shootingTips)
         parcel.writeTypedList(sections)
+        parcel.writeStringList(tags)
     }
 
     fun getDisplaySections(context: Context): List<PresetSection> {
@@ -349,12 +352,16 @@ data class MasterPreset(
     /**
      * 是否为 Pro 模式
      */
-    val isProMode: Boolean get() = mode.lowercase() == "pro"
+    val isProMode: Boolean
+        get() = tags.any { it.equals("pro", ignoreCase = true) } ||
+                mode?.equals("pro", ignoreCase = true) == true
 
     /**
      * 是否为 Auto 模式
      */
-    val isAutoMode: Boolean get() = mode.lowercase() == "auto"
+    val isAutoMode: Boolean
+        get() = tags.any { it.equals("auto", ignoreCase = true) } ||
+                mode?.equals("auto", ignoreCase = true) == true
 
     /**
      * 获取所有展示图片（封面 + 图库）

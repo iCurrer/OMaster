@@ -244,7 +244,7 @@ fun DetailScreen(
 
                         Spacer(modifier = Modifier.height(16.dp))
                         // 模式标签
-                        ModeBadge(mode = it.mode)
+                        ModeBadge(tags = it.tags)
 
                         Spacer(modifier = Modifier.height(16.dp))
                         

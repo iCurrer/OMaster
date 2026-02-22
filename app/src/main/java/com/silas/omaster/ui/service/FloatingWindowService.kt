@@ -18,6 +18,8 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.silas.omaster.R
+import com.silas.omaster.model.PresetItem
+import com.silas.omaster.model.PresetSection
 import com.silas.omaster.util.PresetI18n
 import com.silas.omaster.util.formatSigned
 
@@ -30,6 +32,7 @@ import com.silas.omaster.util.formatSigned
  * 3. 图标化参数展示
  * 4. 精致的收起/展开动画
  * 5. 悬浮球采用品牌色渐变
+ * 6. 动态渲染内容（基于 sections）
  */
 class FloatingWindowService : Service() {
 
@@ -49,19 +52,7 @@ class FloatingWindowService : Service() {
 
     companion object {
         private const val EXTRA_NAME = "name"
-        private const val EXTRA_FILTER = "filter"
-        private const val EXTRA_SOFT_LIGHT = "soft_light"
-        private const val EXTRA_TONE = "tone"
-        private const val EXTRA_SATURATION = "saturation"
-        private const val EXTRA_WARM_COOL = "warm_cool"
-        private const val EXTRA_CYAN_MAGENTA = "cyan_magenta"
-        private const val EXTRA_SHARPNESS = "sharpness"
-        private const val EXTRA_VIGNETTE = "vignette"
-        private const val EXTRA_WHITE_BALANCE = "white_balance"
-        private const val EXTRA_COLOR_TONE = "color_tone"
-        private const val EXTRA_EXPOSURE = "exposure"
-        private const val EXTRA_COLOR_TEMPERATURE = "color_temperature"
-        private const val EXTRA_COLOR_HUE = "color_hue"
+        private const val EXTRA_SECTIONS = "sections"
         private const val EXTRA_PRESET_ID = "preset_id"
         private const val EXTRA_PRESET_INDEX = "preset_index"
         private const val EXTRA_PRESET_LIST = "preset_list"
@@ -88,19 +79,10 @@ class FloatingWindowService : Service() {
             val intent = Intent(context, FloatingWindowService::class.java).apply {
                 putExtra(EXTRA_ACTION, ACTION_SHOW)
                 putExtra(EXTRA_NAME, preset.name)
-                putExtra(EXTRA_FILTER, preset.filter)
-                putExtra(EXTRA_SOFT_LIGHT, preset.softLight)
-                putExtra(EXTRA_TONE, preset.tone ?: 0)
-                putExtra(EXTRA_SATURATION, preset.saturation ?: 0)
-                putExtra(EXTRA_WARM_COOL, preset.warmCool ?: 0)
-                putExtra(EXTRA_CYAN_MAGENTA, preset.cyanMagenta ?: 0)
-                putExtra(EXTRA_SHARPNESS, preset.sharpness ?: 0)
-                putExtra(EXTRA_VIGNETTE, preset.vignette)
-                putExtra(EXTRA_WHITE_BALANCE, preset.whiteBalance ?: "")
-                putExtra(EXTRA_COLOR_TONE, preset.colorTone ?: "")
-                putExtra(EXTRA_EXPOSURE, preset.exposureCompensation ?: "")
-                putExtra(EXTRA_COLOR_TEMPERATURE, preset.colorTemperature ?: -1)
-                putExtra(EXTRA_COLOR_HUE, preset.colorHue ?: -999)
+                // 获取动态生成的 sections
+                val sections = preset.getDisplaySections(context)
+                putParcelableArrayListExtra(EXTRA_SECTIONS, ArrayList(sections))
+                
                 putExtra(EXTRA_PRESET_ID, preset.id ?: "")
                 putExtra(EXTRA_PRESET_INDEX, presetIndex)
                 putStringArrayListExtra(EXTRA_PRESET_LIST, ArrayList(presetIds))
@@ -116,19 +98,9 @@ class FloatingWindowService : Service() {
             val intent = Intent(context, FloatingWindowService::class.java).apply {
                 putExtra(EXTRA_ACTION, ACTION_UPDATE)
                 putExtra(EXTRA_NAME, preset.name)
-                putExtra(EXTRA_FILTER, preset.filter)
-                putExtra(EXTRA_SOFT_LIGHT, preset.softLight)
-                putExtra(EXTRA_TONE, preset.tone ?: 0)
-                putExtra(EXTRA_SATURATION, preset.saturation ?: 0)
-                putExtra(EXTRA_WARM_COOL, preset.warmCool ?: 0)
-                putExtra(EXTRA_CYAN_MAGENTA, preset.cyanMagenta ?: 0)
-                putExtra(EXTRA_SHARPNESS, preset.sharpness ?: 0)
-                putExtra(EXTRA_VIGNETTE, preset.vignette)
-                putExtra(EXTRA_WHITE_BALANCE, preset.whiteBalance ?: "")
-                putExtra(EXTRA_COLOR_TONE, preset.colorTone ?: "")
-                putExtra(EXTRA_EXPOSURE, preset.exposureCompensation ?: "")
-                putExtra(EXTRA_COLOR_TEMPERATURE, preset.colorTemperature ?: -1)
-                putExtra(EXTRA_COLOR_HUE, preset.colorHue ?: -999)
+                val sections = preset.getDisplaySections(context)
+                putParcelableArrayListExtra(EXTRA_SECTIONS, ArrayList(sections))
+                
                 putExtra(EXTRA_PRESET_ID, preset.id ?: "")
                 putExtra(EXTRA_PRESET_INDEX, presetIndex)
                 putStringArrayListExtra(EXTRA_PRESET_LIST, ArrayList(presetIds))
@@ -170,19 +142,8 @@ class FloatingWindowService : Service() {
         val action = intent.getStringExtra(EXTRA_ACTION) ?: ACTION_SHOW
         val rawName = intent.getStringExtra(EXTRA_NAME) ?: getString(R.string.floating_preset)
         val name = PresetI18n.getLocalizedPresetName(this, rawName)
-        val filter = intent.getStringExtra(EXTRA_FILTER) ?: getString(R.string.floating_original)
-        val softLight = intent.getStringExtra(EXTRA_SOFT_LIGHT) ?: getString(R.string.soft_none)
-        val tone = intent.getIntExtra(EXTRA_TONE, 0)
-        val saturation = intent.getIntExtra(EXTRA_SATURATION, 0)
-        val warmCool = intent.getIntExtra(EXTRA_WARM_COOL, 0)
-        val cyanMagenta = intent.getIntExtra(EXTRA_CYAN_MAGENTA, 0)
-        val sharpness = intent.getIntExtra(EXTRA_SHARPNESS, 0)
-        val vignette = intent.getStringExtra(EXTRA_VIGNETTE) ?: getString(R.string.vignette_off)
-        val whiteBalance = intent.getStringExtra(EXTRA_WHITE_BALANCE) ?: ""
-        val colorTone = intent.getStringExtra(EXTRA_COLOR_TONE) ?: ""
-        val exposure = intent.getStringExtra(EXTRA_EXPOSURE) ?: ""
-        val colorTemperature = intent.getIntExtra(EXTRA_COLOR_TEMPERATURE, -1)
-        val colorHue = intent.getIntExtra(EXTRA_COLOR_HUE, -999)
+        
+        val sections = intent.getParcelableArrayListExtra<PresetSection>(EXTRA_SECTIONS) ?: arrayListOf()
 
         isExpanded = intent.getBooleanExtra(EXTRA_IS_EXPANDED, true)
         val savedX = intent.getIntExtra(EXTRA_POS_X, -1)
@@ -195,9 +156,7 @@ class FloatingWindowService : Service() {
             ACTION_UPDATE -> {
                 // 更新模式：只更新内容，不移除窗口（避免闪动）
                 updateWindowContent(
-                    name, filter, softLight, tone, saturation, warmCool,
-                    cyanMagenta, sharpness, vignette, whiteBalance, colorTone,
-                    exposure, colorTemperature, colorHue, currentIndex, totalCount
+                    name, sections, currentIndex, totalCount
                 )
             }
             else -> {
@@ -205,16 +164,12 @@ class FloatingWindowService : Service() {
                 removeWindow()
                 if (isExpanded) {
                     showExpandedWindow(
-                        name, filter, softLight, tone, saturation, warmCool,
-                        cyanMagenta, sharpness, vignette, whiteBalance, colorTone,
-                        exposure, colorTemperature, colorHue, savedX, savedY,
+                        name, sections, savedX, savedY,
                         currentIndex, totalCount
                     )
                 } else {
                     showCollapsedWindow(
-                        name, filter, softLight, tone, saturation, warmCool,
-                        cyanMagenta, sharpness, vignette, whiteBalance, colorTone,
-                        exposure, colorTemperature, colorHue, savedX, savedY
+                        name, sections, savedX, savedY
                     )
                 }
             }
@@ -232,28 +187,14 @@ class FloatingWindowService : Service() {
      */
     private fun updateWindowContent(
         name: String,
-        filter: String,
-        softLight: String,
-        tone: Int,
-        saturation: Int,
-        warmCool: Int,
-        cyanMagenta: Int,
-        sharpness: Int,
-        vignette: String,
-        whiteBalance: String,
-        colorTone: String,
-        exposure: String,
-        colorTemperature: Int,
-        colorHue: Int,
+        sections: ArrayList<PresetSection>,
         currentIndex: Int,
         totalCount: Int
     ) {
         // 如果窗口不存在，直接创建新窗口
         if (floatingView == null || mainContainer == null) {
             showExpandedWindow(
-                name, filter, softLight, tone, saturation, warmCool,
-                cyanMagenta, sharpness, vignette, whiteBalance, colorTone,
-                exposure, colorTemperature, colorHue, 50, 300,
+                name, sections, 50, 300,
                 currentIndex, totalCount
             )
             return
@@ -265,49 +206,14 @@ class FloatingWindowService : Service() {
 
             // 尝试直接更新视图内容，避免重建视图
             val contentContainer = mainContainer?.findViewWithTag<LinearLayout>("content_container")
-            if (contentContainer != null) {
-                val tvFilter = contentContainer.findViewWithTag<TextView>("val_filter")
-                val tvSoftLight = contentContainer.findViewWithTag<TextView>("val_soft_light")
-                val tvTone = contentContainer.findViewWithTag<TextView>("val_tone")
-                val tvSaturation = contentContainer.findViewWithTag<TextView>("val_saturation")
-                val tvWarmCool = contentContainer.findViewWithTag<TextView>("val_warm_cool")
-                val tvCyanMagenta = contentContainer.findViewWithTag<TextView>("val_cyan_magenta")
-                val tvSharpness = contentContainer.findViewWithTag<TextView>("val_sharpness")
-                val tvVignette = contentContainer.findViewWithTag<TextView>("val_vignette")
-
-                if (tvFilter != null && tvSoftLight != null && tvTone != null && 
-                    tvSaturation != null && tvWarmCool != null && tvCyanMagenta != null && 
-                    tvSharpness != null && tvVignette != null) {
-                    
-                    // 直接更新文本
-                    tvFilter.text = PresetI18n.getLocalizedFilter(this@FloatingWindowService, filter)
-                    tvSoftLight.text = PresetI18n.getLocalizedSoftLight(this@FloatingWindowService, softLight)
-                    tvTone.text = tone.formatSigned()
-                    tvSaturation.text = saturation.formatSigned()
-                    tvWarmCool.text = warmCool.formatSigned()
-                    tvCyanMagenta.text = cyanMagenta.formatSigned()
-                    tvSharpness.text = sharpness.toString()
-                    tvVignette.text = PresetI18n.getLocalizedVignette(this@FloatingWindowService, vignette)
-                    
-                    // 仅在必要时请求布局
-                    return
-                }
-            }
-
-            // 如果找不到视图（首次创建或结构变化），则重建内容区域
-            // 创建新的内容区域
-            val newContent = createContentArea(
-                filter, softLight, tone, saturation, warmCool,
-                cyanMagenta, sharpness, vignette, whiteBalance, colorTone,
-                exposure, colorTemperature, colorHue
-            )
-
+            
+            // 简单起见，直接重建内容区域，因为 sections 结构可能变化
             // 移除旧内容并添加新内容
             contentContainer?.let { container ->
                 // 使用 post 确保在 UI 线程执行
                 container.post {
                     container.removeAllViews()
-                    container.addView(newContent)
+                    container.addView(createContentArea(sections))
                     // 请求重新布局
                     container.requestLayout()
                     floatingView?.requestLayout()
@@ -317,9 +223,7 @@ class FloatingWindowService : Service() {
             e.printStackTrace()
             // 如果更新失败，重新创建窗口
             showExpandedWindow(
-                name, filter, softLight, tone, saturation, warmCool,
-                cyanMagenta, sharpness, vignette, whiteBalance, colorTone,
-                exposure, colorTemperature, colorHue, params?.x ?: 50, params?.y ?: 300,
+                name, sections, params?.x ?: 50, params?.y ?: 300,
                 currentIndex, totalCount
             )
         }
@@ -329,19 +233,7 @@ class FloatingWindowService : Service() {
 
     private fun showExpandedWindow(
         name: String,
-        filter: String,
-        softLight: String,
-        tone: Int,
-        saturation: Int,
-        warmCool: Int,
-        cyanMagenta: Int,
-        sharpness: Int,
-        vignette: String,
-        whiteBalance: String,
-        colorTone: String,
-        exposure: String,
-        colorTemperature: Int,
-        colorHue: Int,
+        sections: ArrayList<PresetSection>,
         savedX: Int = -1,
         savedY: Int = -1,
         currentIndex: Int = 0,
@@ -368,10 +260,8 @@ class FloatingWindowService : Service() {
             }
 
             val rootLayout = createExpandedView(
-                name, filter, softLight, tone, saturation, warmCool,
-                cyanMagenta, sharpness, vignette, whiteBalance, colorTone,
-                exposure, colorTemperature, colorHue, currentIndex, totalCount
-            ) { collapseToBubble(name, filter, softLight, tone, saturation, warmCool, cyanMagenta, sharpness, vignette, whiteBalance, colorTone, exposure, colorTemperature, colorHue) }
+                name, sections, currentIndex, totalCount
+            ) { collapseToBubble(name, sections) }
 
             floatingView = rootLayout
             wm.addView(floatingView, params)
@@ -385,19 +275,7 @@ class FloatingWindowService : Service() {
 
     private fun showCollapsedWindow(
         name: String,
-        filter: String,
-        softLight: String,
-        tone: Int,
-        saturation: Int,
-        warmCool: Int,
-        cyanMagenta: Int,
-        sharpness: Int,
-        vignette: String,
-        whiteBalance: String,
-        colorTone: String,
-        exposure: String,
-        colorTemperature: Int,
-        colorHue: Int,
+        sections: ArrayList<PresetSection>,
         savedX: Int = -1,
         savedY: Int = -1
     ) {
@@ -424,19 +302,7 @@ class FloatingWindowService : Service() {
             val miniButton = createCollapsedView(name) {
                 val intent = Intent(this, FloatingWindowService::class.java).apply {
                     putExtra(EXTRA_NAME, name)
-                    putExtra(EXTRA_FILTER, filter)
-                    putExtra(EXTRA_SOFT_LIGHT, softLight)
-                    putExtra(EXTRA_TONE, tone)
-                    putExtra(EXTRA_SATURATION, saturation)
-                    putExtra(EXTRA_WARM_COOL, warmCool)
-                    putExtra(EXTRA_CYAN_MAGENTA, cyanMagenta)
-                    putExtra(EXTRA_SHARPNESS, sharpness)
-                    putExtra(EXTRA_VIGNETTE, vignette)
-                    putExtra(EXTRA_WHITE_BALANCE, whiteBalance)
-                    putExtra(EXTRA_COLOR_TONE, colorTone)
-                    putExtra(EXTRA_EXPOSURE, exposure)
-                    putExtra(EXTRA_COLOR_TEMPERATURE, colorTemperature)
-                    putExtra(EXTRA_COLOR_HUE, colorHue)
+                    putParcelableArrayListExtra(EXTRA_SECTIONS, sections)
                     putExtra(EXTRA_IS_EXPANDED, true)
                     putExtra(EXTRA_POS_X, params?.x ?: 50)
                     putExtra(EXTRA_POS_Y, params?.y ?: 300)
@@ -458,19 +324,7 @@ class FloatingWindowService : Service() {
      */
     private fun createExpandedView(
         name: String,
-        filter: String,
-        softLight: String,
-        tone: Int,
-        saturation: Int,
-        warmCool: Int,
-        cyanMagenta: Int,
-        sharpness: Int,
-        vignette: String,
-        whiteBalance: String,
-        colorTone: String,
-        exposure: String,
-        colorTemperature: Int,
-        colorHue: Int,
+        sections: ArrayList<PresetSection>,
         currentIndex: Int = 0,
         totalCount: Int = 1,
         onCollapse: () -> Unit
@@ -509,11 +363,7 @@ class FloatingWindowService : Service() {
             }
 
             // 添加内容
-            contentContainer.addView(createContentArea(
-                filter, softLight, tone, saturation, warmCool,
-                cyanMagenta, sharpness, vignette, whiteBalance, colorTone,
-                exposure, colorTemperature, colorHue
-            ))
+            contentContainer.addView(createContentArea(sections))
 
             container.addView(contentContainer)
             addView(container)
@@ -521,55 +371,72 @@ class FloatingWindowService : Service() {
     }
 
     /**
-     * 创建内容区域（可复用）
+     * 创建内容区域（可复用） - 动态渲染
      */
-    private fun createContentArea(
-        filter: String,
-        softLight: String,
-        tone: Int,
-        saturation: Int,
-        warmCool: Int,
-        cyanMagenta: Int,
-        sharpness: Int,
-        vignette: String,
-        whiteBalance: String,
-        colorTone: String,
-        exposure: String,
-        colorTemperature: Int,
-        colorHue: Int
-    ): LinearLayout {
+    private fun createContentArea(sections: List<PresetSection>): LinearLayout {
         return LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
 
-            // 基础参数区域
-            addView(createSectionTitle(getString(R.string.floating_basic_params)))
+            sections.forEach { section ->
+                // Section Title
+                section.title?.let { title ->
+                    addView(createSectionTitle(title))
+                }
 
-            // 滤镜 - 高亮显示 - 添加 Tag
-            addView(createHighlightedParam(getString(R.string.floating_filter_icon), getString(R.string.floating_filter_label), PresetI18n.getLocalizedFilter(this@FloatingWindowService, filter), "val_filter"))
-
-            // 其他参数网格
-            val paramGrid = LinearLayout(context).apply {
-                orientation = LinearLayout.VERTICAL
+                // Section Items
+                val items = section.items
+                var i = 0
+                while (i < items.size) {
+                    val item = items[i]
+                    if (item.span == 2) {
+                        // Full width item (highlighted)
+                        val icon = getIconForLabel(item.label)
+                        addView(createHighlightedParam(icon, item.label, item.value))
+                        i++
+                    } else {
+                        // Half width item
+                        val left = item
+                        var right: PresetItem? = null
+                        if (i + 1 < items.size && items[i+1].span == 1) {
+                            right = items[i+1]
+                            i++
+                        }
+                        
+                        val leftIcon = getIconForLabel(left.label)
+                        val leftView = createSmallParamItem(leftIcon, left.label, left.value)
+                        
+                        val rightView = right?.let {
+                            val rightIcon = getIconForLabel(it.label)
+                            createSmallParamItem(rightIcon, it.label, it.value)
+                        }
+                        
+                        addView(createParamRow(leftView, rightView))
+                        i++
+                    }
+                }
             }
-
-            paramGrid.addView(createParamRow(
-                createSmallParamItem(getString(R.string.floating_soft_icon), getString(R.string.floating_soft_label), PresetI18n.getLocalizedSoftLight(this@FloatingWindowService, softLight), "val_soft_light"),
-                createSmallParamItem(getString(R.string.floating_tone_icon), getString(R.string.floating_tone_label), tone.formatSigned(), "val_tone")
-            ))
-            paramGrid.addView(createParamRow(
-                createSmallParamItem(getString(R.string.floating_saturation_icon), getString(R.string.floating_saturation_label), saturation.formatSigned(), "val_saturation"),
-                createSmallParamItem(getString(R.string.floating_warm_icon), getString(R.string.floating_warm_label), warmCool.formatSigned(), "val_warm_cool")
-            ))
-            paramGrid.addView(createParamRow(
-                createSmallParamItem(getString(R.string.floating_cyan_icon), getString(R.string.floating_cyan_label), cyanMagenta.formatSigned(), "val_cyan_magenta"),
-                createSmallParamItem(getString(R.string.floating_sharpness_icon), getString(R.string.floating_sharpness_label), sharpness.toString(), "val_sharpness")
-            ))
-            paramGrid.addView(createParamRow(
-                createSmallParamItem(getString(R.string.floating_vignette_icon), getString(R.string.floating_vignette_label), PresetI18n.getLocalizedVignette(this@FloatingWindowService, vignette), "val_vignette"),
-                null
-            ))
-
-            addView(paramGrid)
+        }
+    }
+    
+    /**
+     * 根据标签获取对应图标
+     */
+    private fun getIconForLabel(label: String): String {
+        return when {
+            label.contains("滤镜") || label.contains("Filter") -> getString(R.string.floating_filter_icon)
+            label.contains("柔光") || label.contains("Soft") -> getString(R.string.floating_soft_icon)
+            label.contains("影调") || label.contains("Tone") -> getString(R.string.floating_tone_icon)
+            label.contains("饱和") || label.contains("Saturation") -> getString(R.string.floating_saturation_icon)
+            label.contains("冷暖") || label.contains("Warm") -> getString(R.string.floating_warm_icon)
+            label.contains("青品") || label.contains("Cyan") -> getString(R.string.floating_cyan_icon)
+            label.contains("锐度") || label.contains("Sharpness") -> getString(R.string.floating_sharpness_icon)
+            label.contains("暗角") || label.contains("Vignette") -> getString(R.string.floating_vignette_icon)
+            label.contains("白平衡") || label.contains("WB") -> "🌡️"
+            label.contains("曝光") || label.contains("EV") -> "☀️"
+            label.contains("ISO") -> "📸"
+            label.contains("快门") || label.contains("Shutter") -> "⏱️"
+            label.contains("建议") || label.contains("Tips") -> "💡"
+            else -> "⚙️"
         }
     }
 
@@ -788,41 +655,6 @@ class FloatingWindowService : Service() {
     }
 
     /**
-     * 创建普通参数项
-     */
-    private fun createParamItem(icon: String, label: String, value: String): LinearLayout {
-        return LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-            setPadding(dpToPx(8), dpToPx(6), dpToPx(8), dpToPx(6))
-
-            // 图标
-            addView(TextView(context).apply {
-                text = icon
-                textSize = 14f
-                setTextColor(textMuted)
-            })
-
-            addView(createSpacing(dpToPx(6)))
-
-            // 标签
-            addView(TextView(context).apply {
-                text = label
-                textSize = 13f
-                setTextColor(textSecondary)
-                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            })
-
-            // 值
-            addView(TextView(context).apply {
-                text = value
-                textSize = 13f
-                setTextColor(textPrimary)
-            })
-        }
-    }
-
-    /**
      * 创建小型参数项（用于网格）
      */
     private fun createSmallParamItem(icon: String, label: String, value: String, valueTag: String? = null): LinearLayout {
@@ -926,19 +758,7 @@ class FloatingWindowService : Service() {
 
     private fun collapseToBubble(
         name: String,
-        filter: String,
-        softLight: String,
-        tone: Int,
-        saturation: Int,
-        warmCool: Int,
-        cyanMagenta: Int,
-        sharpness: Int,
-        vignette: String,
-        whiteBalance: String,
-        colorTone: String,
-        exposure: String,
-        colorTemperature: Int,
-        colorHue: Int
+        sections: ArrayList<PresetSection>
     ) {
         try {
             val currentX = params?.x ?: 50
@@ -949,19 +769,7 @@ class FloatingWindowService : Service() {
 
             val intent = Intent(this, FloatingWindowService::class.java).apply {
                 putExtra(EXTRA_NAME, name)
-                putExtra(EXTRA_FILTER, filter)
-                putExtra(EXTRA_SOFT_LIGHT, softLight)
-                putExtra(EXTRA_TONE, tone)
-                putExtra(EXTRA_SATURATION, saturation)
-                putExtra(EXTRA_WARM_COOL, warmCool)
-                putExtra(EXTRA_CYAN_MAGENTA, cyanMagenta)
-                putExtra(EXTRA_SHARPNESS, sharpness)
-                putExtra(EXTRA_VIGNETTE, vignette)
-                putExtra(EXTRA_WHITE_BALANCE, whiteBalance)
-                putExtra(EXTRA_COLOR_TONE, colorTone)
-                putExtra(EXTRA_EXPOSURE, exposure)
-                putExtra(EXTRA_COLOR_TEMPERATURE, colorTemperature)
-                putExtra(EXTRA_COLOR_HUE, colorHue)
+                putParcelableArrayListExtra(EXTRA_SECTIONS, sections)
                 putExtra(EXTRA_IS_EXPANDED, false)
                 putExtra(EXTRA_POS_X, currentX)
                 putExtra(EXTRA_POS_Y, currentY)

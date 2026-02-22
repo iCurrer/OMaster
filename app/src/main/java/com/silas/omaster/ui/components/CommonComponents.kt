@@ -212,10 +212,10 @@ fun HorizontalSpacer(width: Dp) = Spacer(modifier = Modifier.width(width))
  */
 @Composable
 fun ModeBadge(
-    mode: String,
+    tags: List<String>,
     modifier: Modifier = Modifier
 ) {
-    val isPro = mode.lowercase() == "pro"
+    val isPro = tags.any { it.equals("pro", ignoreCase = true) }
     val backgroundColor = if (isPro) HasselbladOrange else DarkGray
     val text = if (isPro) stringResource(R.string.mode_pro) else stringResource(R.string.mode_auto)
 
