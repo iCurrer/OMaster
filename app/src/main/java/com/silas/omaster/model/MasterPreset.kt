@@ -218,36 +218,35 @@ data class MasterPreset(
         val generatedSections = mutableListOf<PresetSection>()
 
         // 1. Pro 模式参数
-        if (isProMode) {
-            val proItems = mutableListOf<PresetItem>()
-            
-            iso?.let {
-                proItems.add(PresetItem(context.getString(R.string.param_iso), it, 1))
-            }
-            shutterSpeed?.let {
-                proItems.add(PresetItem(context.getString(R.string.param_shutter), it, 1))
-            }
-            exposureCompensation?.let {
-                proItems.add(PresetItem(context.getString(R.string.param_exposure), it, 1))
-            }
-            
-            // 色温/白平衡
-            if (colorTemperature != null) {
-                proItems.add(PresetItem(context.getString(R.string.param_color_temp), "${colorTemperature}K", 1))
-            } else if (whiteBalance != null) {
-                proItems.add(PresetItem(context.getString(R.string.param_white_balance), whiteBalance, 1))
-            }
-            
-            // 色调
-            if (colorHue != null) {
-                proItems.add(PresetItem(context.getString(R.string.param_tone), colorHue.formatSigned(), 1))
-            } else if (colorTone != null) {
-                proItems.add(PresetItem(context.getString(R.string.param_tone_style), colorTone, 1))
-            }
+        // 兼容逻辑：如果有 ISO 或快门等参数，自动归类为 Pro 模式参数
+        val proItems = mutableListOf<PresetItem>()
+        
+        iso?.let {
+            proItems.add(PresetItem(context.getString(R.string.param_iso), it, 1))
+        }
+        shutterSpeed?.let {
+            proItems.add(PresetItem(context.getString(R.string.param_shutter), it, 1))
+        }
+        exposureCompensation?.let {
+            proItems.add(PresetItem(context.getString(R.string.param_exposure), it, 1))
+        }
+        
+        // 色温/白平衡
+        if (colorTemperature != null) {
+            proItems.add(PresetItem(context.getString(R.string.param_color_temp), "${colorTemperature}K", 1))
+        } else if (whiteBalance != null) {
+            proItems.add(PresetItem(context.getString(R.string.param_white_balance), whiteBalance, 1))
+        }
+        
+        // 色调
+        if (colorHue != null) {
+            proItems.add(PresetItem(context.getString(R.string.param_tone), colorHue.formatSigned(), 1))
+        } else if (colorTone != null) {
+            proItems.add(PresetItem(context.getString(R.string.param_tone_style), colorTone, 1))
+        }
 
-            if (proItems.isNotEmpty()) {
-                generatedSections.add(PresetSection(context.getString(R.string.param_pro_adjust), proItems))
-            }
+        if (proItems.isNotEmpty()) {
+            generatedSections.add(PresetSection(context.getString(R.string.param_pro_adjust), proItems))
         }
 
         // 2. 调色参数
@@ -348,20 +347,6 @@ data class MasterPreset(
             return arrayOfNulls(size)
         }
     }
-
-    /**
-     * 是否为 Pro 模式
-     */
-    val isProMode: Boolean
-        get() = tags.any { it.equals("pro", ignoreCase = true) } ||
-                mode?.equals("pro", ignoreCase = true) == true
-
-    /**
-     * 是否为 Auto 模式
-     */
-    val isAutoMode: Boolean
-        get() = tags.any { it.equals("auto", ignoreCase = true) } ||
-                mode?.equals("auto", ignoreCase = true) == true
 
     /**
      * 获取所有展示图片（封面 + 图库）

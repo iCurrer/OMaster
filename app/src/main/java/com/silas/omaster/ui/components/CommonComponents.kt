@@ -4,6 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -209,28 +212,36 @@ fun HorizontalSpacer(width: Dp) = Spacer(modifier = Modifier.width(width))
 
 /**
  * 模式标签组件
+ * 支持显示多个标签
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ModeBadge(
     tags: List<String>,
     modifier: Modifier = Modifier
 ) {
-    val isPro = tags.any { it.equals("pro", ignoreCase = true) }
-    val backgroundColor = if (isPro) HasselbladOrange else DarkGray
-    val text = if (isPro) stringResource(R.string.mode_pro) else stringResource(R.string.mode_auto)
+    if (tags.isEmpty()) return
 
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(backgroundColor)
-            .padding(horizontal = 12.dp, vertical = 6.dp)
+    FlowRow(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelMedium,
-            color = Color.White,
-            fontWeight = FontWeight.Bold
-        )
+        tags.forEach { tag ->
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(DarkGray)
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+            ) {
+                Text(
+                    text = tag,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
     }
 }
 
