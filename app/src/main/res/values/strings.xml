@@ -175,6 +175,10 @@
     <string name="preset_holiday_fresh">假日清新</string>
     <string name="preset_dreamy_bw">梦幻黑白</string>
     <string name="preset_delicious_dream">美味梦境</string>
+    <string name="preset_blue_clear">蓝调通透</string>
+    <string name="preset_sunny_vintage">晴天复古</string>
+    <string name="preset_neon_lights">霓虹灯</string>
+    <string name="preset_retro_nostalgia">复古怀旧</string>
 
     <!-- 拍摄建议 -->
     <string name="tips_fuji_film">【环境建议】日间户外或光线充足的室内\n【场景推荐】街拍、人像、风景、建筑\n【拍摄要点】适合追求经典胶片质感的场景，色彩浓郁复古，建议寻找有光影对比的场景增强层次感</string>
@@ -196,6 +200,10 @@
     <string name="tips_holiday_fresh">【环境建议】晴朗天气或明亮的度假场景\n【场景推荐】海边、度假、旅行、夏日户外\n【拍摄要点】影调明亮通透，饱和度略低营造清新感，适合度假和旅行场景，记录轻松愉快的时光</string>
     <string name="tips_dreamy_bw">【环境建议】柔和光线或阴天\n【场景推荐】情绪人像、艺术摄影、静物、建筑\n【拍摄要点】保留轻微色彩信息，梦幻柔光营造艺术感，适合追求艺术表达的黑白摄影</string>
     <string name="tips_delicious_dream">【环境建议】餐厅、咖啡馆、温馨室内\n【场景推荐】美食、甜品、饮品、精致小物\n【拍摄要点】梦幻柔光营造温馨氛围，影调略暗突出质感，适合拍摄精致美食和温馨场景</string>
+    <string name="tips_blue_clear">【环境建议】日间户外或室内、海边、天空、水面\n【场景推荐】风景、建筑、人像、静物\n【拍摄要点】蓝调通透风格，冷色调营造清新通透感，轻微欠曝保留细节，梦幻柔光增加氛围感，适合拍摄清新风景和人像</string>
+    <string name="tips_sunny_vintage">【环境建议】晴天户外、阳光充足场景\n【场景推荐】街拍、人像、风景、复古场景\n【拍摄要点】晴天复古风格，色温5000K还原自然色彩，负色调营造复古感，轻微欠曝保留高光细节，暖调柔光增加复古氛围，适合拍摄晴天户外人像和风景</string>
+    <string name="tips_neon_lights">【环境建议】夜晚城市、霓虹灯招牌、繁华街道\n【场景推荐】夜景、街景、人像、城市风光\n【拍摄要点】霓虹灯风格，浓郁滤镜增强色彩饱和度，柔美柔光营造梦幻感，轻微欠曝保留霓虹细节，适合拍摄夜晚城市霓虹灯场景</string>
+    <string name="tips_retro_nostalgia">【环境建议】老城区、复古场景、室内怀旧场景\n【场景推荐】老物件、街景、人像、故事性场景\n【拍摄要点】复古怀旧风格，65%复古滤镜营造怀旧感，低影调增加复古氛围，降低饱和度模拟老照片质感，适合拍摄怀旧主题照片</string>
 
     <!-- 关于页 -->
     <string name="about_title">关于</string>

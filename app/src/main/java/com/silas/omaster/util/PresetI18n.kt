@@ -188,6 +188,10 @@ object PresetI18n {
             "假日清新" -> R.string.preset_holiday_fresh
             "梦幻黑白" -> R.string.preset_dreamy_bw
             "美味梦境" -> R.string.preset_delicious_dream
+            "蓝调通透" -> R.string.preset_blue_clear
+            "晴天复古" -> R.string.preset_sunny_vintage
+            "霓虹灯" -> R.string.preset_neon_lights
+            "复古怀旧" -> R.string.preset_retro_nostalgia
             else -> null
         }
     }
@@ -280,6 +284,10 @@ object PresetI18n {
             "假日清新" -> R.string.tips_holiday_fresh
             "梦幻黑白" -> R.string.tips_dreamy_bw
             "美味梦境" -> R.string.tips_delicious_dream
+            "蓝调通透" -> R.string.tips_blue_clear
+            "晴天复古" -> R.string.tips_sunny_vintage
+            "霓虹灯" -> R.string.tips_neon_lights
+            "复古怀旧" -> R.string.tips_retro_nostalgia
             else -> null
         }
     }

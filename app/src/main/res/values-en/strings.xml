@@ -175,6 +175,10 @@
     <string name="preset_holiday_fresh">Vacation Vibes</string>
     <string name="preset_dreamy_bw">Dreamy Noir</string>
     <string name="preset_delicious_dream">Sweet Dreams</string>
+    <string name="preset_blue_clear">Blue Clarity</string>
+    <string name="preset_sunny_vintage">Sunny Vintage</string>
+    <string name="preset_neon_lights">Neon Glow</string>
+    <string name="preset_retro_nostalgia">Retro Nostalgia</string>
 
     <!-- Shooting Tips -->
     <string name="tips_fuji_film">[Environment] Daylight outdoor or well-lit indoor\n[Scenes] Street, portrait, landscape, architecture\n[Tips] Classic film aesthetic with rich, vintage colors. Look for scenes with light-shadow contrast to enhance depth</string>
@@ -196,6 +200,10 @@
     <string name="tips_holiday_fresh">[Environment] Sunny weather or bright vacation scenes\n[Scenes] Seaside, vacation, travel, summer outdoors\n[Tips] Bright and transparent tones. Lower saturation creates freshness. Perfect for vacation and travel scenes. Capture joyful moments</string>
     <string name="tips_dreamy_bw">[Environment] Soft light or overcast\n[Scenes] Emotional portraits, artistic photography, still life, architecture\n[Tips] Retains slight color information. Dreamy soft light creates artistic feel. Perfect for expressive black and white photography</string>
     <string name="tips_delicious_dream">[Environment] Restaurants, cafés, cozy indoor\n[Scenes] Food, desserts, beverages, delicate items\n[Tips] Dreamy soft light creates warm atmosphere. Darker tones highlight texture. Perfect for fine food and cozy scenes</string>
+    <string name="tips_blue_clear">[Environment] Daylight outdoor or indoor, seaside, sky, water surface\n[Scenes] Landscapes, architecture, portraits, still life\n[Tips] Blue clarity style with cool tones creates fresh and transparent feel. Slight underexposure preserves details. Dreamy soft light adds atmosphere. Perfect for fresh landscapes and portraits</string>
+    <string name="tips_sunny_vintage">[Environment] Sunny outdoor, well-lit scenes\n[Scenes] Street, portraits, landscapes, vintage scenes\n[Tips] Sunny vintage style with 5000K color temp for natural colors. Negative tone creates vintage feel. Slight underexposure preserves highlight details. Warm soft light adds retro atmosphere. Perfect for sunny outdoor portraits and landscapes</string>
+    <string name="tips_neon_lights">[Environment] Night city, neon signs, bustling streets\n[Scenes] Night views, street scenes, portraits, urban landscapes\n[Tips] Neon lights style with rich filter enhancing color saturation. Gentle soft light creates dreamy feel. Slight underexposure preserves neon details. Perfect for night city neon scenes</string>
+    <string name="tips_retro_nostalgia">[Environment] Old districts, vintage scenes, nostalgic indoor settings\n[Scenes] Old objects, street scenes, portraits, storytelling scenes\n[Tips] Retro nostalgia style with 65% vintage filter for nostalgic feel. Low tone adds retro atmosphere. Reduced saturation simulates old photo texture. Perfect for nostalgic themed photos</string>
 
     <!-- About Page -->
     <string name="about_title">About</string>
