@@ -265,7 +265,7 @@ fun HomeScreen(
                                 showDeleteConfirm = true
                             },
                             showLoadingTip = false,
-                            showTopHint = true,
+                            showTopHint = false,
                             onScrollStateChanged = onScrollStateChanged
                             ,
                             onRefresh = { viewModel.refresh() }
@@ -280,8 +280,7 @@ fun HomeScreen(
             FloatingActionButton(
                 onClick = {
                     haptic.perform(HapticFeedbackType.Confirm)
-                    // onNavigateToCreate()
-                    android.widget.Toast.makeText(context, R.string.feature_coming_soon, android.widget.Toast.LENGTH_SHORT).show()
+                    onNavigateToCreate()
                 },
                 containerColor = HasselbladOrange,
                 contentColor = Color.White,

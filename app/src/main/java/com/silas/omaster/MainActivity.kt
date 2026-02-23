@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,12 +32,13 @@ import androidx.navigation.toRoute
 import com.silas.omaster.model.MasterPreset
 import com.silas.omaster.ui.components.PillNavBar
 import com.silas.omaster.ui.components.WelcomeDialog
-import com.silas.omaster.ui.create.CreatePresetScreen
-import com.silas.omaster.ui.create.CreatePresetViewModelFactory
+import com.silas.omaster.ui.create.PresetSelectionScreen
+import com.silas.omaster.ui.create.UniversalCreatePresetScreen
+import com.silas.omaster.ui.create.UniversalCreatePresetViewModel
+import com.silas.omaster.ui.create.UniversalCreatePresetViewModelFactory
 import com.silas.omaster.ui.detail.AboutScreen
 import com.silas.omaster.ui.detail.DetailScreen
 import com.silas.omaster.ui.detail.PrivacyPolicyScreen
-//import com.silas.omaster.ui.edit.EditPresetScreen
 import com.silas.omaster.ui.edit.EditPresetViewModelFactory
 import com.silas.omaster.ui.home.HomeScreen
 import com.silas.omaster.ui.service.FloatingWindowController
@@ -56,7 +58,10 @@ sealed class Screen {
     data class Detail(val presetId: String) : Screen()
 
     @Serializable
-    data object CreatePreset : Screen()
+    data object PresetSelection : Screen()
+
+    @Serializable
+    data class CreatePreset(val templateId: String? = null) : Screen()
 
     @Serializable
     data class EditPreset(val presetId: String) : Screen()
@@ -200,12 +205,23 @@ fun MainApp(navController: NavHostController) {
                         }
                     },
                     onNavigateToCreate = {
-                        navController.navigate(Screen.CreatePreset)
+                        navController.navigate(Screen.PresetSelection)
                     },
                     onScrollStateChanged = { isScrollingUp ->
                         isHomeScrollingUp = isScrollingUp
                     },
                     refreshTrigger = refreshTrigger
+                )
+            }
+
+            composable<Screen.PresetSelection> {
+                PresetSelectionScreen(
+                    onPresetSelected = { templateId ->
+                        navController.navigate(Screen.CreatePreset(templateId))
+                    },
+                    onBack = {
+                        navController.popBackStack()
+                    }
                 )
             }
 
@@ -225,20 +241,35 @@ fun MainApp(navController: NavHostController) {
                 )
             }
 
-            composable<Screen.CreatePreset> {
+            composable<Screen.CreatePreset> { backStackEntry ->
+                val createPreset = backStackEntry.toRoute<Screen.CreatePreset>()
                 val localContext = androidx.compose.ui.platform.LocalContext.current
                 val repository = PresetRepository.getInstance(localContext)
-                CreatePresetScreen(
+                
+                val viewModel: UniversalCreatePresetViewModel = viewModel(
+                    factory = UniversalCreatePresetViewModelFactory(localContext, repository)
+                )
+                
+                // Load template if not already loaded (to avoid reloading on recomposition)
+                // However, viewModel survives configuration changes, but if we navigate back and forth, 
+                // we might want to ensure we don't overwrite if user is editing.
+                // For simplicity, we can load it once. 
+                // But since we create a new screen instance on navigation, 
+                // the viewModel store owner is the backStackEntry, so it's a new ViewModel instance.
+                LaunchedEffect(createPreset.templateId) {
+                    viewModel.loadTemplate(createPreset.templateId)
+                }
+
+                UniversalCreatePresetScreen(
                     onSave = {
                         refreshTrigger++ // 触发刷新
-                        navController.popBackStack()
+                        // Navigate back to Home, popping the selection screen as well
+                        navController.popBackStack(Screen.Home, false)
                     },
                     onBack = {
                         navController.popBackStack()
                     },
-                    viewModel = viewModel(
-                        factory = CreatePresetViewModelFactory(localContext, repository)
-                    )
+                    viewModel = viewModel
                 )
             }
 
