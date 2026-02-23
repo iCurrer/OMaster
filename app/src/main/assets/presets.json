@@ -1032,7 +1032,6 @@
         "images/hsny_03.webp"
       ],
       "author": "@Aurora",
-      "isNew": true,
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -1096,7 +1095,6 @@
         "images/jrqx_03.webp"
       ],
       "author": "@Aurora",
-      "isNew": true,
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -1159,7 +1157,6 @@
         "images/mhhb_02.webp"
       ],
       "author": "@Aurora",
-      "isNew": true,
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -1222,7 +1219,6 @@
         "images/mwmj_02.webp"
       ],
       "author": "@Aurora",
-      "isNew": true,
       "sections": [
         {
           "title": "@string/section_color_grading",
@@ -1276,6 +1272,349 @@
       "description": {
         "title": "Shooting Tips",
         "content": "【环境建议】餐厅、咖啡馆、温馨室内\n【场景推荐】美食、甜品、饮品、精致小物\n【拍摄要点】梦幻柔光营造温馨氛围，影调略暗突出质感，适合拍摄精致美食和温馨场景"
+      }
+    },
+    {
+      "name": "蓝调通透",
+      "coverPath": "images/ldtt_01.webp",
+      "galleryImages": [
+        "images/ldtt_02.webp"
+      ],
+      "author": "@屋顶橙子味",
+      "isNew": true,
+      "sections": [
+        {
+          "title": "@string/param_pro_adjust",
+          "items": [
+            {
+              "label": "@string/param_iso",
+              "value": "Auto",
+              "span": 1
+            },
+            {
+              "label": "@string/param_shutter",
+              "value": "Auto",
+              "span": 1
+            },
+            {
+              "label": "@string/param_exposure",
+              "value": "-0.3",
+              "span": 1
+            }
+          ]
+        },
+        {
+          "title": "@string/section_color_grading",
+          "items": [
+            {
+              "label": "@string/param_filter",
+              "value": "清新 94%",
+              "span": 2
+            },
+            {
+              "label": "@string/param_soft_light",
+              "value": "梦幻",
+              "span": 1
+            },
+            {
+              "label": "@string/param_tone_curve",
+              "value": "+16",
+              "span": 1
+            },
+            {
+              "label": "@string/param_saturation",
+              "value": "+4",
+              "span": 1
+            },
+            {
+              "label": "@string/param_warm_cool",
+              "value": "-13",
+              "span": 1
+            },
+            {
+              "label": "@string/param_cyan_magenta",
+              "value": "-5",
+              "span": 1
+            },
+            {
+              "label": "@string/param_sharpness",
+              "value": "0",
+              "span": 1
+            },
+            {
+              "label": "@string/param_vignette",
+              "value": "开",
+              "span": 2
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "Pro"
+      ],
+      "description": {
+        "title": "Shooting Tips",
+        "content": "【环境建议】日间户外或室内、海边、天空、水面\n【场景推荐】风景、建筑、人像、静物\n【拍摄要点】蓝调通透风格，冷色调营造清新通透感，轻微欠曝保留细节，梦幻柔光增加氛围感，适合拍摄清新风景和人像"
+      }
+    },
+    {
+      "name": "晴天复古",
+      "coverPath": "images/qtfw_01.webp",
+      "galleryImages": [
+        "images/qtfw_02.webp"
+      ],
+      "author": "@屋顶橙子味",
+      "isNew": true,
+      "sections": [
+        {
+          "title": "@string/param_pro_adjust",
+          "items": [
+            {
+              "label": "@string/param_iso",
+              "value": "Auto",
+              "span": 1
+            },
+            {
+              "label": "@string/param_shutter",
+              "value": "Auto",
+              "span": 1
+            },
+            {
+              "label": "@string/param_exposure",
+              "value": "-1~0",
+              "span": 1
+            },
+            {
+              "label": "@string/param_color_temp",
+              "value": "5000K",
+              "span": 1
+            },
+            {
+              "label": "@string/param_tone",
+              "value": "-8",
+              "span": 1
+            }
+          ]
+        },
+        {
+          "title": "@string/section_color_grading",
+          "items": [
+            {
+              "label": "@string/param_filter",
+              "value": "复古 100%",
+              "span": 2
+            },
+            {
+              "label": "@string/param_soft_light",
+              "value": "柔美",
+              "span": 1
+            },
+            {
+              "label": "@string/param_tone_curve",
+              "value": "-20",
+              "span": 1
+            },
+            {
+              "label": "@string/param_saturation",
+              "value": "0",
+              "span": 1
+            },
+            {
+              "label": "@string/param_warm_cool",
+              "value": "+15",
+              "span": 1
+            },
+            {
+              "label": "@string/param_cyan_magenta",
+              "value": "-25",
+              "span": 1
+            },
+            {
+              "label": "@string/param_sharpness",
+              "value": "+5",
+              "span": 1
+            },
+            {
+              "label": "@string/param_vignette",
+              "value": "开",
+              "span": 2
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "Pro"
+      ],
+      "description": {
+        "title": "Shooting Tips",
+        "content": "【环境建议】晴天户外、阳光充足场景\n【场景推荐】街拍、人像、风景、复古场景\n【拍摄要点】晴天复古风格，色温5000K还原自然色彩，负色调营造复古感，轻微欠曝保留高光细节，暖调柔光增加复古氛围，适合拍摄晴天户外人像和风景"
+      }
+    },
+    {
+      "name": "霓虹灯",
+      "coverPath": "images/nhd_01.webp",
+      "galleryImages": [
+        "images/nhd_02.webp",
+        "images/nhd_03.webp"
+      ],
+      "author": "@屋顶橙子味",
+      "isNew": true,
+      "sections": [
+        {
+          "title": "@string/param_pro_adjust",
+          "items": [
+            {
+              "label": "@string/param_iso",
+              "value": "Auto",
+              "span": 1
+            },
+            {
+              "label": "@string/param_shutter",
+              "value": "Auto",
+              "span": 1
+            },
+            {
+              "label": "@string/param_exposure",
+              "value": "0~-0.7",
+              "span": 1
+            }
+          ]
+        },
+        {
+          "title": "@string/section_color_grading",
+          "items": [
+            {
+              "label": "@string/param_filter",
+              "value": "浓郁 100%",
+              "span": 2
+            },
+            {
+              "label": "@string/param_soft_light",
+              "value": "柔美",
+              "span": 1
+            },
+            {
+              "label": "@string/param_tone_curve",
+              "value": "+17",
+              "span": 1
+            },
+            {
+              "label": "@string/param_saturation",
+              "value": "+4",
+              "span": 1
+            },
+            {
+              "label": "@string/param_warm_cool",
+              "value": "+7",
+              "span": 1
+            },
+            {
+              "label": "@string/param_cyan_magenta",
+              "value": "+3",
+              "span": 1
+            },
+            {
+              "label": "@string/param_sharpness",
+              "value": "+10",
+              "span": 1
+            },
+            {
+              "label": "@string/param_vignette",
+              "value": "开",
+              "span": 2
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "Pro"
+      ],
+      "description": {
+        "title": "Shooting Tips",
+        "content": "【环境建议】夜晚城市、霓虹灯招牌、繁华街道\n【场景推荐】夜景、街景、人像、城市风光\n【拍摄要点】霓虹灯风格，浓郁滤镜增强色彩饱和度，柔美柔光营造梦幻感，轻微欠曝保留霓虹细节，适合拍摄夜晚城市霓虹灯场景"
+      }
+    },
+    {
+      "name": "复古怀旧",
+      "coverPath": "images/fghj_01.webp",
+      "galleryImages": [
+        "images/fghj_02.webp"
+      ],
+      "author": "@屋顶橙子味",
+      "isNew": true,
+      "sections": [
+        {
+          "title": "@string/param_pro_adjust",
+          "items": [
+            {
+              "label": "@string/param_iso",
+              "value": "Auto",
+              "span": 1
+            },
+            {
+              "label": "@string/param_shutter",
+              "value": "Auto",
+              "span": 1
+            },
+            {
+              "label": "@string/param_exposure",
+              "value": "-0.3~0.3",
+              "span": 1
+            }
+          ]
+        },
+        {
+          "title": "@string/section_color_grading",
+          "items": [
+            {
+              "label": "@string/param_filter",
+              "value": "复古 65%",
+              "span": 2
+            },
+            {
+              "label": "@string/param_soft_light",
+              "value": "无",
+              "span": 1
+            },
+            {
+              "label": "@string/param_tone_curve",
+              "value": "-45",
+              "span": 1
+            },
+            {
+              "label": "@string/param_saturation",
+              "value": "-6",
+              "span": 1
+            },
+            {
+              "label": "@string/param_warm_cool",
+              "value": "+15",
+              "span": 1
+            },
+            {
+              "label": "@string/param_cyan_magenta",
+              "value": "-4",
+              "span": 1
+            },
+            {
+              "label": "@string/param_sharpness",
+              "value": "+7",
+              "span": 1
+            },
+            {
+              "label": "@string/param_vignette",
+              "value": "开",
+              "span": 2
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "Pro"
+      ],
+      "description": {
+        "title": "Shooting Tips",
+        "content": "【环境建议】老城区、复古场景、室内怀旧场景\n【场景推荐】老物件、街景、人像、故事性场景\n【拍摄要点】复古怀旧风格，65%复古滤镜营造怀旧感，低影调增加复古氛围，降低饱和度模拟老照片质感，适合拍摄怀旧主题照片"
       }
     }
   ]
