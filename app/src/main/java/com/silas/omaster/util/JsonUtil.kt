@@ -67,38 +67,54 @@ object JsonUtil {
 
         val allPresets = mutableListOf<MasterPreset>()
         
-        // 1. 加载内置资产预设 (Assets)
-        try {
-            context.assets.open(fileName).use { inputStream ->
-                InputStreamReader(inputStream).use { reader ->
-                    val presetListType = object : TypeToken<PresetList>() {}.type
-                    val presetList: PresetList? = gson.fromJson(reader, presetListType)
-                    if (presetList != null) {
-                        currentPresetsVersion = presetList.version
-                        val processed = processPresets(presetList.presets ?: emptyList(), "asset")
-                        allPresets.addAll(processed)
+        val subManager = com.silas.omaster.data.local.SubscriptionManager.getInstance(context)
+        val subscriptions = subManager.subscriptionsFlow.value
+        val defaultSub = subscriptions.find { it.url == UpdateConfigManager.DEFAULT_PRESET_URL }
+        val isDefaultEnabled = defaultSub?.isEnabled ?: true // 如果找不到默认订阅（理论上不会），默认开启
+
+        // 1. 加载内置资产预设 (Assets) - 仅当默认订阅开启时加载
+        if (isDefaultEnabled) {
+            try {
+                context.assets.open(fileName).use { inputStream ->
+                    InputStreamReader(inputStream).use { reader ->
+                        val presetListType = object : TypeToken<PresetList>() {}.type
+                        val presetList: PresetList? = gson.fromJson(reader, presetListType)
+                        if (presetList != null) {
+                            currentPresetsVersion = presetList.version
+                            val processed = processPresets(presetList.presets ?: emptyList(), "asset")
+                            allPresets.addAll(processed)
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                android.util.Log.e("JsonUtil", "Failed to load presets from assets", e)
             }
-        } catch (e: Exception) {
-            android.util.Log.e("JsonUtil", "Failed to load presets from assets", e)
         }
 
-        // 2. 加载所有开启的订阅预设
+        // 2. 加载所有开启的订阅预设 (排除 assets 已经加载的情况，如果是同一个 URL)
         try {
-            val subManager = com.silas.omaster.data.local.SubscriptionManager.getInstance(context)
-            val enabledSubs = subManager.subscriptionsFlow.value.filter { it.isEnabled }
+            val enabledSubs = subscriptions.filter { it.isEnabled }
             
             for (sub in enabledSubs) {
+                // 如果是默认订阅，且我们已经加载了 assets，则优先加载本地下载的订阅文件（如果有）来覆盖 assets
+                // 但为了简单起见，目前的逻辑是 assets 始终加载，如果订阅文件存在则重复加载可能会导致重复
+                // 这里的逻辑改为：如果订阅文件存在，则加载订阅文件；如果订阅文件不存在且是默认订阅，则加载 assets
+                
+                // 检查是否存在下载的订阅文件
                 val subFile = java.io.File(context.filesDir, subManager.getFileNameForUrl(sub.url))
                 if (subFile.exists()) {
+                    // 如果存在订阅文件，加载它
                     subFile.inputStream().use { inputStream ->
                         InputStreamReader(inputStream).use { reader ->
                             val presetListType = object : TypeToken<PresetList>() {}.type
                             val presetList: PresetList? = gson.fromJson(reader, presetListType)
                             if (presetList != null) {
-                                // 订阅链接的 ID 生成需要包含订阅标识，避免冲突
                                 val processed = processPresets(presetList.presets ?: emptyList(), sub.url)
+                                // 如果是默认订阅，我们可能需要替换掉 assets 中的内容，或者干脆不加 assets
+                                // 这里为了简单，如果加载了下载的默认订阅，我们就清空之前加载的 assets
+                                if (sub.url == UpdateConfigManager.DEFAULT_PRESET_URL) {
+                                    allPresets.clear() 
+                                }
                                 allPresets.addAll(processed)
                             }
                         }
