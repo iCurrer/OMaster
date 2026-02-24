@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 
 /**
  * 主页 ViewModel
@@ -107,8 +108,13 @@ class HomeViewModel(
      * 刷新数据
      * 修复：现在会正确取消旧任务并重新收集
      */
-    fun refresh() {
-        loadPresets()
+    fun refresh(onComplete: () -> Unit = {}) {
+        viewModelScope.launch {
+            repository.reloadDefaultPresets()
+            loadPresets()
+            delay(500) // 给予足够时间让 Flow 发射新值并让 UI 感知
+            onComplete()
+        }
     }
 
     override fun onCleared() {

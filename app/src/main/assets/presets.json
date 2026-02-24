@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "name": "OPPO / 一加 / Realme 预设",
+  "author": "@OMaster",
+  "build": 1,
   "presets": [
     {
       "name": "富士胶片",

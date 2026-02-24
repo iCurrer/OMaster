@@ -96,6 +96,7 @@ fun HomeScreen(
         factory = HomeViewModelFactory(repository)
     )
     val haptic = LocalHapticFeedback.current
+    val scope = rememberCoroutineScope()
 
     val allPresets by viewModel.allPresets.collectAsState()
     val favorites by viewModel.favorites.collectAsState()
@@ -109,7 +110,6 @@ fun HomeScreen(
         }
     }
 
-    val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { 3 })
 
     // 全局悬浮窗控制器
@@ -236,9 +236,8 @@ fun HomeScreen(
                                 presetToDelete = it
                                 showDeleteConfirm = true
                             },
-                            onScrollStateChanged = onScrollStateChanged
-                            ,
-                            onRefresh = { viewModel.refresh() }
+                            onScrollStateChanged = onScrollStateChanged,
+                            onRefresh = { onComplete -> viewModel.refresh(onComplete) }
                         )
                         1 -> PresetGrid(
                             presets = favorites,
@@ -250,9 +249,8 @@ fun HomeScreen(
                                 showDeleteConfirm = true
                             },
                             onScrollStateChanged = onScrollStateChanged,
-                            showLoadingTip = false
-                            ,
-                            onRefresh = { viewModel.refresh() }
+                            showLoadingTip = false,
+                            onRefresh = { onComplete -> viewModel.refresh(onComplete) }
                         )
                         2 -> PresetGrid(
                             presets = customPresets,
@@ -265,9 +263,8 @@ fun HomeScreen(
                             },
                             showLoadingTip = false,
                             showTopHint = false,
-                            onScrollStateChanged = onScrollStateChanged
-                            ,
-                            onRefresh = { viewModel.refresh() }
+                            onScrollStateChanged = onScrollStateChanged,
+                            onRefresh = { onComplete -> viewModel.refresh(onComplete) }
                         )
                     }
                 }
@@ -352,7 +349,7 @@ private fun PresetGrid(
     onScrollStateChanged: (Boolean) -> Unit = {},
     showLoadingTip: Boolean = true,
     showTopHint: Boolean = false,
-    onRefresh: () -> Unit = {}
+    onRefresh: (onComplete: () -> Unit) -> Unit = {}
 ) {
     val listState = rememberLazyStaggeredGridState()
     val haptic = LocalHapticFeedback.current
@@ -361,13 +358,13 @@ private fun PresetGrid(
     var refreshing by remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(refreshing, onRefresh = {
         refreshing = true
-        onRefresh()
+        onRefresh { refreshing = false }
     })
 
-    // When presets list updates, stop the refreshing indicator
-    LaunchedEffect(presets) {
-        if (refreshing) refreshing = false
-    }
+    // Remove the problematic LaunchedEffect
+    // LaunchedEffect(presets) {
+    //    if (refreshing) refreshing = false
+    // }
 
     // 修复：使用 snapshotFlow 安全地检测滚动方向
     // 避免在 derivedStateOf 中修改外部状态
@@ -411,102 +408,114 @@ private fun PresetGrid(
         }
     }
 
-    if (presets.isEmpty()) {
-        EmptyState(tabIndex)
-    } else {
-        // 缓存可见区域起始索引，避免每次重组都计算
-        val visibleStartIndex by remember {
-            derivedStateOf {
-                listState.layoutInfo.visibleItemsInfo.firstOrNull()?.index ?: 0
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState)
+    ) {
+        if (presets.isEmpty()) {
+            // 使用 LazyColumn 确保即使为空也能触发下拉刷新
+            androidx.compose.foundation.lazy.LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                item {
+                    EmptyState(tabIndex)
+                }
             }
-        }
+        } else {
+            // 缓存可见区域起始索引，避免每次重组都计算
+            val visibleStartIndex by remember {
+                derivedStateOf {
+                    listState.layoutInfo.visibleItemsInfo.firstOrNull()?.index ?: 0
+                }
+            }
 
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2),
-            state = listState,
-            contentPadding = PaddingValues(
-                start = 16.dp,
-                end = 16.dp,
-                top = 8.dp,
-                bottom = 100.dp
-            ),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),  // 优化：水平间距从 12dp 增加到 16dp
-            verticalItemSpacing = 16.dp,  // 优化：垂直间距从 12dp 增加到 16dp
-            modifier = Modifier
-                .fillMaxSize()
-                .pullRefresh(pullRefreshState)
-        ) {
-            if (showTopHint) {
-                item(span = StaggeredGridItemSpan.FullLine) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(R.string.feature_coming_soon),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White.copy(alpha = 0.6f)
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(2),
+                state = listState,
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 8.dp,
+                    bottom = 100.dp
+                ),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),  // 优化：水平间距从 12dp 增加到 16dp
+                verticalItemSpacing = 16.dp,  // 优化：垂直间距从 12dp 增加到 16dp
+                modifier = Modifier.fillMaxSize()
+            ) {
+                if (showTopHint) {
+                    item(span = StaggeredGridItemSpan.FullLine) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = stringResource(R.string.feature_coming_soon),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White.copy(alpha = 0.6f)
+                            )
+                        }
+                    }
+                }
+
+                itemsIndexed(
+                    items = presets,
+                    key = { index, preset -> preset.id?.let { "${it}_$index" } ?: "preset_$index" }
+                ) { index, preset ->
+                    val imageHeight = remember(index) {
+                        when (index % 3) {
+                            0 -> 220
+                            1 -> 180
+                            else -> 260
+                        }
+                    }
+
+                    if (preset.id != null) {
+                        // 使用缓存的 visibleStartIndex 计算延迟
+                        // 优化：只有在列表顶部时才应用交错延迟，滚动时立即显示，避免卡顿感
+                        val delayMillis = if (visibleStartIndex == 0) {
+                            calculateStaggerDelay(index, visibleStartIndex)
+                        } else {
+                            0
+                        }
+
+                        PresetCardItem(
+                            preset = preset,
+                            index = index,
+                            tabIndex = tabIndex,
+                            imageHeight = imageHeight,
+                            delayMillis = delayMillis,
+                            onNavigateToDetail = onNavigateToDetail,
+                            onToggleFavorite = onToggleFavorite,
+                            onDeletePreset = onDeletePreset,
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = ListItemFadeInSpec,
+                                placementSpec = ListItemPlacementSpec
+                            )
                         )
                     }
                 }
-            }
 
-            itemsIndexed(
-                items = presets,
-                key = { index, preset -> preset.id?.let { "${it}_$index" } ?: "preset_$index" }
-            ) { index, preset ->
-                val imageHeight = remember(index) {
-                    when (index % 3) {
-                        0 -> 220
-                        1 -> 180
-                        else -> 260
+                // 底部提示（仅在全部预设页面显示）
+                if (showLoadingTip) {
+                    item(span = StaggeredGridItemSpan.FullLine) {
+                        LoadingMoreTip()
                     }
-                }
-
-                if (preset.id != null) {
-                    // 使用缓存的 visibleStartIndex 计算延迟
-                    // 优化：只有在列表顶部时才应用交错延迟，滚动时立即显示，避免卡顿感
-                    val delayMillis = if (visibleStartIndex == 0) {
-                        calculateStaggerDelay(index, visibleStartIndex)
-                    } else {
-                        0
-                    }
-
-                    PresetCardItem(
-                        preset = preset,
-                        index = index,
-                        tabIndex = tabIndex,
-                        imageHeight = imageHeight,
-                        delayMillis = delayMillis,
-                        onNavigateToDetail = onNavigateToDetail,
-                        onToggleFavorite = onToggleFavorite,
-                        onDeletePreset = onDeletePreset,
-                        modifier = Modifier.animateItem(
-                            fadeInSpec = ListItemFadeInSpec,
-                            placementSpec = ListItemPlacementSpec
-                        )
-                    )
-                }
-            }
-
-            // 底部提示（仅在全部预设页面显示）
-            if (showLoadingTip) {
-                item(span = StaggeredGridItemSpan.FullLine) {
-                    LoadingMoreTip()
                 }
             }
         }
+
         // Pull refresh indicator overlay
-        Box(modifier = Modifier.fillMaxWidth()) {
-            PullRefreshIndicator(
-                refreshing = refreshing,
-                state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter),
-                contentColor = MaterialTheme.colorScheme.primary
-            )
-        }
+        PullRefreshIndicator(
+            refreshing = refreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter),
+            contentColor = MaterialTheme.colorScheme.primary
+        )
     }
 }
 

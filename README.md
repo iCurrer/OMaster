@@ -10,18 +10,19 @@
 </p>
 
 <p align="center">
-  <b>专为 OPPO / 一加 / Realme 手机打造的摄影调色参数管理工具</b>
+  <b>为各品牌手机打造的摄影调色参数管理工具</b>
 </p>
 
 <p align="center">
   <a href="https://github.com/iCurrer/OMaster/releases">
-    <img src="https://img.shields.io/badge/版本-v1.2.0-FF6B35.svg?style=flat-square" alt="Version"/>
+    <img src="https://img.shields.io/github/v/release/iCurrer/OMaster" alt="Version"/>
   </a>
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">
     <img src="https://img.shields.io/badge/协议-CC%20BY--NC--SA%204.0-orange.svg?style=flat-square" alt="License"/>
   </a>
   <img src="https://img.shields.io/badge/平台-Android%206+-brightgreen.svg?style=flat-square" alt="Platform"/>
   <img src="https://img.shields.io/badge/技术-Jetpack%20Compose-4285F4.svg?style=flat-square" alt="Tech"/>
+  <img src="https://img.shields.io/github/actions/workflow/status/iCurrer/OMaster/beta-release.yml" alt="Build"/>
 </p>
 
 <p align="center">
@@ -43,8 +44,7 @@
 ## ✨ 核心功能
 
 ### 🎨 丰富的预设库
-- **23+ 款专业预设** - 涵盖胶片、复古、清新、黑白、美食、夜景等多种风格
-- **Pro & Auto 双模式** - 支持专业模式和自动模式参数
+- **23+ 款专业预设** - 涵盖胶片、复古、清新、黑白、美食等多种风格
 - **新预设置顶标记** - 新增预设显示 NEW 标签并置顶展示
 
 ### ☁️ 配置云更新
@@ -56,10 +56,10 @@
 - 快速访问常用参数
 - 本地存储，无需网络
 
-### 🛠️ 自定义预设
-- 创建属于自己的调色参数
-- 支持编辑修改自定义预设
-- 导入自定义封面图片
+### 🛠️ 全平台支持
+- 支持创建自定义预设
+- 支持各大主流平台专业相机
+- 支持远程订阅更新
 
 ### 🔲 悬浮窗模式
 - 拍照时可悬浮显示参数
@@ -67,7 +67,7 @@
 - 半透明设计不遮挡取景
 
 ### 📱 简洁优雅的界面
-- 纯黑背景 + 哈苏橙配色
+- 纯黑背景 + 各大摄影品牌配色
 - 流畅的动画过渡
 - 瀑布流卡片布局
 
@@ -93,7 +93,7 @@
 
 ### 系统要求
 - Android 6 (API 23) 及以上
-- 支持 OPPO / 一加 / Realme 手机的大师模式
+- 你的手机系统允许浮窗显示在相机应用上方
 
 ---
 
@@ -112,7 +112,7 @@
 
 ## 📋 参数说明
 
-OMaster 支持的大师模式参数包括：
+OMaster 支持的大师模式参数包括但不限于：
 
 | 参数类别 | 具体参数 |
 |---------|---------|
@@ -137,16 +137,18 @@ OMaster 支持的大师模式参数包括：
 
 1. 打开**设置** → **应用** → **应用管理**
 2. 找到 **OMaster**，点击**权限管理**
-3. 点击右上角 **⋮** 图标，选择**"解除所有授权限制"**
+3. 点击右上角 **⋮** 图标，选择**解除所有授权限制**
 4. 返回应用重新开启悬浮窗权限
 
-> ⚠️ 注意：解除限制后，请确保只授予"悬浮窗"权限，其他敏感权限可根据需要选择是否授予。
+> [!WARNING]
+> 
+> 解除限制后，请确保只授予"悬浮窗"权限，其他敏感权限可根据需要选择是否授予。
 
 ---
 
 ## 🔒 隐私说明
 
-- 所有数据本地存储，无需联网
+- 所有数据本地存储
 - 悬浮窗权限仅用于显示参数窗口
 - 统计功能需用户同意后开启
 
@@ -164,116 +166,13 @@ OMaster 支持的大师模式参数包括：
 > 如果只是更新云端预设，不要直接在 OMaster 主仓库提交 Pull Request
 
 如果你想贡献新的调色预设：
-1. 前往 [OMaster Community](https://github.com/fengyec2/OMaster-Community)
+
+1. 前往 [OMaster-Community](https://github.com/fengyec2/OMaster-Community) 社区仓库
 2. Fork 社区仓库
-3. 在 `presets.json` 中添加预设数据
-4. ~~*在 `app/src/main/assets/images/` 中添加样片*~~（这个之后再说罢）
-5. 提交 Pull Request
-
-### 预设数据格式
-
-|      外层键      |      描述      |      值      |
-| ------------- | ------------- | ------------- |
-| coverPath | App 首页封面图片 | 相对路径或 URL |
-| galleryImages | 单个预设下轮播图片 | 相对路径或 URL |
-| mode | 相机模式 | 只接受 auto 和 pro（即将废弃） |
-| isNew | 是否为新配置 | true 置顶，非必须键 |
-
-|      内层键      |      描述      |      值      |
-| ------------- | ------------- | ------------- |
-| title | 预设配置的组名称 | 支持 @string 解析 |
-| label | 组下单个预设配置的名称 | 支持 @string 解析 |
-| span | 单个预设配置卡片宽度 | 1: 半宽，2: 全宽 |
-
-
-```json
-{
-  "presets": [
-    {
-      "name": "富士胶片",
-      "coverPath": "images/fsjp_01.webp",
-      "galleryImages": [
-        "images/fsjp_02.webp",
-        "images/fsjp_03.webp"
-      ],
-      "author": "@OPPO影像",
-      "mode": "auto",
-      "iso": null,
-      "shutterSpeed": null,
-      "exposureCompensation": null,
-      "colorTemperature": null,
-      "colorHue": null,
-      "whiteBalance": null,
-      "colorTone": null,
-      "filter": "复古 100%",
-      "softLight": "无",
-      "tone": 0,
-      "saturation": 19,
-      "warmCool": -5,
-      "cyanMagenta": 0,
-      "sharpness": 15,
-      "vignette": "开",
-      "sections": [
-        {
-          "title": "@string/section_color_grading",
-          "items": [
-            {
-              "label": "@string/param_filter",
-              "value": "复古 100%",
-              "span": 2
-            },
-            {
-              "label": "@string/param_soft_light",
-              "value": "无",
-              "span": 1
-            },
-            {
-              "label": "@string/param_tone_curve",
-              "value": "0",
-              "span": 1
-            },
-            {
-              "label": "@string/param_saturation",
-              "value": "+19",
-              "span": 1
-            },
-            {
-              "label": "@string/param_warm_cool",
-              "value": "-5",
-              "span": 1
-            },
-            {
-              "label": "@string/param_cyan_magenta",
-              "value": "0",
-              "span": 1
-            },
-            {
-              "label": "@string/param_sharpness",
-              "value": "15",
-              "span": 1
-            },
-            {
-              "label": "@string/param_vignette",
-              "value": "开",
-              "span": 2
-            }
-          ]
-        },
-        {
-          "title": null,
-          "items": [
-            {
-              "label": "@string/shooting_tips",
-              "value": "【环境建议】日间户外或光线充足的室内\n【场景推荐】街拍、人像、风景、建筑\n【拍摄要点】适合追求经典胶片质感的场景，色彩浓郁复古，建议寻找有光影对比的场景增强层次感",
-              "span": 2
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-```
+3. 新建一个分支（例如 `preset` ）
+4. 在新分支（例如 `preset` ）的 `presets.json` 中添加预设数据
+5. 在主分支（就是 `main` 分支）修改 README
+6. 提交 Pull Request，把你的新分支（例如 `preset` ）合并到 `fengyec2/OMaster-Community:main` 中
 
 ---
 
@@ -289,14 +188,19 @@ OMaster 支持的大师模式参数包括：
 
 ## 🙏 致谢
 
+- **项目维护：**
+
+| | |
+|---|---|
+| <a href="https://github.com/iCurrer"><img src="https://avatars.githubusercontent.com/u/61453275?v=4" width="80px;" alt="Silas"/><br /><sub><b>Silas</b></sub></a><br /><a href="https://github.com/iCurrer/OMaster/commits?author=iCurrer" title="Code">💻</a> <a href="#design-Silas" title="Design">🎨</a> <a href="https://github.com/iCurrer/OMaster/commits?author=iCurrer" title="Documentation">📖</a> <a href="#ideas-Silas" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-Silas" title="Maintenance">🚧</a> | <a href="https://github.com/fengyec2"><img src="https://avatars.githubusercontent.com/u/85821538?v=4" width="80px;" alt="Luminary"/><br /><sub><b>Luminary</b></sub></a><br /><a href="https://github.com/iCurrer/OMaster/commits?author=fengyec2" title="Code">💻</a> <a href="https://github.com/iCurrer/OMaster/commits?author=fengyec2" title="Documentation">📖</a> <a href="#ideas-Luminary" title="Ideas">💡</a>|
+
 - **素材提供：**
   - [@OPPO影像](https://xhslink.com/m/8c2gJYGlCTR)
   - [@蘭州白鴿](https://xhslink.com/m/4h5lx4Lg37n)
   - [@派瑞特凯](https://xhslink.com/m/AkrgUI0kgg1)
   - [@ONESTEP™](https://xhslink.com/m/4LZ8zRdNCSv)
   - [@盒子叔](https://xhslink.com/m/4mje9mimNXJ)
-  - [@Aurora](https://xhslink.com/m/2Ebow4iyVOE)
-  - **[@屋顶橙子味](https://xhslink.com/m/xxx)** ⭐ 新增
+  - **[@Aurora](https://xhslink.com/m/2Ebow4iyVOE)** ⭐ 新增
 
 ---
 

@@ -41,24 +41,55 @@ object PresetRemoteManager {
         }
     }
 
-    suspend fun fetchAndSave(context: Context, url: String): Boolean {
+    suspend fun fetchAndSave(context: Context, url: String, forceUpdate: Boolean = false): Result<PresetList> {
         Log.d("PresetRemoteManager", "Starting fetch from $url")
         return try {
             val response: HttpResponse = client.get(url)
             val text: String = response.body()
             
             // 验证 JSON 是否有效
-            try {
+            val presetList = try {
                 Json.decodeFromString(PresetList.serializer(), text)
             } catch (e: Exception) {
                 Log.e("PresetRemoteManager", "Invalid JSON received", e)
-                return false
+                return Result.failure(Exception("JSON 格式错误"))
+            }
+
+            // 验证必填字段
+            val missingFields = mutableListOf<String>()
+            if (presetList.name.isNullOrBlank()) missingFields.add("name (订阅名称)")
+            if (presetList.author.isNullOrBlank()) missingFields.add("author (作者)")            
+            if (missingFields.isNotEmpty()) {
+                val errorMsg = "缺少必要字段: ${missingFields.joinToString(", ")}"
+                return Result.failure(Exception(errorMsg))
+            }
+
+            val subManager = com.silas.omaster.data.local.SubscriptionManager.getInstance(context)
+            
+            // 检查版本号是否相同
+            if (!forceUpdate) {
+                val currentSub = subManager.subscriptionsFlow.value.find { it.url == url }
+                if (currentSub != null && currentSub.build == presetList.build) {
+                    return Result.failure(Exception("无需更新"))
+                }
             }
 
             withContext(Dispatchers.IO) {
-                val file = File(context.filesDir, "presets_remote.json")
+                val fileName = subManager.getFileNameForUrl(url)
+                val file = File(context.filesDir, fileName)
                 file.writeText(text)
                 Log.d("PresetRemoteManager", "Saved remote presets to ${file.absolutePath}")
+                
+                // Update subscription info
+                subManager.updateSubscriptionStatus(
+                    url = url,
+                    presetCount = presetList.presets.size,
+                    lastUpdateTime = System.currentTimeMillis(),
+                    name = presetList.name,
+                    author = presetList.author,
+                    build = presetList.build
+                )
+
                 // Invalidate JsonUtil cache so subsequent loads read the new remote file
                 try {
                     JsonUtil.invalidateCache()
@@ -66,10 +97,10 @@ object PresetRemoteManager {
                     Log.w("PresetRemoteManager", "Failed to invalidate JsonUtil cache", e)
                 }
             }
-            true
+            Result.success(presetList)
         } catch (e: Exception) {
             Log.e("PresetRemoteManager", "Failed to save presets", e)
-            false
+            Result.failure(e)
         }
     }
 }

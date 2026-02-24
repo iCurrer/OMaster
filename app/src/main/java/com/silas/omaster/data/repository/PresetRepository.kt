@@ -8,6 +8,7 @@ import com.silas.omaster.util.JsonUtil
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 
 /**
  * 【数据仓库层 - 统一数据访问入口】
@@ -48,6 +49,8 @@ class PresetRepository(
      */
     private val appContext = context.applicationContext
 
+    private val subscriptionManager = com.silas.omaster.data.local.SubscriptionManager.getInstance(appContext)
+
     // 缓存默认预设（内存缓存，App 重启后清空）
     private val _defaultPresets = MutableStateFlow<List<MasterPreset>>(emptyList())
     private val defaultPresetsLoaded = MutableStateFlow(false)
@@ -55,6 +58,15 @@ class PresetRepository(
     init {
         // 初始化时加载默认预设
         loadDefaultPresets()
+        
+        // 监听订阅状态变化，自动重新加载预设
+        // 注意：这里使用 Flow 的特性，只有当订阅列表内容真正发生变化时才触发重载
+        kotlinx.coroutines.GlobalScope.launch(kotlinx.coroutines.Dispatchers.Main) {
+            subscriptionManager.subscriptionsFlow.collect { subs ->
+                android.util.Log.d("PresetRepository", "Subscription status changed, reloading...")
+                reloadDefaultPresets()
+            }
+        }
     }
 
     /**
@@ -74,6 +86,7 @@ class PresetRepository(
      */
     fun reloadDefaultPresets() {
         android.util.Log.d("PresetRepository", "Reloading default presets from JsonUtil")
+        JsonUtil.invalidateCache() // 必须先清除 JsonUtil 的内存缓存
         val presets = JsonUtil.loadPresets(appContext)
         _defaultPresets.value = presets
         android.util.Log.d("PresetRepository", "Reloaded ${presets.size} default presets")

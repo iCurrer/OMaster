@@ -381,6 +381,9 @@ data class MasterPreset(
  */
 @Serializable
 data class PresetList(
-    val version: Int = 1,
+    val name: String? = null,
+    val author: String? = null,
+    val build: Int = 1,
+    val version: Int = 1, // 兼容旧版
     val presets: List<MasterPreset> = emptyList()
 )

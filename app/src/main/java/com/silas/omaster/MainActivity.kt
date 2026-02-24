@@ -81,6 +81,9 @@ sealed class Screen {
     data object About : Screen()
 
     @Serializable
+    data object Subscription : Screen()
+
+    @Serializable
     data object PrivacyPolicy : Screen()
 }
 
@@ -216,6 +219,7 @@ fun MainApp(navController: NavHostController) {
 
     val showBottomNav = currentRoute?.contains("Home") == true || 
                         currentRoute?.contains("About") == true || 
+                        currentRoute?.contains("Subscription") == true || 
                         currentRoute?.contains("Settings") == true
 
     var isHomeScrollingUp by remember { mutableStateOf(true) }
@@ -370,6 +374,17 @@ fun MainApp(navController: NavHostController) {
                     currentVersionName = VersionInfo.VERSION_NAME
                 )
             }
+
+            composable<Screen.Subscription> {
+                com.silas.omaster.ui.subscription.SubscriptionScreen(
+                    onBack = {
+                        navController.popBackStack()
+                    },
+                    onScrollStateChanged = { isScrollingUp ->
+                        isHomeScrollingUp = isScrollingUp
+                    }
+                )
+            }
         }
 
         if (showBottomNav) {
@@ -377,6 +392,7 @@ fun MainApp(navController: NavHostController) {
                 visible = isHomeScrollingUp,
                 currentRoute = when {
                     currentRoute?.contains("Home") == true -> "home"
+                    currentRoute?.contains("Subscription") == true -> "subscription"
                     currentRoute?.contains("About") == true -> "about"
                     currentRoute?.contains("Settings") == true -> "settings"
                     else -> "home"
@@ -386,6 +402,17 @@ fun MainApp(navController: NavHostController) {
                         "home" -> {
                             if (currentRoute?.contains("Home") != true) {
                                 navController.popBackStack(Screen.Home, false)
+                            }
+                        }
+                        "subscription" -> {
+                            if (currentRoute?.contains("Subscription") != true) {
+                                navController.navigate(Screen.Subscription) {
+                                    popUpTo(Screen.Home) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             }
                         }
                         "settings" -> {
