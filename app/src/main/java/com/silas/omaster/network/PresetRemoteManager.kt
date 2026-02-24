@@ -48,7 +48,7 @@ object PresetRemoteManager {
             val text: String = response.body()
             
             // 验证 JSON 是否有效
-            try {
+            val presetList = try {
                 Json.decodeFromString(PresetList.serializer(), text)
             } catch (e: Exception) {
                 Log.e("PresetRemoteManager", "Invalid JSON received", e)
@@ -56,9 +56,19 @@ object PresetRemoteManager {
             }
 
             withContext(Dispatchers.IO) {
-                val file = File(context.filesDir, "presets_remote.json")
+                val subManager = com.silas.omaster.data.local.SubscriptionManager.getInstance(context)
+                val fileName = subManager.getFileNameForUrl(url)
+                val file = File(context.filesDir, fileName)
                 file.writeText(text)
                 Log.d("PresetRemoteManager", "Saved remote presets to ${file.absolutePath}")
+                
+                // Update subscription info
+                subManager.updateSubscriptionStatus(
+                    url = url,
+                    presetCount = presetList.presets.size,
+                    lastUpdateTime = System.currentTimeMillis()
+                )
+
                 // Invalidate JsonUtil cache so subsequent loads read the new remote file
                 try {
                     JsonUtil.invalidateCache()

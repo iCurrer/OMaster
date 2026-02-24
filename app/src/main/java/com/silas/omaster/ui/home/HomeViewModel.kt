@@ -108,7 +108,10 @@ class HomeViewModel(
      * 修复：现在会正确取消旧任务并重新收集
      */
     fun refresh() {
-        loadPresets()
+        viewModelScope.launch {
+            repository.reloadDefaultPresets()
+            loadPresets()
+        }
     }
 
     override fun onCleared() {

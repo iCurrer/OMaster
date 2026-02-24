@@ -19,8 +19,22 @@
 
     <!-- 底部导航 -->
     <string name="nav_home">主页</string>
+    <string name="nav_subscription">订阅</string>
     <string name="nav_settings">设置</string>
     <string name="nav_about">关于</string>
+
+    <!-- 订阅 -->
+    <string name="sub_title">订阅管理</string>
+    <string name="sub_add">添加订阅</string>
+    <string name="sub_url_label">链接 (JSON URL)</string>
+    <string name="sub_name_label">名称 (可选)</string>
+    <string name="sub_empty">暂无订阅</string>
+    <string name="sub_delete_confirm_title">确认删除</string>
+    <string name="sub_delete_confirm_msg">确定要删除这个订阅吗？对应的预设也将不再显示。</string>
+    <string name="sub_update_status">更新完成: %1$d/%2$d</string>
+    <string name="sub_preset_count">预设数量: %1$d</string>
+    <string name="sub_last_update">更新于: %1$s</string>
+    <string name="sub_no_name">未命名订阅</string>
 
     <!-- 设置 -->
     <string name="settings_title">设置</string>
