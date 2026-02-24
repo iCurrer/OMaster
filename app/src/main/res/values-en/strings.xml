@@ -38,6 +38,8 @@
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
+    <string name="settings_section_general">General</string>
+    <string name="settings_section_appearance">Appearance</string>
     <string name="vibration_feedback">Vibration Feedback</string>
     <string name="settings_theme_title">Theme Color</string>
     <string name="settings_theme_dialog_title">Select Theme Color</string>
