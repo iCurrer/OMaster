@@ -77,6 +77,9 @@ fun SettingsScreen() {
             modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars)
         )
 
+        // General Section
+        SettingsSectionHeader(title = stringResource(R.string.settings_section_general))
+
         // Vibration Setting
         Row(
             modifier = Modifier
@@ -87,7 +90,7 @@ fun SettingsScreen() {
                     settingsManager.isVibrationEnabled = newValue
                     HapticSettings.enabled = newValue
                 }
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
                 .height(56.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -111,18 +114,21 @@ fun SettingsScreen() {
             )
         }
 
+        // Appearance Section
+        SettingsSectionHeader(title = stringResource(R.string.settings_section_appearance))
+
         // Theme Setting
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { showThemeDialog = true }
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
                 .height(56.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "主题颜色", // TODO: Extract to strings.xml
+                text = stringResource(R.string.settings_theme_title),
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.White
             )
@@ -137,13 +143,25 @@ fun SettingsScreen() {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = currentTheme.brandName,
+                    text = stringResource(currentTheme.brandNameResId),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
             }
         }
     }
+}
+
+@Composable
+private fun SettingsSectionHeader(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(top = 16.dp)
+    )
 }
 
 @Composable
@@ -189,12 +207,12 @@ fun ThemeSelectionDialog(
                         
                         Column {
                             Text(
-                                text = theme.brandName,
+                                text = stringResource(theme.brandNameResId),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = theme.colorName,
+                                text = stringResource(theme.colorNameResId),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -205,7 +223,7 @@ fun ThemeSelectionDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("取消")
+                Text(stringResource(R.string.cancel))
             }
         },
         containerColor = MaterialTheme.colorScheme.surface,

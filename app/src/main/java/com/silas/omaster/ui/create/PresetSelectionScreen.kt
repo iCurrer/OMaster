@@ -45,10 +45,10 @@ fun PresetSelectionScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("选择预设模版") },
+                title = { Text(stringResource(R.string.select_template)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -71,7 +71,7 @@ fun PresetSelectionScreen(
                     Icon(Icons.Default.Add, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        "从零开始创建",
+                        stringResource(R.string.start_from_scratch),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontWeight = FontWeight.Bold
@@ -80,7 +80,7 @@ fun PresetSelectionScreen(
             }
 
             Text(
-                "或者选择一个现有预设作为起点：",
+                stringResource(R.string.or_choose_template),
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                 color = Color.Gray

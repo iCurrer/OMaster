@@ -262,6 +262,8 @@ fun PresetImage(
     val imageUri = when {
         // 网络图片：以 http 或 https 开头
         preset.coverPath.startsWith("http") -> preset.coverPath
+        // 绝对路径
+        preset.coverPath.startsWith("/") -> File(preset.coverPath).toUri().toString()
         // 自定义预设：路径以 presets/ 开头，使用内部存储
         preset.isCustom || preset.coverPath.startsWith("presets/") -> {
             File(context.filesDir, preset.coverPath).toUri().toString()

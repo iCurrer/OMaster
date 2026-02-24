@@ -36,10 +36,14 @@ class FloatingWindowController private constructor(private val context: Context)
      */
     fun register() {
         val filter = IntentFilter(FloatingWindowService.ACTION_SWITCH_PRESET)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 context.registerReceiver(broadcastReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            } else {
+                context.registerReceiver(broadcastReceiver, filter)
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

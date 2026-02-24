@@ -129,7 +129,7 @@ See [Changelog](CHANGELOG.md)
 
 ## ❓ FAQ
 
-### What if the floating window cannot be opened?
+### Floating window cannot be opened?
 
 Some ColorOS / OxygenOS systems may identify this application as an "application from unknown sources", thereby restricting floating window permission authorization.
 
@@ -143,6 +143,16 @@ Some ColorOS / OxygenOS systems may identify this application as an "application
 > [!WARNING]
 > 
 > After removing the restriction, please ensure that only "Floating Window" permission is granted. Other sensitive permissions can be granted as needed.
+
+### Floating window not displaying on top of the camera application?
+
+Unfortunately, some customized Android systems may limit applications from displaying floating windows on top of the camera application.
+
+**Solution:**
+
+1. Try a new phone
+2. Throw away the old phone
+3. No other solutions at the moment
 
 ---
 

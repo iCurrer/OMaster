@@ -123,6 +123,8 @@ fun ImageGallery(
                 val imageUri = when {
                     // 网络图片：以 http 或 https 开头
                     imagePath.startsWith("http") -> imagePath
+                    // 绝对路径
+                    imagePath.startsWith("/") -> File(imagePath).toUri().toString()
                     // 内部存储路径：以 presets/ 开头
                     imagePath.startsWith("presets/") -> {
                         File(context.filesDir, imagePath).toUri().toString()

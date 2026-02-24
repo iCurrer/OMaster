@@ -38,9 +38,33 @@
 
     <!-- 设置 -->
     <string name="settings_title">设置</string>
+    <string name="settings_section_general">常规</string>
+    <string name="settings_section_appearance">外观</string>
     <string name="vibration_feedback">震动反馈</string>
     <string name="settings_theme_title">主题颜色</string>
     <string name="settings_theme_dialog_title">选择主题颜色</string>
+
+    <!-- 品牌名称 -->
+    <string name="brand_hasselblad">哈苏</string>
+    <string name="brand_zeiss">蔡司</string>
+    <string name="brand_leica">徕卡</string>
+    <string name="brand_ricoh">理光</string>
+    <string name="brand_fujifilm">富士</string>
+    <string name="brand_canon">佳能</string>
+    <string name="brand_nikon">尼康</string>
+    <string name="brand_sony">索尼</string>
+    <string name="brand_phaseone">飞思</string>
+
+    <!-- 品牌颜色名称 -->
+    <string name="color_hasselblad_orange">哈苏橙</string>
+    <string name="color_zeiss_blue">蔡司蓝</string>
+    <string name="color_leica_red">徕卡红</string>
+    <string name="color_ricoh_green">理光绿</string>
+    <string name="color_fujifilm_green">富士绿</string>
+    <string name="color_canon_red">佳能红</string>
+    <string name="color_nikon_yellow">尼康黄</string>
+    <string name="color_sony_orange">索尼橙</string>
+    <string name="color_phaseone_grey">飞思灰</string>
 
     <!-- 主页 Tab -->
     <string name="tab_all">全部</string>
@@ -118,6 +142,20 @@
     <string name="save_changes">保存修改</string>
     <string name="save_failed">保存失败，请重试</string>
     <string name="feature_coming_soon">功能即将开放，敬请期待</string>
+    <string name="add_item">添加参数</string>
+    <string name="edit_item">编辑参数</string>
+    <string name="param_label">参数名 (Label)</string>
+    <string name="param_value">参数值 (Value)</string>
+    <string name="span_label">宽度占比 (Span): %1$d</string>
+    <string name="add_section">添加分类</string>
+    <string name="section_name">分类名称</string>
+    <string name="remove_item">移除参数</string>
+    <string name="remove_section">移除分类</string>
+    <string name="select_template">选择预设模版</string>
+    <string name="start_from_scratch">从零开始创建</string>
+    <string name="or_choose_template">或者选择一个现有预设作为起点：</string>
+    <string name="upload_cover_hint">点击上传封面</string>
+    <string name="unnamed_section">未命名分组</string>
 
     <!-- 封面图片 -->
     <string name="cover_image">封面图片</string>

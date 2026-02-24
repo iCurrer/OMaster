@@ -115,9 +115,15 @@ fun HomeScreen(
     // 全局悬浮窗控制器
     val floatingWindowController = remember { FloatingWindowController.getInstance(context) }
 
-    // 当预设列表变化时，更新到全局控制器
-    LaunchedEffect(allPresets) {
-        floatingWindowController.setPresetList(allPresets)
+    // 当预设列表或选中的 Tab 变化时，更新到全局控制器
+    LaunchedEffect(allPresets, favorites, customPresets, selectedTab) {
+        val currentList = when (selectedTab) {
+            0 -> allPresets
+            1 -> favorites
+            2 -> customPresets
+            else -> allPresets
+        }
+        floatingWindowController.setPresetList(currentList)
     }
 
     // 删除确认对话框状态

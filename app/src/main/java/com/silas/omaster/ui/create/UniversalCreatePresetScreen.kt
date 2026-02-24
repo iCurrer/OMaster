@@ -30,6 +30,7 @@ import com.silas.omaster.model.PresetItem
 import com.silas.omaster.model.PresetSection
 
 import java.io.File
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,10 +60,10 @@ fun UniversalCreatePresetScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (uiState.isEditMode) "编辑预设" else "新建预设") },
+                title = { Text(if (uiState.isEditMode) stringResource(R.string.edit_preset_title) else stringResource(R.string.create_preset_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Text("取消", color = Color.Gray)
+                        Text(stringResource(R.string.cancel), color = Color.Gray)
                     }
                 },
                 actions = {
@@ -75,7 +76,7 @@ fun UniversalCreatePresetScreen(
                         },
                         enabled = isSaveEnabled
                     ) {
-                        Text("保存", color = if (isSaveEnabled) MaterialTheme.colorScheme.primary else Color.Gray)
+                        Text(stringResource(R.string.save), color = if (isSaveEnabled) MaterialTheme.colorScheme.primary else Color.Gray)
                     }
                 }
             )
@@ -85,7 +86,7 @@ fun UniversalCreatePresetScreen(
                 onClick = { showAddSectionDialog = true },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Section")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_section))
             }
         }
     ) { padding ->
@@ -102,7 +103,7 @@ fun UniversalCreatePresetScreen(
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text("基本信息", style = MaterialTheme.typography.titleMedium)
+                        Text(stringResource(R.string.section_basic), style = MaterialTheme.typography.titleMedium)
                         Spacer(modifier = Modifier.height(8.dp))
                         
                         // Cover Image
@@ -118,14 +119,24 @@ fun UniversalCreatePresetScreen(
                             if (uiState.imageUri != null) {
                                 AsyncImage(
                                     model = uiState.imageUri,
-                                    contentDescription = "Cover",
+                                    contentDescription = stringResource(R.string.cover_image),
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier.fillMaxSize()
                                 )
                             } else if (uiState.originalCoverPath != null) {
+                                val context = LocalContext.current
+                                val imageModel = remember(uiState.originalCoverPath) {
+                                      val path = uiState.originalCoverPath ?: ""
+                                      when {
+                                          path.startsWith("http") -> path
+                                          path.startsWith("/") -> File(path) // Absolute path
+                                          path.startsWith("presets/") -> File(context.filesDir, path)
+                                          else -> "file:///android_asset/$path"
+                                      }
+                                  }
                                 AsyncImage(
-                                    model = File(uiState.originalCoverPath),
-                                    contentDescription = "Cover",
+                                    model = imageModel,
+                                    contentDescription = stringResource(R.string.cover_image),
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier.fillMaxSize()
                                 )
@@ -141,7 +152,7 @@ fun UniversalCreatePresetScreen(
                                         modifier = Modifier.size(48.dp)
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
-                                    Text("点击上传封面", color = Color.White)
+                                    Text(stringResource(R.string.upload_cover_hint), color = Color.White)
                                 }
                             }
                         }
@@ -151,7 +162,7 @@ fun UniversalCreatePresetScreen(
                         OutlinedTextField(
                             value = uiState.name,
                             onValueChange = { viewModel.updateName(it) },
-                            label = { Text("预设名称") },
+                            label = { Text(stringResource(R.string.preset_name)) },
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -190,12 +201,12 @@ fun UniversalCreatePresetScreen(
         var newSectionTitle by remember { mutableStateOf("") }
         AlertDialog(
             onDismissRequest = { showAddSectionDialog = false },
-            title = { Text("添加分组") },
+            title = { Text(stringResource(R.string.add_section)) },
             text = {
                 OutlinedTextField(
                     value = newSectionTitle,
                     onValueChange = { newSectionTitle = it },
-                    label = { Text("分组标题") }
+                    label = { Text(stringResource(R.string.section_name)) }
                 )
             },
             confirmButton = {
@@ -205,12 +216,12 @@ fun UniversalCreatePresetScreen(
                         showAddSectionDialog = false
                     }
                 }) {
-                    Text("确定")
+                    Text(stringResource(R.string.confirm))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddSectionDialog = false }) {
-                    Text("取消")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -223,24 +234,27 @@ fun UniversalCreatePresetScreen(
 
         AlertDialog(
             onDismissRequest = { showAddItemDialog = false },
-            title = { Text(if (editingItem == null) "添加参数" else "编辑参数") },
+            title = { Text(if (editingItem == null) stringResource(R.string.add_item) else stringResource(R.string.edit_item)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     OutlinedTextField(
                         value = label,
                         onValueChange = { label = it },
-                        label = { Text("参数名 (Label)") }
+                        label = { Text(stringResource(R.string.param_label)) }
                     )
                     OutlinedTextField(
                         value = value,
                         onValueChange = { value = it },
-                        label = { Text("参数值 (Value)") }
+                        label = { Text(stringResource(R.string.param_value)) }
                     )
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("宽度占比 (Span): $span")
+                        Text(stringResource(R.string.span_label, span))
                         Slider(
                             value = span.toFloat(),
-                            onValueChange = { span = it.toInt() },
+                            onValueChange = { 
+                                // Use roundToInt to make selection of 2 easier
+                                span = it.roundToInt() 
+                            },
                             valueRange = 1f..2f,
                             steps = 0
                         )
@@ -259,12 +273,12 @@ fun UniversalCreatePresetScreen(
                         showAddItemDialog = false
                     }
                 }) {
-                    Text("确定")
+                    Text(stringResource(R.string.confirm))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddItemDialog = false }) {
-                    Text("取消")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -290,12 +304,12 @@ fun SectionCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = section.title ?: "未命名分组",
+                    text = section.title ?: stringResource(R.string.unnamed_section),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
                 IconButton(onClick = onRemoveSection) {
-                    Icon(Icons.Default.Delete, contentDescription = "Remove Section", tint = Color.Red)
+                    Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.remove_section), tint = Color.Red)
                 }
             }
             
@@ -317,7 +331,7 @@ fun SectionCard(
                         Text(text = item.value, style = MaterialTheme.typography.bodySmall)
                     }
                     IconButton(onClick = { onRemoveItem(index) }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Remove Item", modifier = Modifier.size(20.dp))
+                        Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.remove_item), modifier = Modifier.size(20.dp))
                     }
                 }
             }
@@ -328,7 +342,7 @@ fun SectionCard(
             ) {
                 Icon(Icons.Default.Add, contentDescription = null)
                 Spacer(modifier = Modifier.width(4.dp))
-                Text("添加参数")
+                Text(stringResource(R.string.add_item))
             }
         }
     }

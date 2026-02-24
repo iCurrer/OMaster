@@ -227,32 +227,98 @@ fun MainApp(navController: NavHostController) {
     // 用于触发 HomeScreen 刷新的状态
     var refreshTrigger by remember { mutableStateOf(0) }
 
+    // 底部导航栏页面顺序，用于决定切换动画方向
+    val mainRouteList = remember { listOf("Home", "Subscription", "Settings", "About") }
+    fun getNavIndex(route: String?): Int {
+        return mainRouteList.indexOfFirst { route?.contains(it) == true }
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         NavHost(
             navController = navController,
             startDestination = Screen.Home,
             modifier = Modifier.fillMaxSize(),
             enterTransition = {
+                val initialIndex = getNavIndex(initialState.destination.route)
+                val targetIndex = getNavIndex(targetState.destination.route)
+                
+                val direction = if (initialIndex != -1 && targetIndex != -1) {
+                    // 底部导航栏页面之间的切换
+                    if (targetIndex > initialIndex) {
+                        AnimatedContentTransitionScope.SlideDirection.Left
+                    } else {
+                        AnimatedContentTransitionScope.SlideDirection.Right
+                    }
+                } else {
+                    // 默认的前进导航（如 Home -> Detail）
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                }
+                
                 slideIntoContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                    towards = direction,
                     animationSpec = tween(300)
                 ) + fadeIn(animationSpec = tween(300))
             },
             exitTransition = {
+                val initialIndex = getNavIndex(initialState.destination.route)
+                val targetIndex = getNavIndex(targetState.destination.route)
+                
+                val direction = if (initialIndex != -1 && targetIndex != -1) {
+                    // 底部导航栏页面之间的切换
+                    if (targetIndex > initialIndex) {
+                        AnimatedContentTransitionScope.SlideDirection.Left
+                    } else {
+                        AnimatedContentTransitionScope.SlideDirection.Right
+                    }
+                } else {
+                    // 默认的前进导航（如 Home -> Detail）
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                }
+
                 slideOutOfContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                    towards = direction,
                     animationSpec = tween(300)
                 ) + fadeOut(animationSpec = tween(300))
             },
             popEnterTransition = {
+                val initialIndex = getNavIndex(initialState.destination.route)
+                val targetIndex = getNavIndex(targetState.destination.route)
+                
+                val direction = if (initialIndex != -1 && targetIndex != -1) {
+                    // 底部导航栏页面之间的切换（通过 popBackStack 触发，如回到 Home）
+                    if (targetIndex > initialIndex) {
+                        AnimatedContentTransitionScope.SlideDirection.Left
+                    } else {
+                        AnimatedContentTransitionScope.SlideDirection.Right
+                    }
+                } else {
+                    // 默认的回退导航（如 Detail -> Home）
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                }
+
                 slideIntoContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                    towards = direction,
                     animationSpec = tween(300)
                 ) + fadeIn(animationSpec = tween(300))
             },
             popExitTransition = {
+                val initialIndex = getNavIndex(initialState.destination.route)
+                val targetIndex = getNavIndex(targetState.destination.route)
+                
+                val direction = if (initialIndex != -1 && targetIndex != -1) {
+                    // 底部导航栏页面之间的切换（通过 popBackStack 触发，如从 Subscription 回到 Home）
+                    if (targetIndex > initialIndex) {
+                        AnimatedContentTransitionScope.SlideDirection.Left
+                    } else {
+                        AnimatedContentTransitionScope.SlideDirection.Right
+                    }
+                } else {
+                    // 默认的回退导航（如 Detail -> Home）
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                }
+
                 slideOutOfContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                    towards = direction,
                     animationSpec = tween(300)
                 ) + fadeOut(animationSpec = tween(300))
             }
