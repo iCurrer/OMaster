@@ -27,7 +27,21 @@ class SubscriptionManager private constructor(context: Context) {
         if (jsonStr != null) {
             try {
                 val list = json.decodeFromString<SubscriptionList>(jsonStr)
-                _subscriptionsFlow.value = list.subscriptions
+                var updated = false
+                val migratedSubscriptions = list.subscriptions.map { sub ->
+                    // 迁移逻辑：如果订阅名称是“官方内置预设”但 URL 不是最新的，则更新它
+                    if (sub.name == "官方内置预设" && sub.url != UpdateConfigManager.DEFAULT_PRESET_URL) {
+                        updated = true
+                        sub.copy(url = UpdateConfigManager.DEFAULT_PRESET_URL)
+                    } else {
+                        sub
+                    }
+                }
+                _subscriptionsFlow.value = migratedSubscriptions
+                if (updated) {
+                    saveSubscriptions()
+                    android.util.Log.d("SubscriptionManager", "Migrated official subscription to new URL")
+                }
             } catch (e: Exception) {
                 android.util.Log.e("SubscriptionManager", "Failed to decode subscriptions", e)
                 _subscriptionsFlow.value = emptyList()
