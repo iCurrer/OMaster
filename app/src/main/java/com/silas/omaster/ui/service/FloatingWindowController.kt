@@ -62,9 +62,26 @@ class FloatingWindowController private constructor(private val context: Context)
      * 显示悬浮窗
      */
     fun showFloatingWindow(preset: MasterPreset, presets: List<MasterPreset> = emptyList()) {
-        // 如果没有传入预设列表，使用已保存的列表
-        presetList = if (presets.isNotEmpty()) presets else presetList
-        currentIndex = presetList.indexOfFirst { it.id == preset.id }.coerceAtLeast(0)
+        // 如果传入了新的列表，则更新保存的列表
+        if (presets.isNotEmpty()) {
+            presetList = presets
+        }
+        
+        // 尝试根据 ID 查找索引
+        var index = presetList.indexOfFirst { it.id == preset.id }
+        
+        // 如果找不到 ID，尝试根据名称查找（兜底方案）
+        if (index == -1) {
+            index = presetList.indexOfFirst { it.name == preset.name }
+        }
+        
+        // 仍然找不到，则默认为 0 并记录日志
+        if (index == -1) {
+            android.util.Log.w("FloatingWindowController", "Preset not found in list, defaulting to index 0. ID: ${preset.id}, Name: ${preset.name}")
+            index = 0
+        }
+
+        currentIndex = index
         _currentPreset.value = preset
 
         FloatingWindowService.show(context, preset, currentIndex, presetList.map { it.id ?: "" })
