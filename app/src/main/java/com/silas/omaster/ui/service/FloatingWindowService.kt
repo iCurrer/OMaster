@@ -1,5 +1,6 @@
 package com.silas.omaster.ui.service
 
+import android.animation.ValueAnimator
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -10,10 +11,12 @@ import android.graphics.Shader
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.IBinder
+import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -267,6 +270,9 @@ class FloatingWindowService : Service() {
             floatingView = rootLayout
             wm.addView(floatingView, params)
             setupDrag(wm)
+            
+            // 初始显示时自动贴边
+            floatingView?.post { snapToEdge(wm) }
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -314,6 +320,9 @@ class FloatingWindowService : Service() {
             floatingView = miniButton
             wm.addView(floatingView, params)
             setupDrag(wm)
+            
+            // 初始显示时自动贴边
+            floatingView?.post { snapToEdge(wm) }
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -830,19 +839,66 @@ class FloatingWindowService : Service() {
                         if (Math.abs(dx) > clickThreshold || Math.abs(dy) > clickThreshold) {
                             isClick = false
                         }
+                        
+                        val metrics = DisplayMetrics()
+                        wm.defaultDisplay.getMetrics(metrics)
+                        
                         params?.x = initialX + dx.toInt()
-                        params?.y = initialY + dy.toInt()
+                        
+                        // 垂直方向限制，防止超出屏幕
+                        val newY = initialY + dy.toInt()
+                        val maxY = metrics.heightPixels - (floatingView?.height ?: 0)
+                        params?.y = newY.coerceIn(0, maxY)
+                        
                         floatingView?.let { view ->
                             params?.let { p ->
                                 wm.updateViewLayout(view, p)
                             }
                         }
                     }
-                    MotionEvent.ACTION_UP -> {}
+                    MotionEvent.ACTION_UP -> {
+                        if (!isClick) {
+                            // 实现贴边收纳逻辑
+                            snapToEdge(wm)
+                        }
+                    }
                 }
                 return false
             }
         })
+    }
+
+    /**
+     * 将悬浮窗平滑移动至屏幕边缘
+     */
+    private fun snapToEdge(wm: WindowManager) {
+        val view = floatingView ?: return
+        val p = params ?: return
+        
+        val metrics = DisplayMetrics()
+        wm.defaultDisplay.getMetrics(metrics)
+        val screenWidth = metrics.widthPixels
+        val viewWidth = view.width
+
+        // 计算目标位置：左边(0)或右边(screenWidth - viewWidth)
+        // 如果是收起状态，可以进一步实现“半收纳”效果，即只露出一半图标
+        val targetX = if (p.x + viewWidth / 2 < screenWidth / 2) {
+            if (!isExpanded) -viewWidth / 2 else 0
+        } else {
+            if (!isExpanded) screenWidth - viewWidth / 2 else screenWidth - viewWidth
+        }
+
+        // 使用动画平滑移动
+        val animator = ValueAnimator.ofInt(p.x, targetX)
+        animator.duration = 300
+        animator.interpolator = DecelerateInterpolator()
+        animator.addUpdateListener { animation ->
+            if (floatingView != null) {
+                p.x = animation.animatedValue as Int
+                wm.updateViewLayout(view, p)
+            }
+        }
+        animator.start()
     }
 
     private fun removeWindow() {
