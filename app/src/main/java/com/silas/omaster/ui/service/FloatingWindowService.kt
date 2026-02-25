@@ -15,6 +15,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.silas.omaster.R
@@ -441,7 +442,7 @@ class FloatingWindowService : Service() {
     }
 
     /**
-     * 创建收起视图 - 品牌色渐变悬浮球
+     * 创建收起视图 - 圆形应用图标
      */
     private fun createCollapsedView(
         name: String,
@@ -452,36 +453,48 @@ class FloatingWindowService : Service() {
         return FrameLayout(this).apply {
             layoutParams = FrameLayout.LayoutParams(size, size)
 
-            // 外发光效果
+            // 外发光效果 - 品牌色外溢
             val glowView = View(context).apply {
                 layoutParams = FrameLayout.LayoutParams(size, size)
                 background = createGlowBackground()
             }
 
-            // 主按钮 - 渐变背景
-            val button = LinearLayout(context).apply {
-                orientation = LinearLayout.VERTICAL
-                gravity = Gravity.CENTER
+            // 主按钮容器 - 圆形边框
+            val button = FrameLayout(context).apply {
                 layoutParams = FrameLayout.LayoutParams(
                     dpToPx(48),
                     dpToPx(48)
                 ).apply {
                     gravity = Gravity.CENTER
                 }
-                background = createGradientCircleBackground()
+                
+                // 圆形黑色底色（防止图标透明部分看到背景）
+                background = GradientDrawable().apply {
+                    shape = GradientDrawable.OVAL
+                    setColor(Color.BLACK)
+                    setStroke(dpToPx(1), Color.parseColor("#1A000000")) // 极淡的描边增加立体感
+                }
 
-                // 展开图标
-                addView(TextView(context).apply {
-                    text = "▲"
-                    textSize = 18f
-                    setTextColor(Color.WHITE)
-                    gravity = Gravity.CENTER
-                })
+                // 应用图标
+                val iconView = ImageView(context).apply {
+                    layoutParams = FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT
+                    ).apply {
+                        val margin = dpToPx(1) // 留一点边距，显示底色的圆边
+                        setMargins(margin, margin, margin, margin)
+                    }
+                    setImageResource(R.mipmap.ic_launcher_round)
+                    scaleType = ImageView.ScaleType.FIT_CENTER
+                }
+                
+                addView(iconView)
             }
 
             addView(glowView)
             addView(button)
 
+            // 整个容器可点击
             setOnClickListener { onExpand() }
         }
     }
