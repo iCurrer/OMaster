@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.res.stringResource
 import com.silas.omaster.R
+import com.silas.omaster.data.local.SettingsManager
 import com.silas.omaster.data.repository.PresetRepository
 import com.silas.omaster.model.MasterPreset
 import com.silas.omaster.ui.animation.AnimationSpecs
@@ -110,7 +111,18 @@ fun HomeScreen(
         }
     }
 
-    val pagerState = rememberPagerState(pageCount = { 3 })
+    // 读取默认启动 Tab 设置
+    val settingsManager = remember { SettingsManager.getInstance(context) }
+    val defaultStartTab = remember { settingsManager.defaultStartTab }
+    
+    val pagerState = rememberPagerState(initialPage = defaultStartTab, pageCount = { 3 })
+    
+    // 初始化时同步默认 Tab
+    LaunchedEffect(Unit) {
+        if (selectedTab != defaultStartTab) {
+            viewModel.selectTab(defaultStartTab)
+        }
+    }
 
     // 全局悬浮窗控制器
     val floatingWindowController = remember { FloatingWindowController.getInstance(context) }

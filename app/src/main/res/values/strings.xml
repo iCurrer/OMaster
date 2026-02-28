@@ -40,9 +40,12 @@
     <string name="settings_title">设置</string>
     <string name="settings_section_general">常规</string>
     <string name="settings_section_appearance">外观</string>
+    <string name="settings_section_floating_window">悬浮窗</string>
     <string name="vibration_feedback">震动反馈</string>
+    <string name="default_start_tab">默认启动页面</string>
     <string name="settings_theme_title">主题颜色</string>
     <string name="settings_theme_dialog_title">选择主题颜色</string>
+    <string name="floating_window_opacity">悬浮窗透明度</string>
 
     <!-- 品牌名称 -->
     <string name="brand_hasselblad">哈苏</string>

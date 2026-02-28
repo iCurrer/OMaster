@@ -70,7 +70,6 @@ fun PillNavBar(
     val navItems = listOf(
         NavItem("home", stringResource(R.string.nav_home), Icons.Default.Home),
         NavItem("subscription", stringResource(R.string.nav_subscription), Icons.Default.RssFeed),
-        NavItem("settings", stringResource(R.string.nav_settings), Icons.Default.Settings),
         NavItem("about", stringResource(R.string.nav_about), Icons.Default.Info)
     )
 
@@ -105,7 +104,7 @@ fun PillNavBar(
                 // 磨砂玻璃背景层
                 Box(
                     modifier = Modifier
-                        .width(320.dp)
+                        .width(260.dp)
                         .height(64.dp)
                         .clip(RoundedCornerShape(32.dp))
                         .background(
@@ -121,7 +120,7 @@ fun PillNavBar(
                 // 顶部高光线条
                 Box(
                     modifier = Modifier
-                        .width(320.dp)
+                        .width(260.dp)
                         .height(64.dp)
                         .clip(RoundedCornerShape(32.dp))
                         .background(
@@ -138,7 +137,7 @@ fun PillNavBar(
                 // 边框
                 Box(
                     modifier = Modifier
-                        .width(320.dp)
+                        .width(260.dp)
                         .height(64.dp)
                         .clip(RoundedCornerShape(32.dp))
                         .background(
@@ -171,7 +170,7 @@ fun PillNavBar(
                 // 导航项
                 Row(
                     modifier = Modifier
-                        .width(320.dp)
+                        .width(260.dp)
                         .height(64.dp)
                         .padding(horizontal = 8.dp, vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly,
@@ -233,7 +232,7 @@ private fun NavItemButton(
 
     Column(
         modifier = Modifier
-            .width(76.dp)
+            .width(80.dp)
             .height(48.dp)
             .scale(scale)
             .clip(RoundedCornerShape(24.dp))

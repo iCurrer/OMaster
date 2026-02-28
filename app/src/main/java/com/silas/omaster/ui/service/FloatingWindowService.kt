@@ -22,6 +22,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.silas.omaster.R
+import com.silas.omaster.data.local.SettingsManager
 import com.silas.omaster.model.PresetItem
 import com.silas.omaster.model.PresetSection
 import com.silas.omaster.util.PresetI18n
@@ -48,11 +49,17 @@ class FloatingWindowService : Service() {
     // 配色方案
     private val primaryColor = Color.parseColor("#FF6B35")      // 品牌橙色
     private val primaryDark = Color.parseColor("#E55A2B")       // 深橙色
-    private val backgroundColor = Color.parseColor("#801A1A1A") // 毛玻璃背景（50%透明度，更透明便于取景）
     private val cardBackground = Color.parseColor("#26FFFFFF")  // 卡片背景
     private val textPrimary = Color.parseColor("#FFFFFF")       // 主文字
     private val textSecondary = Color.parseColor("#B3FFFFFF")   // 次要文字
     private val textMuted = Color.parseColor("#80FFFFFF")       // 弱化文字
+    
+    // 背景颜色根据设置动态计算
+    private fun getBackgroundColor(context: Context): Int {
+        val opacity = SettingsManager.getInstance(context).floatingWindowOpacity
+        val alpha = (opacity * 255 / 100).coerceIn(30, 255)
+        return Color.argb(alpha, 26, 26, 26) // #1A1A1A with dynamic alpha
+    }
 
     companion object {
         private const val EXTRA_NAME = "name"
@@ -354,7 +361,7 @@ class FloatingWindowService : Service() {
                     windowWidth,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
-                background = createGlassmorphismBackground()
+                background = createGlassmorphismBackground(context)
                 setPadding(dpToPx(20), dpToPx(16), dpToPx(20), dpToPx(20))
             }
             mainContainer = container
@@ -511,10 +518,10 @@ class FloatingWindowService : Service() {
     /**
      * 创建毛玻璃背景
      */
-    private fun createGlassmorphismBackground(): GradientDrawable {
+    private fun createGlassmorphismBackground(context: Context): GradientDrawable {
         return GradientDrawable().apply {
             cornerRadius = dpToPx(24).toFloat()
-            setColor(backgroundColor)
+            setColor(getBackgroundColor(context))
             // 添加边框效果
             setStroke(dpToPx(1), Color.parseColor("#33FFFFFF"))
         }

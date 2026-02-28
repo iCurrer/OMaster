@@ -32,9 +32,25 @@ class SettingsManager private constructor(context: Context) {
             _themeFlow.value = value
         }
 
+    // 悬浮窗透明度 (30-70%，默认56%)
+    var floatingWindowOpacity: Int
+        get() = prefs.getInt(KEY_FLOATING_WINDOW_OPACITY, 56)
+        set(value) {
+            prefs.edit().putInt(KEY_FLOATING_WINDOW_OPACITY, value.coerceIn(30, 70)).apply()
+        }
+
+    // 默认启动 Tab (0=全部, 1=收藏, 2=我的，默认0)
+    var defaultStartTab: Int
+        get() = prefs.getInt(KEY_DEFAULT_START_TAB, 0)
+        set(value) {
+            prefs.edit().putInt(KEY_DEFAULT_START_TAB, value.coerceIn(0, 2)).apply()
+        }
+
     companion object {
         private const val KEY_VIBRATION_ENABLED = "vibration_enabled"
         private const val KEY_THEME_ID = "theme_id"
+        private const val KEY_FLOATING_WINDOW_OPACITY = "floating_window_opacity"
+        private const val KEY_DEFAULT_START_TAB = "default_start_tab"
 
         @Volatile
         private var instance: SettingsManager? = null

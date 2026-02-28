@@ -219,8 +219,7 @@ fun MainApp(navController: NavHostController) {
 
     val showBottomNav = currentRoute?.contains("Home") == true || 
                         currentRoute?.contains("About") == true || 
-                        currentRoute?.contains("Subscription") == true || 
-                        currentRoute?.contains("Settings") == true
+                        currentRoute?.contains("Subscription") == true
 
     var isHomeScrollingUp by remember { mutableStateOf(true) }
     
@@ -228,7 +227,7 @@ fun MainApp(navController: NavHostController) {
     var refreshTrigger by remember { mutableStateOf(0) }
 
     // 底部导航栏页面顺序，用于决定切换动画方向
-    val mainRouteList = remember { listOf("Home", "Subscription", "Settings", "About") }
+    val mainRouteList = remember { listOf("Home", "Subscription", "About") }
     fun getNavIndex(route: String?): Int {
         return mainRouteList.indexOfFirst { route?.contains(it) == true }
     }
@@ -433,6 +432,9 @@ fun MainApp(navController: NavHostController) {
                     onBack = {
                         navController.popBackStack()
                     },
+                    onNavigateToSettings = {
+                        navController.navigate(Screen.Settings)
+                    },
                     onScrollStateChanged = { isScrollingUp ->
                         isHomeScrollingUp = isScrollingUp
                     },
@@ -460,7 +462,6 @@ fun MainApp(navController: NavHostController) {
                     currentRoute?.contains("Home") == true -> "home"
                     currentRoute?.contains("Subscription") == true -> "subscription"
                     currentRoute?.contains("About") == true -> "about"
-                    currentRoute?.contains("Settings") == true -> "settings"
                     else -> "home"
                 },
                 onNavigate = { route ->
@@ -473,17 +474,6 @@ fun MainApp(navController: NavHostController) {
                         "subscription" -> {
                             if (currentRoute?.contains("Subscription") != true) {
                                 navController.navigate(Screen.Subscription) {
-                                    popUpTo(Screen.Home) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            }
-                        }
-                        "settings" -> {
-                            if (currentRoute?.contains("Settings") != true) {
-                                navController.navigate(Screen.Settings) {
                                     popUpTo(Screen.Home) {
                                         saveState = true
                                     }

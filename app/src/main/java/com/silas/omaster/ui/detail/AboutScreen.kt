@@ -42,6 +42,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -94,6 +95,7 @@ import com.silas.omaster.util.perform
 @Composable
 fun AboutScreen(
     onBack: () -> Unit,
+    onNavigateToSettings: () -> Unit,
     onScrollStateChanged: (Boolean) -> Unit,
     currentVersionCode: Int = VersionInfo.VERSION_CODE,
     currentVersionName: String = VersionInfo.VERSION_NAME
@@ -194,7 +196,16 @@ fun AboutScreen(
     ) {
         OMasterTopAppBar(
             title = stringResource(R.string.about_title),
-            modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars)
+            modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
+            actions = {
+                IconButton(onClick = onNavigateToSettings) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = stringResource(R.string.nav_settings),
+                        tint = Color.White
+                    )
+                }
+            }
         )
 
         Column(

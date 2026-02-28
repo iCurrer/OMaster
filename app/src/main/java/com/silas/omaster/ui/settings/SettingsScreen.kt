@@ -24,6 +24,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -45,6 +47,7 @@ import com.silas.omaster.R
 import com.silas.omaster.data.local.SettingsManager
 import com.silas.omaster.ui.components.OMasterTopAppBar
 import com.silas.omaster.ui.theme.BrandTheme
+import com.silas.omaster.ui.theme.DarkGray
 import com.silas.omaster.ui.theme.PureBlack
 import com.silas.omaster.util.HapticSettings
 
@@ -55,6 +58,9 @@ fun SettingsScreen() {
     var vibrationEnabled by remember { mutableStateOf(settingsManager.isVibrationEnabled) }
     val currentTheme by settingsManager.themeFlow.collectAsState()
     var showThemeDialog by remember { mutableStateOf(false) }
+    var showTabDialog by remember { mutableStateOf(false) }
+    var floatingWindowOpacity by remember { mutableStateOf(settingsManager.floatingWindowOpacity) }
+    var defaultStartTab by remember { mutableStateOf(settingsManager.defaultStartTab) }
 
     if (showThemeDialog) {
         ThemeSelectionDialog(
@@ -64,6 +70,18 @@ fun SettingsScreen() {
                 showThemeDialog = false
             },
             onDismiss = { showThemeDialog = false }
+        )
+    }
+
+    if (showTabDialog) {
+        TabSelectionDialog(
+            currentTab = defaultStartTab,
+            onTabSelected = { tab ->
+                defaultStartTab = tab
+                settingsManager.defaultStartTab = tab
+                showTabDialog = false
+            },
+            onDismiss = { showTabDialog = false }
         )
     }
 
@@ -114,6 +132,29 @@ fun SettingsScreen() {
             )
         }
 
+        // Default Start Tab Setting
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { showTabDialog = true }
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .height(56.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.default_start_tab),
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White
+            )
+            
+            Text(
+                text = getTabName(defaultStartTab),
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray
+            )
+        }
+
         // Appearance Section
         SettingsSectionHeader(title = stringResource(R.string.settings_section_appearance))
 
@@ -149,6 +190,76 @@ fun SettingsScreen() {
                 )
             }
         }
+
+        // Floating Window Section
+        SettingsSectionHeader(title = stringResource(R.string.settings_section_floating_window))
+
+        // Floating Window Opacity Setting
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.floating_window_opacity),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White
+                )
+                Text(
+                    text = "$floatingWindowOpacity%",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            Slider(
+                value = floatingWindowOpacity.toFloat(),
+                onValueChange = { 
+                    floatingWindowOpacity = it.toInt()
+                    settingsManager.floatingWindowOpacity = it.toInt()
+                },
+                valueRange = 30f..70f,
+                steps = 39, // (70-30)/1 - 1 = 39 steps for integer values
+                colors = SliderDefaults.colors(
+                    thumbColor = MaterialTheme.colorScheme.primary,
+                    activeTrackColor = MaterialTheme.colorScheme.primary,
+                    inactiveTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                )
+            )
+            
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "30%",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
+                Text(
+                    text = "70%",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun getTabName(tabIndex: Int): String {
+    return when (tabIndex) {
+        0 -> "全部"
+        1 -> "收藏"
+        2 -> "我的"
+        else -> "全部"
     }
 }
 
@@ -226,7 +337,58 @@ fun ThemeSelectionDialog(
                 Text(stringResource(R.string.cancel))
             }
         },
-        containerColor = MaterialTheme.colorScheme.surface,
-        textContentColor = MaterialTheme.colorScheme.onSurface
+        containerColor = DarkGray,
+        textContentColor = Color.White
+    )
+}
+
+@Composable
+fun TabSelectionDialog(
+    currentTab: Int,
+    onTabSelected: (Int) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val tabs = listOf("全部" to 0, "收藏" to 1, "我的" to 2)
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(text = "选择默认启动页面")
+        },
+        text = {
+            LazyColumn {
+                items(tabs) { (name, index) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onTabSelected(index) }
+                            .padding(vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (index == currentTab),
+                            onClick = { onTabSelected(index) },
+                            colors = RadioButtonDefaults.colors(
+                                selectedColor = MaterialTheme.colorScheme.primary,
+                                unselectedColor = Color.Gray
+                            )
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+                            text = name,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.White
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        },
+        containerColor = DarkGray,
+        textContentColor = Color.White
     )
 }
