@@ -120,14 +120,12 @@ fun DetailScreen(
             title = preset?.let { PresetI18n.getLocalizedPresetName(it.name) } ?: stringResource(R.string.detail_title),
             subtitle = preset?.author,
             onBack = {
-                haptic.perform(HapticFeedbackType.TextHandleMove)
                 onBack()
             },
             actions = {
                 // 悬浮窗按钮
                 IconButton(
                     onClick = {
-                        haptic.perform(HapticFeedbackType.Confirm)
                         preset?.let { p ->
                             val isFirstTime = guideManager.isFirstTimeUseFloatingWindow()
                             android.util.Log.d("DetailScreen", "悬浮窗按钮点击，是否首次使用: $isFirstTime")

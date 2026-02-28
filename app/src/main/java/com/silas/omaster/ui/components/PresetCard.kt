@@ -74,10 +74,7 @@ fun PresetCard(
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
-                onClick = {
-                    haptic.perform(HapticFeedbackType.TextHandleMove)
-                    onClick()
-                }
+                onClick = onClick
             ),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(

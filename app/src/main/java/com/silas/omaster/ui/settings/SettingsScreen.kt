@@ -50,6 +50,9 @@ import com.silas.omaster.ui.theme.BrandTheme
 import com.silas.omaster.ui.theme.DarkGray
 import com.silas.omaster.ui.theme.PureBlack
 import com.silas.omaster.util.HapticSettings
+import com.silas.omaster.util.perform
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 
 @Composable
 fun SettingsScreen() {
@@ -61,11 +64,13 @@ fun SettingsScreen() {
     var showTabDialog by remember { mutableStateOf(false) }
     var floatingWindowOpacity by remember { mutableStateOf(settingsManager.floatingWindowOpacity) }
     var defaultStartTab by remember { mutableStateOf(settingsManager.defaultStartTab) }
+    val haptic = LocalHapticFeedback.current
 
     if (showThemeDialog) {
         ThemeSelectionDialog(
             currentTheme = currentTheme,
             onThemeSelected = { theme ->
+                haptic.perform(HapticFeedbackType.Confirm)
                 settingsManager.currentTheme = theme
                 showThemeDialog = false
             },
@@ -77,6 +82,7 @@ fun SettingsScreen() {
         TabSelectionDialog(
             currentTab = defaultStartTab,
             onTabSelected = { tab ->
+                haptic.perform(HapticFeedbackType.Confirm)
                 defaultStartTab = tab
                 settingsManager.defaultStartTab = tab
                 showTabDialog = false
@@ -124,6 +130,9 @@ fun SettingsScreen() {
                     vibrationEnabled = enabled
                     settingsManager.isVibrationEnabled = enabled
                     HapticSettings.enabled = enabled
+                    if (enabled) {
+                        haptic.perform(HapticFeedbackType.ToggleOn)
+                    }
                 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = MaterialTheme.colorScheme.primary,
@@ -219,11 +228,18 @@ fun SettingsScreen() {
             
             Spacer(modifier = Modifier.height(8.dp))
             
+            var previousOpacity by remember { mutableStateOf(floatingWindowOpacity) }
             Slider(
                 value = floatingWindowOpacity.toFloat(),
                 onValueChange = { 
-                    floatingWindowOpacity = it.toInt()
-                    settingsManager.floatingWindowOpacity = it.toInt()
+                    val newValue = it.toInt()
+                    floatingWindowOpacity = newValue
+                    settingsManager.floatingWindowOpacity = newValue
+                    // 值变化时触发震动（避免连续震动，只在整数步进时触发）
+                    if (newValue != previousOpacity) {
+                        haptic.perform(HapticFeedbackType.TextHandleMove)
+                        previousOpacity = newValue
+                    }
                 },
                 valueRange = 30f..70f,
                 steps = 39, // (70-30)/1 - 1 = 39 steps for integer values
