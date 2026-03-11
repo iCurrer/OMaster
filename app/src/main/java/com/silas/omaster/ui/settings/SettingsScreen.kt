@@ -18,9 +18,26 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material.icons.filled.Brush
+import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.filled.DashboardCustomize
+import androidx.compose.material.icons.filled.PrivacyTip
+import androidx.compose.material.icons.filled.Update
+import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
@@ -40,8 +57,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.silas.omaster.R
 import com.silas.omaster.data.local.SettingsManager
@@ -52,8 +73,6 @@ import com.silas.omaster.ui.theme.DarkGray
 import com.silas.omaster.ui.theme.PureBlack
 import com.silas.omaster.util.HapticSettings
 import com.silas.omaster.util.perform
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalHapticFeedback
 
 @Composable
 fun SettingsScreen() {
@@ -67,6 +86,7 @@ fun SettingsScreen() {
     var defaultStartTab by remember { mutableStateOf(settingsManager.defaultStartTab) }
     var updateChannel by remember { mutableStateOf(settingsManager.updateChannel) }
     var showChannelDialog by remember { mutableStateOf(false) }
+    var analyticsEnabled by remember { mutableStateOf(settingsManager.isAnalyticsEnabled) }
     val haptic = LocalHapticFeedback.current
 
     if (showThemeDialog) {
@@ -107,10 +127,13 @@ fun SettingsScreen() {
         )
     }
 
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(PureBlack)
+            .verticalScroll(scrollState)
     ) {
         OMasterTopAppBar(
             title = stringResource(R.string.settings_title),
@@ -118,29 +141,13 @@ fun SettingsScreen() {
         )
 
         // General Section
-        SettingsSectionHeader(title = stringResource(R.string.settings_section_general))
+        SettingsSectionCard {
+            SettingsSectionTitle(title = stringResource(R.string.settings_section_general))
 
-        // Vibration Setting
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    val newValue = !vibrationEnabled
-                    vibrationEnabled = newValue
-                    settingsManager.isVibrationEnabled = newValue
-                    HapticSettings.enabled = newValue
-                }
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .height(56.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.vibration_feedback),
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.White
-            )
-            Switch(
+            // Vibration Setting
+            SettingsSwitchItem(
+                icon = Icons.Default.Vibration,
+                title = stringResource(R.string.vibration_feedback),
                 checked = vibrationEnabled,
                 onCheckedChange = { enabled ->
                     vibrationEnabled = enabled
@@ -149,169 +156,282 @@ fun SettingsScreen() {
                     if (enabled) {
                         haptic.perform(HapticFeedbackType.ToggleOn)
                     }
+                }
+            )
+
+            HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
+
+            // Default Start Tab Setting
+            SettingsClickableItem(
+                icon = Icons.Default.DashboardCustomize,
+                title = stringResource(R.string.default_start_tab),
+                subtitle = getTabName(defaultStartTab),
+                onClick = { showTabDialog = true }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Appearance Section
+        SettingsSectionCard {
+            SettingsSectionTitle(title = stringResource(R.string.settings_section_appearance))
+
+            // Theme Setting
+            SettingsClickableItem(
+                icon = Icons.Default.Brush,
+                title = stringResource(R.string.settings_theme_title),
+                subtitle = stringResource(currentTheme.brandNameResId),
+                trailingContent = {
+                    Box(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clip(CircleShape)
+                            .background(currentTheme.primaryColor)
+                    )
                 },
+                onClick = { showThemeDialog = true }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Floating Window Section
+        SettingsSectionCard {
+            SettingsSectionTitle(title = stringResource(R.string.settings_section_floating_window))
+
+            // Floating Window Opacity Setting
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.floating_window_opacity),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "$floatingWindowOpacity%",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                var previousOpacity by remember { mutableStateOf(floatingWindowOpacity) }
+                Slider(
+                    value = floatingWindowOpacity.toFloat(),
+                    onValueChange = {
+                        val newValue = it.toInt()
+                        floatingWindowOpacity = newValue
+                        settingsManager.floatingWindowOpacity = newValue
+                        if (newValue != previousOpacity) {
+                            haptic.perform(HapticFeedbackType.TextHandleMove)
+                            previousOpacity = newValue
+                        }
+                    },
+                    valueRange = 30f..70f,
+                    steps = 39,
+                    colors = SliderDefaults.colors(
+                        thumbColor = MaterialTheme.colorScheme.primary,
+                        activeTrackColor = MaterialTheme.colorScheme.primary,
+                        inactiveTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                    )
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "30%",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+                    Text(
+                        text = "70%",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Update Section
+        SettingsSectionCard {
+            SettingsSectionTitle(title = "更新设置")
+
+            SettingsClickableItem(
+                icon = Icons.Default.Update,
+                title = "更新渠道",
+                subtitle = when (updateChannel) {
+                    UpdateChannel.GITEE -> "Gitee（国内推荐）"
+                    UpdateChannel.GITHUB -> "GitHub（国际）"
+                },
+                onClick = { showChannelDialog = true }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Privacy Section
+        SettingsSectionCard {
+            SettingsSectionTitle(title = stringResource(R.string.settings_section_privacy))
+
+            SettingsSwitchItem(
+                icon = Icons.Default.Analytics,
+                title = stringResource(R.string.analytics_enabled),
+                subtitle = stringResource(R.string.analytics_restart_hint),
+                checked = analyticsEnabled,
+                onCheckedChange = { enabled ->
+                    analyticsEnabled = enabled
+                    settingsManager.isAnalyticsEnabled = enabled
+                    if (enabled) {
+                        haptic.perform(HapticFeedbackType.ToggleOn)
+                    } else {
+                        haptic.perform(HapticFeedbackType.ToggleOff)
+                    }
+                }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+    }
+}
+
+@Composable
+private fun SettingsSectionCard(
+    content: @Composable () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = DarkGray.copy(alpha = 0.5f)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        content()
+    }
+}
+
+@Composable
+private fun SettingsSectionTitle(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
+    )
+}
+
+@Composable
+private fun SettingsSwitchItem(
+    icon: ImageVector,
+    title: String,
+    subtitle: String? = null,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    ListItem(
+        headlineContent = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White
+            )
+        },
+        supportingContent = subtitle?.let {
+            {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray
+                )
+            }
+        },
+        leadingContent = {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(24.dp)
+            )
+        },
+        trailingContent = {
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = MaterialTheme.colorScheme.primary,
                     checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                 )
             )
-        }
+        },
+        modifier = Modifier.clickable { onCheckedChange(!checked) },
+        colors = ListItemDefaults.colors(
+            containerColor = Color.Transparent
+        )
+    )
+}
 
-        // Default Start Tab Setting
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { showTabDialog = true }
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .height(56.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+@Composable
+private fun SettingsClickableItem(
+    icon: ImageVector,
+    title: String,
+    subtitle: String? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
+    onClick: () -> Unit
+) {
+    ListItem(
+        headlineContent = {
             Text(
-                text = stringResource(R.string.default_start_tab),
+                text = title,
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.White
             )
-            
-            Text(
-                text = getTabName(defaultStartTab),
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
-            )
-        }
-
-        // Appearance Section
-        SettingsSectionHeader(title = stringResource(R.string.settings_section_appearance))
-
-        // Theme Setting
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { showThemeDialog = true }
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .height(56.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.settings_theme_title),
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.White
-            )
-            
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                // Color Dot
-                Box(
-                    modifier = Modifier
-                        .size(16.dp)
-                        .clip(CircleShape)
-                        .background(currentTheme.primaryColor)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
+        },
+        supportingContent = subtitle?.let {
+            {
                 Text(
-                    text = stringResource(currentTheme.brandNameResId),
+                    text = it,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
+                    color = Color.Gray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
-        }
-
-        // Floating Window Section
-        SettingsSectionHeader(title = stringResource(R.string.settings_section_floating_window))
-
-        // Floating Window Opacity Setting
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.floating_window_opacity),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
-                Text(
-                    text = "$floatingWindowOpacity%",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            
-            var previousOpacity by remember { mutableStateOf(floatingWindowOpacity) }
-            Slider(
-                value = floatingWindowOpacity.toFloat(),
-                onValueChange = { 
-                    val newValue = it.toInt()
-                    floatingWindowOpacity = newValue
-                    settingsManager.floatingWindowOpacity = newValue
-                    // 值变化时触发震动（避免连续震动，只在整数步进时触发）
-                    if (newValue != previousOpacity) {
-                        haptic.perform(HapticFeedbackType.TextHandleMove)
-                        previousOpacity = newValue
-                    }
-                },
-                valueRange = 30f..70f,
-                steps = 39, // (70-30)/1 - 1 = 39 steps for integer values
-                colors = SliderDefaults.colors(
-                    thumbColor = MaterialTheme.colorScheme.primary,
-                    activeTrackColor = MaterialTheme.colorScheme.primary,
-                    inactiveTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
-                )
+        },
+        leadingContent = {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(24.dp)
             )
-            
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "30%",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
-                )
-                Text(
-                    text = "70%",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
-                )
-            }
-        }
-
-        // Update Section
-        SettingsSectionHeader(title = "更新设置")
-
-        // Update Channel Setting
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { showChannelDialog = true }
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .height(56.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "更新渠道",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.White
+        },
+        trailingContent = trailingContent ?: {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = Color.Gray
             )
-
-            Text(
-                text = when (updateChannel) {
-                    UpdateChannel.GITEE -> "Gitee"
-                    UpdateChannel.GITHUB -> "GitHub"
-                },
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
-            )
-        }
-    }
+        },
+        modifier = Modifier.clickable(onClick = onClick),
+        colors = ListItemDefaults.colors(
+            containerColor = Color.Transparent
+        )
+    )
 }
 
 @Composable
@@ -322,18 +442,6 @@ private fun getTabName(tabIndex: Int): String {
         2 -> "我的"
         else -> "全部"
     }
-}
-
-@Composable
-private fun SettingsSectionHeader(title: String) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.labelMedium,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .padding(top = 16.dp)
-    )
 }
 
 @Composable
@@ -366,17 +474,16 @@ fun ThemeSelectionDialog(
                             )
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        
-                        // Color Preview
+
                         Box(
                             modifier = Modifier
                                 .size(24.dp)
                                 .clip(CircleShape)
                                 .background(theme.primaryColor)
                         )
-                        
+
                         Spacer(modifier = Modifier.width(16.dp))
-                        
+
                         Column {
                             Text(
                                 text = stringResource(theme.brandNameResId),
@@ -410,7 +517,7 @@ fun TabSelectionDialog(
     onDismiss: () -> Unit
 ) {
     val tabs = listOf("全部" to 0, "收藏" to 1, "我的" to 2)
-    
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {

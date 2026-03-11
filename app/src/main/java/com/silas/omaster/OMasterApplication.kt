@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import com.silas.omaster.data.local.SettingsManager
 import com.silas.omaster.util.HapticSettings
 import com.umeng.commonsdk.UMConfigure
+import com.umeng.analytics.MobclickAgent
 
 class OMasterApplication : Application() {
     companion object {
@@ -30,8 +31,8 @@ class OMasterApplication : Application() {
         // 每次冷启动都调用预初始化（不采集数据）
         preInitUMeng()
 
-        // 如果用户已同意隐私政策，则调用正式初始化
-        if (hasUserAgreed()) {
+        // 如果用户已同意隐私政策且统计开关开启，则调用正式初始化
+        if (hasUserAgreed() && isAnalyticsEnabled()) {
             initUMeng()
         }
     }
@@ -61,5 +62,27 @@ class OMasterApplication : Application() {
 
     fun setUserAgreed(agreed: Boolean) {
         prefs.edit().putBoolean(KEY_USER_AGREED, agreed).apply()
+    }
+
+    /**
+     * 检查统计开关是否开启
+     */
+    private fun isAnalyticsEnabled(): Boolean {
+        return SettingsManager.getInstance(this).isAnalyticsEnabled
+    }
+
+    /**
+     * 根据当前开关状态重新初始化或禁用友盟统计
+     * 在设置页面切换开关后调用
+     */
+    fun updateAnalyticsState() {
+        if (isAnalyticsEnabled() && hasUserAgreed()) {
+            // 开启统计，执行初始化
+            initUMeng()
+        } else {
+            // 关闭统计，禁用数据上报
+            // 注意：友盟SDK不支持完全停止，但可以通过以下方式减少数据收集
+            MobclickAgent.disable()
+        }
     }
 }

@@ -68,12 +68,20 @@ class SettingsManager private constructor(context: Context) {
             prefs.edit().putString(KEY_UPDATE_CHANNEL, value.name).apply()
         }
 
+    // 友盟统计开关（默认开启，因为用户首次已同意隐私政策）
+    var isAnalyticsEnabled: Boolean
+        get() = prefs.getBoolean(KEY_ANALYTICS_ENABLED, true)
+        set(value) {
+            prefs.edit().putBoolean(KEY_ANALYTICS_ENABLED, value).apply()
+        }
+
     companion object {
         private const val KEY_VIBRATION_ENABLED = "vibration_enabled"
         private const val KEY_THEME_ID = "theme_id"
         private const val KEY_FLOATING_WINDOW_OPACITY = "floating_window_opacity"
         private const val KEY_DEFAULT_START_TAB = "default_start_tab"
         private const val KEY_UPDATE_CHANNEL = "update_channel"
+        private const val KEY_ANALYTICS_ENABLED = "analytics_enabled"
 
         @Volatile
         private var instance: SettingsManager? = null
