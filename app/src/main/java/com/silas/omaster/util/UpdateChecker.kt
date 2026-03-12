@@ -140,8 +140,9 @@ object UpdateChecker {
 
     /**
      * 使用系统 DownloadManager 下载并安装
+     * @return 下载任务 ID，用于查询进度
      */
-    fun downloadAndInstall(context: Context, downloadUrl: String, versionName: String) {
+    fun downloadAndInstall(context: Context, downloadUrl: String, versionName: String): Long {
         val fileName = "app-universal-release.apk"
 
         // 清理旧文件
@@ -158,7 +159,56 @@ object UpdateChecker {
         }
 
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        downloadManager.enqueue(request)
+        return downloadManager.enqueue(request)
+    }
+
+    /**
+     * 查询下载进度
+     * @return Pair<下载状态, 进度百分比> 状态：1=等待中, 2=下载中, 4=完成, 8=失败, 16=暂停
+     */
+    fun queryDownloadProgress(context: Context, downloadId: Long): Pair<Int, Int> {
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val query = DownloadManager.Query().setFilterById(downloadId)
+        val cursor = downloadManager.query(query)
+
+        var status = -1
+        var progress = 0
+
+        if (cursor.moveToFirst()) {
+            status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
+
+            when (status) {
+                DownloadManager.STATUS_PENDING -> {
+                    progress = 0
+                }
+                DownloadManager.STATUS_RUNNING -> {
+                    val downloaded = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+                    val total = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                    progress = if (total > 0) ((downloaded * 100) / total).toInt() else 0
+                }
+                DownloadManager.STATUS_SUCCESSFUL -> {
+                    progress = 100
+                }
+                DownloadManager.STATUS_FAILED -> {
+                    progress = -1
+                }
+                DownloadManager.STATUS_PAUSED -> {
+                    val downloaded = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+                    val total = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                    progress = if (total > 0) ((downloaded * 100) / total).toInt() else 0
+                }
+            }
+        }
+        cursor.close()
+        return Pair(status, progress)
+    }
+
+    /**
+     * 取消下载
+     */
+    fun cancelDownload(context: Context, downloadId: Long) {
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        downloadManager.remove(downloadId)
     }
 }
 

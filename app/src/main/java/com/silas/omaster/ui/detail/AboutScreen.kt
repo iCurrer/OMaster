@@ -1,8 +1,10 @@
 package com.silas.omaster.ui.detail
 
+import android.app.DownloadManager
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
@@ -88,6 +90,8 @@ import com.silas.omaster.network.PresetRemoteManager
 import com.silas.omaster.data.repository.PresetRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -144,6 +148,11 @@ fun AboutScreen(
     var updateInfo by remember { mutableStateOf<UpdateChecker.UpdateInfo?>(null) }
     var checkError by remember { mutableStateOf<String?>(null) }
     var lastCheckTime by remember { mutableStateOf<Long?>(null) }
+    
+    // 下载进度相关状态
+    var downloadId by remember { mutableStateOf<Long>(-1L) }
+    var downloadProgress by remember { mutableIntStateOf(0) }
+    var isDownloading by remember { mutableStateOf(false) }
 
     // 获取设置管理器和更新渠道
     val settingsManager = remember { SettingsManager.getInstance(context) }
@@ -230,11 +239,22 @@ fun AboutScreen(
                 updateInfo = updateInfo,
                 checkError = checkError,
                 lastCheckTime = lastCheckTime,
+                isDownloading = isDownloading,
+                downloadProgress = downloadProgress,
                 onCheckClick = { checkForUpdate() },
                 onDownloadClick = {
                     updateInfo?.let { info ->
-                        UpdateChecker.downloadAndInstall(context, info.downloadUrl, info.versionName)
-                        Toast.makeText(context, "已开始下载，请查看通知栏进度", Toast.LENGTH_SHORT).show()
+                        downloadId = UpdateChecker.downloadAndInstall(context, info.downloadUrl, info.versionName)
+                        isDownloading = true
+                        downloadProgress = 0
+                    }
+                },
+                onCancelDownload = {
+                    if (downloadId != -1L) {
+                        UpdateChecker.cancelDownload(context, downloadId)
+                        isDownloading = false
+                        downloadProgress = 0
+                        downloadId = -1L
                     }
                 },
                 onRetryClick = {
@@ -242,6 +262,32 @@ fun AboutScreen(
                     checkForUpdate()
                 }
             )
+            
+            // 监听下载进度
+            LaunchedEffect(isDownloading, downloadId) {
+                if (isDownloading && downloadId != -1L) {
+                    while (isActive) {
+                        val (status, progress) = UpdateChecker.queryDownloadProgress(context, downloadId)
+                        downloadProgress = progress
+                        
+                        when (status) {
+                            DownloadManager.STATUS_SUCCESSFUL -> {
+                                isDownloading = false
+                                downloadProgress = 100
+                                break
+                            }
+                            DownloadManager.STATUS_FAILED -> {
+                                isDownloading = false
+                                downloadProgress = -1
+                                break
+                            }
+                        }
+                        
+                        if (!isDownloading) break
+                        delay(500) // 每500ms查询一次
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -311,8 +357,11 @@ private fun UpdateCard(
     updateInfo: UpdateChecker.UpdateInfo?,
     checkError: String?,
     lastCheckTime: Long?,
+    isDownloading: Boolean,
+    downloadProgress: Int,
     onCheckClick: () -> Unit,
     onDownloadClick: () -> Unit,
+    onCancelDownload: () -> Unit,
     onRetryClick: () -> Unit
 ) {
     val hasUpdate = updateInfo?.isNewer == true
@@ -446,18 +495,46 @@ private fun UpdateCard(
                                             )
                                         }
                                     }
-                                    Button(
-                                        onClick = onDownloadClick,
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = MaterialTheme.colorScheme.primary
-                                        ),
-                                        shape = RoundedCornerShape(10.dp),
-                                        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-                                    ) {
-                                        Text(
-                                            stringResource(R.string.version_download_btn),
-                                            style = MaterialTheme.typography.labelMedium
-                                        )
+                                    if (isDownloading) {
+                                        // 显示下载进度
+                                        Column(
+                                            horizontalAlignment = Alignment.End
+                                        ) {
+                                            Text(
+                                                text = "$downloadProgress%",
+                                                style = MaterialTheme.typography.labelMedium,
+                                                color = MaterialTheme.colorScheme.primary
+                                            )
+                                            Spacer(modifier = Modifier.height(4.dp))
+                                            LinearProgressIndicator(
+                                                progress = { downloadProgress / 100f },
+                                                modifier = Modifier.width(120.dp),
+                                                color = MaterialTheme.colorScheme.primary,
+                                                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                                                drawStopIndicator = {}
+                                            )
+                                            Spacer(modifier = Modifier.height(4.dp))
+                                            Text(
+                                                text = "取消",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                                                modifier = Modifier.clickable { onCancelDownload() }
+                                            )
+                                        }
+                                    } else {
+                                        Button(
+                                            onClick = onDownloadClick,
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.primary
+                                            ),
+                                            shape = RoundedCornerShape(10.dp),
+                                            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                                        ) {
+                                            Text(
+                                                stringResource(R.string.version_download_btn),
+                                                style = MaterialTheme.typography.labelMedium
+                                            )
+                                        }
                                     }
                                 }
                                 
