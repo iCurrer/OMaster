@@ -756,6 +756,28 @@ private fun CreditsCard(context: android.content.Context) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // QQ群号
+            Box(
+                modifier = Modifier
+                    .padding(start = 24.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f))
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+            ) {
+                Text(
+                    text = "软件交流QQ群: 1083543279",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
                 text = stringResource(R.string.material_provider),
                 style = MaterialTheme.typography.bodySmall,
