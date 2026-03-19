@@ -38,6 +38,8 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -297,6 +299,10 @@ fun AboutScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             CreditsCard(context)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ProjectCard(context)
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -873,6 +879,77 @@ private fun DeveloperChip(name: String, url: String, context: android.content.Co
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Medium
         )
+    }
+}
+
+@Composable
+private fun ProjectCard(context: android.content.Context) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = 1.dp,
+                color = CardBorderLight,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .clickable {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/iCurrer/OMaster"))
+                context.startActivity(intent)
+            },
+        colors = CardDefaults.cardColors(
+            containerColor = DarkGray
+        ),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(10.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Code,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+                Column {
+                    Text(
+                        text = "项目地址",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = "GitHub - iCurrer/OMaster",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White.copy(alpha = 0.5f)
+                    )
+                }
+            }
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                modifier = Modifier.size(20.dp)
+            )
+        }
     }
 }
 
