@@ -11,10 +11,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -98,7 +100,54 @@ fun SubscriptionScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             OMasterTopAppBar(
                 title = stringResource(R.string.sub_title),
-                modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars)
+                modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
+                actions = {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                if (refreshing) return@launch
+                                refreshing = true
+                                var successCount = 0
+                                var upToDateCount = 0
+                                val enabledSubs = subscriptions.filter { it.isEnabled }
+                                for (sub in enabledSubs) {
+                                    val result = PresetRemoteManager.fetchAndSave(context, sub.url)
+                                    if (result.isSuccess) {
+                                        successCount++
+                                    } else if (result.exceptionOrNull()?.message == "无需更新") {
+                                        upToDateCount++
+                                    }
+                                }
+                                if (enabledSubs.isNotEmpty()) {
+                                    PresetRepository.getInstance(context).reloadDefaultPresets()
+                                    val message = when {
+                                        successCount > 0 && upToDateCount > 0 -> "成功更新 ${successCount} 个，${upToDateCount} 个已是最新"
+                                        successCount > 0 -> "成功更新 ${successCount} 个订阅"
+                                        upToDateCount > 0 -> "所有订阅均已是最新"
+                                        else -> "更新失败，请检查网络"
+                                    }
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                }
+                                refreshing = false
+                            }
+                        },
+                        enabled = !refreshing && subscriptions.isNotEmpty()
+                    ) {
+                        if (refreshing) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                color = Color.White,
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = "刷新订阅",
+                                tint = if (subscriptions.isNotEmpty()) Color.White else Color.White.copy(alpha = 0.3f)
+                            )
+                        }
+                    }
+                }
             )
 
             Box(modifier = Modifier.fillMaxSize().pullRefresh(pullRefreshState)) {
