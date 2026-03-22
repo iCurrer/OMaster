@@ -1,8 +1,8 @@
 {
-  "version": 2,
-  "name": "OPPO / 一加 / Realme 预设",
+  "version": 3,
+  "name": "OPPO / 一加 大师预设",
   "author": "@OMaster",
-  "build": 1,
+  "build": 4,
   "presets": [
     {
       "name": "富士胶片",
@@ -1284,7 +1284,6 @@
         "images/ldtt_02.webp"
       ],
       "author": "@屋顶橙子味",
-      "isNew": true,
       "sections": [
         {
           "title": "@string/param_pro_adjust",
@@ -1367,7 +1366,6 @@
         "images/qtfw_02.webp"
       ],
       "author": "@屋顶橙子味",
-      "isNew": true,
       "sections": [
         {
           "title": "@string/param_pro_adjust",
@@ -1461,7 +1459,6 @@
         "images/nhd_03.webp"
       ],
       "author": "@屋顶橙子味",
-      "isNew": true,
       "sections": [
         {
           "title": "@string/param_pro_adjust",
@@ -1544,7 +1541,6 @@
         "images/fghj_02.webp"
       ],
       "author": "@屋顶橙子味",
-      "isNew": true,
       "sections": [
         {
           "title": "@string/param_pro_adjust",
@@ -1618,6 +1614,69 @@
       "description": {
         "title": "Shooting Tips",
         "content": "【环境建议】老城区、复古场景、室内怀旧场景\n【场景推荐】老物件、街景、人像、故事性场景\n【拍摄要点】复古怀旧风格，65%复古滤镜营造怀旧感，低影调增加复古氛围，降低饱和度模拟老照片质感，适合拍摄怀旧主题照片"
+      }
+    },
+    {
+      "name": "春日清新",
+      "coverPath": "https://cdn.fky.ltd/crqx_01.webp",
+      "galleryImages": [
+        "https://cdn.fky.ltd/crqx_02.webp"
+      ],
+      "author": "@屋顶橙子味",
+      "isNew": true,
+      "sections": [
+        {
+          "title": "@string/section_color_grading",
+          "items": [
+            {
+              "label": "@string/param_filter",
+              "value": "清新 90%",
+              "span": 2
+            },
+            {
+              "label": "@string/param_soft_light",
+              "value": "柔美",
+              "span": 1
+            },
+            {
+              "label": "@string/param_tone_curve",
+              "value": "+12",
+              "span": 1
+            },
+            {
+              "label": "@string/param_saturation",
+              "value": "+4",
+              "span": 1
+            },
+            {
+              "label": "@string/param_warm_cool",
+              "value": "-10",
+              "span": 1
+            },
+            {
+              "label": "@string/param_cyan_magenta",
+              "value": "+4",
+              "span": 1
+            },
+            {
+              "label": "@string/param_sharpness",
+              "value": "+15",
+              "span": 1
+            },
+            {
+              "label": "@string/param_vignette",
+              "value": "开",
+              "span": 2
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "Auto"
+      ],
+      "description": {
+        "title": "Shooting Tips",
+        "content": "【环境建议】春日户外，光线柔和的场景\n【场景推荐】花卉、人像、风景、日常记录\n【拍摄要点】清新明亮的色调，适合表现春天的生机与活力"
       }
     }
   ]

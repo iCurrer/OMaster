@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.io.InputStreamReader
 
 class SubscriptionManager private constructor(context: Context) {
     private val appContext = context.applicationContext
@@ -48,15 +49,39 @@ class SubscriptionManager private constructor(context: Context) {
             }
         } else {
             // First time, add the default subscription
+            // 与云端 presets.json 保持一致：version 3, build 4
+            // 从 assets 读取预设数量
+            val presetCount = loadPresetCountFromAssets()
             val defaultSub = Subscription(
                 url = UpdateConfigManager.DEFAULT_PRESET_URL,
-                name = "官方内置预设",
+                name = "OPPO / 一加 大师预设",
                 author = "@OMaster",
-                build = 1,
-                isEnabled = true
+                build = 4,
+                isEnabled = true,
+                presetCount = presetCount,
+                lastUpdateTime = System.currentTimeMillis()
             )
             _subscriptionsFlow.value = listOf(defaultSub)
             saveSubscriptions()
+        }
+    }
+
+    /**
+     * 从 assets/presets.json 读取预设数量
+     */
+    private fun loadPresetCountFromAssets(): Int {
+        return try {
+            appContext.assets.open("presets.json").use { inputStream ->
+                InputStreamReader(inputStream).use { reader ->
+                    val presetListType = object : com.google.gson.reflect.TypeToken<com.silas.omaster.model.PresetList>() {}.type
+                    val presetList: com.silas.omaster.model.PresetList? = 
+                        com.google.gson.Gson().fromJson(reader, presetListType)
+                    presetList?.presets?.size ?: 0
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("SubscriptionManager", "Failed to load preset count from assets", e)
+            0
         }
     }
 

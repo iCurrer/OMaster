@@ -200,7 +200,8 @@ fun MainApp(navController: NavHostController) {
         }
         
         // 现在 currentPresetsVersion 已经被正确设置
-        if (JsonUtil.currentPresetsVersion != 2) {
+        // 支持 version 2 和 3，只有旧版本 (version 1) 才需要迁移
+        if (JsonUtil.currentPresetsVersion == 1) {
             showMigrationDialog = true
         }
     }
