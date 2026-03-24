@@ -2,6 +2,7 @@ package com.silas.omaster.network
 
 import android.content.Context
 import android.util.Log
+import com.silas.omaster.data.config.ConfigCenter
 import com.silas.omaster.model.PresetList
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -64,24 +65,24 @@ object PresetRemoteManager {
                 return Result.failure(Exception(errorMsg))
             }
 
-            val subManager = com.silas.omaster.data.local.SubscriptionManager.getInstance(context)
-            
+            val config = ConfigCenter.getInstance(context)
+
             // 检查版本号是否相同
             if (!forceUpdate) {
-                val currentSub = subManager.subscriptionsFlow.value.find { it.url == url }
+                val currentSub = config.subscriptionsFlow.value.find { it.url == url }
                 if (currentSub != null && currentSub.build == presetList.build) {
                     return Result.failure(Exception("无需更新"))
                 }
             }
 
             withContext(Dispatchers.IO) {
-                val fileName = subManager.getFileNameForUrl(url)
+                val fileName = config.getSubscriptionFileName(url)
                 val file = File(context.filesDir, fileName)
                 file.writeText(text)
                 Log.d("PresetRemoteManager", "Saved remote presets to ${file.absolutePath}")
-                
+
                 // Update subscription info
-                subManager.updateSubscriptionStatus(
+                config.updateSubscriptionStatus(
                     url = url,
                     presetCount = presetList.presets.size,
                     lastUpdateTime = System.currentTimeMillis(),

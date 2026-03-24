@@ -11,6 +11,10 @@ import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.InputStreamReader
 
+@Deprecated(
+    "使用 ConfigCenter 替代",
+    ReplaceWith("ConfigCenter.getInstance(context)")
+)
 class SubscriptionManager private constructor(context: Context) {
     private val appContext = context.applicationContext
     private val prefs = appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

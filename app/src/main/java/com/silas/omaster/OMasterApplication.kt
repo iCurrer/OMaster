@@ -3,7 +3,7 @@ package com.silas.omaster
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import com.silas.omaster.data.local.SettingsManager
+import com.silas.omaster.data.config.ConfigCenter
 import com.silas.omaster.util.HapticSettings
 import com.silas.omaster.util.Logger
 import com.umeng.commonsdk.UMConfigure
@@ -30,7 +30,7 @@ class OMasterApplication : Application() {
         Logger.init(this)
 
         // 初始化震动设置
-        HapticSettings.enabled = SettingsManager.getInstance(this).isVibrationEnabled
+        HapticSettings.enabled = ConfigCenter.getInstance(this).isVibrationEnabled
 
         // 每次冷启动都调用预初始化（不采集数据）
         preInitUMeng()
@@ -72,7 +72,7 @@ class OMasterApplication : Application() {
      * 检查统计开关是否开启
      */
     private fun isAnalyticsEnabled(): Boolean {
-        return SettingsManager.getInstance(this).isAnalyticsEnabled
+        return ConfigCenter.getInstance(this).isAnalyticsEnabled
     }
 
     /**

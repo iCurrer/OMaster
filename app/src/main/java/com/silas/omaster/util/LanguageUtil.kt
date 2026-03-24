@@ -3,8 +3,8 @@ package com.silas.omaster.util
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
+import com.silas.omaster.data.config.ConfigCenter
 import com.silas.omaster.data.local.AppLanguage
-import com.silas.omaster.data.local.SettingsManager
 import java.util.Locale
 
 /**
@@ -17,8 +17,8 @@ object LanguageUtil {
      * 在 Activity 创建前调用
      */
     fun applyLanguage(context: Context): Context {
-        val settingsManager = SettingsManager.getInstance(context)
-        val language = settingsManager.appLanguage
+        val config = ConfigCenter.getInstance(context)
+        val language = config.appLanguage
         return updateResources(context, language)
     }
 
@@ -26,8 +26,8 @@ object LanguageUtil {
      * 获取当前应该使用的 Locale
      */
     fun getLocale(context: Context): Locale {
-        val settingsManager = SettingsManager.getInstance(context)
-        return when (settingsManager.appLanguage) {
+        val config = ConfigCenter.getInstance(context)
+        return when (config.appLanguage) {
             AppLanguage.SYSTEM -> getSystemLocale()
             AppLanguage.CHINESE -> Locale.SIMPLIFIED_CHINESE
             AppLanguage.ENGLISH -> Locale.ENGLISH

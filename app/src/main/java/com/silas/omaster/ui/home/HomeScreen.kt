@@ -56,7 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.res.stringResource
 import com.silas.omaster.R
-import com.silas.omaster.data.local.SettingsManager
+import com.silas.omaster.data.config.ConfigCenter
 import com.silas.omaster.data.repository.PresetRepository
 import com.silas.omaster.model.MasterPreset
 import com.silas.omaster.ui.animation.AnimationSpecs
@@ -113,9 +113,9 @@ fun HomeScreen(
     }
 
     // 读取默认启动 Tab 设置
-    val settingsManager = remember { SettingsManager.getInstance(context) }
-    val defaultStartTab = remember { settingsManager.defaultStartTab }
-    
+    val config = remember { ConfigCenter.getInstance(context) }
+    val defaultStartTab by config.defaultStartTabFlow.collectAsState()
+
     val pagerState = rememberPagerState(initialPage = defaultStartTab, pageCount = { 3 })
     
     // 初始化时同步默认 Tab

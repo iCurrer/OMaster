@@ -66,9 +66,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.silas.omaster.R
+import com.silas.omaster.data.config.ConfigCenter
 import com.silas.omaster.data.local.AppLanguage
 import com.silas.omaster.data.local.FloatingWindowMode
-import com.silas.omaster.data.local.SettingsManager
 import com.silas.omaster.data.local.UpdateChannel
 import com.silas.omaster.ui.components.OMasterTopAppBar
 import com.silas.omaster.ui.theme.BrandTheme
@@ -87,21 +87,21 @@ import androidx.compose.material.icons.filled.BugReport
 @Composable
 fun SettingsScreen() {
     val context = LocalContext.current
-    val settingsManager = remember { SettingsManager.getInstance(context) }
-    var vibrationEnabled by remember { mutableStateOf(settingsManager.isVibrationEnabled) }
-    val currentTheme by settingsManager.themeFlow.collectAsState()
+    val config = remember { ConfigCenter.getInstance(context) }
+    var vibrationEnabled by remember { mutableStateOf(config.isVibrationEnabled) }
+    val currentTheme by config.themeFlow.collectAsState()
     var showThemeDialog by remember { mutableStateOf(false) }
     var showTabDialog by remember { mutableStateOf(false) }
-    var floatingWindowOpacity by remember { mutableStateOf(settingsManager.floatingWindowOpacity) }
-    var defaultStartTab by remember { mutableStateOf(settingsManager.defaultStartTab) }
-    var updateChannel by remember { mutableStateOf(settingsManager.updateChannel) }
+    var floatingWindowOpacity by remember { mutableStateOf(config.floatingWindowOpacity) }
+    var defaultStartTab by remember { mutableStateOf(config.defaultStartTab) }
+    var updateChannel by remember { mutableStateOf(config.updateChannel) }
     var showChannelDialog by remember { mutableStateOf(false) }
-    var analyticsEnabled by remember { mutableStateOf(settingsManager.isAnalyticsEnabled) }
+    var analyticsEnabled by remember { mutableStateOf(config.isAnalyticsEnabled) }
     var cacheSize by remember { mutableStateOf(ImageCacheManager.getCacheSize(context)) }
     var showClearCacheDialog by remember { mutableStateOf(false) }
-    var floatingWindowMode by remember { mutableStateOf(settingsManager.floatingWindowMode) }
+    var floatingWindowMode by remember { mutableStateOf(config.floatingWindowMode) }
     var showFloatingModeDialog by remember { mutableStateOf(false) }
-    var appLanguage by remember { mutableStateOf(settingsManager.appLanguage) }
+    var appLanguage by remember { mutableStateOf(config.appLanguage) }
     var showLanguageDialog by remember { mutableStateOf(false) }
     var logSize by remember { mutableStateOf(LogExporter.getFormattedLogSize()) }
     var showClearLogDialog by remember { mutableStateOf(false) }
@@ -112,7 +112,7 @@ fun SettingsScreen() {
             currentTheme = currentTheme,
             onThemeSelected = { theme ->
                 haptic.perform(HapticFeedbackType.Confirm)
-                settingsManager.currentTheme = theme
+                config.currentTheme = theme
                 showThemeDialog = false
             },
             onDismiss = { showThemeDialog = false }
@@ -125,7 +125,7 @@ fun SettingsScreen() {
             onTabSelected = { tab ->
                 haptic.perform(HapticFeedbackType.Confirm)
                 defaultStartTab = tab
-                settingsManager.defaultStartTab = tab
+                config.defaultStartTab = tab
                 showTabDialog = false
             },
             onDismiss = { showTabDialog = false }
@@ -137,7 +137,7 @@ fun SettingsScreen() {
             currentChannel = updateChannel,
             onChannelSelected = { channel ->
                 haptic.perform(HapticFeedbackType.Confirm)
-                settingsManager.updateChannel = channel
+                config.updateChannel = channel
                 updateChannel = channel
                 showChannelDialog = false
             },
@@ -150,7 +150,7 @@ fun SettingsScreen() {
             currentMode = floatingWindowMode,
             onModeSelected = { mode ->
                 haptic.perform(HapticFeedbackType.Confirm)
-                settingsManager.floatingWindowMode = mode
+                config.floatingWindowMode = mode
                 floatingWindowMode = mode
                 showFloatingModeDialog = false
             },
@@ -168,7 +168,7 @@ fun SettingsScreen() {
                     showLanguageDialog = false
                     return@LanguageSelectionDialog
                 }
-                settingsManager.appLanguage = language
+                config.appLanguage = language
                 appLanguage = language
                 showLanguageDialog = false
                 // 提示用户并重启应用
@@ -213,7 +213,7 @@ fun SettingsScreen() {
                 checked = vibrationEnabled,
                 onCheckedChange = { enabled ->
                     vibrationEnabled = enabled
-                    settingsManager.isVibrationEnabled = enabled
+                    config.isVibrationEnabled = enabled
                     HapticSettings.enabled = enabled
                     if (enabled) {
                         haptic.perform(HapticFeedbackType.ToggleOn)
@@ -319,7 +319,7 @@ fun SettingsScreen() {
                     onValueChange = {
                         val newValue = it.toInt()
                         floatingWindowOpacity = newValue
-                        settingsManager.floatingWindowOpacity = newValue
+                        config.floatingWindowOpacity = newValue
                         if (newValue != previousOpacity) {
                             haptic.perform(HapticFeedbackType.TextHandleMove)
                             previousOpacity = newValue
@@ -382,7 +382,7 @@ fun SettingsScreen() {
                 checked = analyticsEnabled,
                 onCheckedChange = { enabled ->
                     analyticsEnabled = enabled
-                    settingsManager.isAnalyticsEnabled = enabled
+                    config.isAnalyticsEnabled = enabled
                     if (enabled) {
                         haptic.perform(HapticFeedbackType.ToggleOn)
                     } else {

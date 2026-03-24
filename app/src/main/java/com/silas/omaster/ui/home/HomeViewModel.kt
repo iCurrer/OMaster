@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.silas.omaster.data.local.SubscriptionManager
+import com.silas.omaster.data.config.ConfigCenter
 import com.silas.omaster.data.repository.PresetRepository
 import com.silas.omaster.model.MasterPreset
 import com.silas.omaster.network.PresetRemoteManager
@@ -117,8 +117,8 @@ class HomeViewModel(
     fun refresh(onComplete: (RefreshResult) -> Unit = {}) {
         viewModelScope.launch {
             // 1. 先尝试从远程更新所有启用的订阅
-            val subManager = SubscriptionManager.getInstance(context)
-            val subscriptions = subManager.subscriptionsFlow.value
+            val config = ConfigCenter.getInstance(context)
+            val subscriptions = config.subscriptionsFlow.value
             val enabledSubs = subscriptions.filter { it.isEnabled }
 
             var successCount = 0

@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.silas.omaster.R
-import com.silas.omaster.data.local.SubscriptionManager
+import com.silas.omaster.data.config.ConfigCenter
 import com.silas.omaster.data.repository.PresetRepository
 import com.silas.omaster.model.Subscription
 import com.silas.omaster.network.PresetRemoteManager
@@ -49,8 +49,8 @@ fun SubscriptionScreen(
     onScrollStateChanged: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
-    val subManager = remember { SubscriptionManager.getInstance(context) }
-    val subscriptions by subManager.subscriptionsFlow.collectAsState()
+    val config = remember { ConfigCenter.getInstance(context) }
+    val subscriptions by config.subscriptionsFlow.collectAsState()
     val scope = rememberCoroutineScope()
     
     var refreshing by remember { mutableStateOf(false) }
@@ -178,7 +178,7 @@ fun SubscriptionScreen(
                         items(subscriptions, key = { it.url }) { sub ->
                             SubscriptionItem(
                                 sub = sub,
-                                onToggle = { subManager.toggleSubscription(sub.url) },
+                                onToggle = { config.toggleSubscription(sub.url) },
                                 onClick = {
                                     selectedSubscription = sub
                                     showBottomSheet = true
@@ -223,7 +223,7 @@ fun SubscriptionScreen(
                     showBottomSheet = false
                 },
                 onDelete = {
-                    subManager.removeSubscription(selectedSubscription!!.url)
+                    config.removeSubscription(selectedSubscription!!.url)
                     showBottomSheet = false
                 }
             )
@@ -238,14 +238,14 @@ fun SubscriptionScreen(
                         // 添加新订阅时强制更新 (forceUpdate = true)，以确保能正确导入并验证
                         val result = PresetRemoteManager.fetchAndSave(context, url, forceUpdate = true)
                         result.onSuccess { presetList ->
-                            subManager.addSubscription(
+                            config.addSubscription(
                                 url = url,
                                 name = presetList.name ?: "",
                                 author = presetList.author ?: "",
                                 build = presetList.build
                             )
                             // 再次更新状态，确保 presetCount 等信息正确（因为 fetchAndSave 时可能还没 add）
-                            subManager.updateSubscriptionStatus(
+                            config.updateSubscriptionStatus(
                                 url = url,
                                 presetCount = presetList.presets.size,
                                 lastUpdateTime = System.currentTimeMillis(),
@@ -270,11 +270,11 @@ fun SubscriptionScreen(
                 onConfirm = { oldUrl, newUrl ->
                     showEditDialog = null
                     scope.launch {
-                        subManager.updateSubscriptionUrl(oldUrl, newUrl)
+                        config.updateSubscriptionUrl(oldUrl, newUrl)
                         // 更新 URL 后需要重新拉取
                         val result = PresetRemoteManager.fetchAndSave(context, newUrl, forceUpdate = true)
                         result.onSuccess { presetList ->
-                            subManager.updateSubscriptionStatus(
+                            config.updateSubscriptionStatus(
                                 url = newUrl,
                                 presetCount = presetList.presets.size,
                                 lastUpdateTime = System.currentTimeMillis(),

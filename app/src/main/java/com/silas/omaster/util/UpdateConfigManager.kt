@@ -2,6 +2,10 @@ package com.silas.omaster.util
 
 import android.content.Context
 
+@Deprecated(
+    "使用 ConfigCenter 替代",
+    ReplaceWith("ConfigCenter.getInstance(context).updateChannel")
+)
 object UpdateConfigManager {
     private const val PREFS_NAME = "omaster_update_prefs"
     private const val KEY_PRESET_URL = "preset_update_url"

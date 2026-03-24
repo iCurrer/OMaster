@@ -1,6 +1,8 @@
 package com.silas.omaster.util
 
 import android.content.Context
+import com.silas.omaster.data.config.ConfigCenter
+import com.silas.omaster.data.config.SubscriptionConfig
 import com.silas.omaster.model.MasterPreset
 import com.silas.omaster.model.PresetList
 import com.google.gson.Gson
@@ -98,17 +100,17 @@ object JsonUtil {
         }
 
         val allPresets = mutableListOf<MasterPreset>()
-        
-        val subManager = com.silas.omaster.data.local.SubscriptionManager.getInstance(context)
-        val subscriptions = subManager.subscriptionsFlow.value
+
+        val config = ConfigCenter.getInstance(context)
+        val subscriptions = config.subscriptionsFlow.value
 
         // 1. 加载所有开启的订阅预设
         try {
             val enabledSubs = subscriptions.filter { it.isEnabled }
-            
+
             for (sub in enabledSubs) {
                 // 检查是否存在下载的订阅文件
-                val subFile = java.io.File(context.filesDir, subManager.getFileNameForUrl(sub.url))
+                val subFile = java.io.File(context.filesDir, config.getSubscriptionFileName(sub.url))
                 if (subFile.exists()) {
                     // 如果存在订阅文件，加载它
                     try {
@@ -127,7 +129,7 @@ object JsonUtil {
                     } catch (e: Exception) {
                         Logger.e("JsonUtil", "Failed to load sub file: ${sub.url}", e)
                     }
-                } else if (sub.url == UpdateConfigManager.DEFAULT_PRESET_URL) {
+                } else if (sub.url == SubscriptionConfig.DEFAULT_PRESET_URL) {
                     // 如果是官方订阅但文件不存在，则从 assets 加载
                     try {
                         context.assets.open(fileName).use { inputStream ->
@@ -161,7 +163,7 @@ object JsonUtil {
     private fun processPresets(presets: List<MasterPreset>, sourceId: String): List<MasterPreset> {
         return presets.mapIndexed { index, preset ->
             // 对于官方内置预设，无论从 assets 还是远程加载，都保持一致的 ID
-            val effectiveSourceId = if (sourceId == "asset" || sourceId == UpdateConfigManager.DEFAULT_PRESET_URL) {
+            val effectiveSourceId = if (sourceId == "asset" || sourceId == SubscriptionConfig.DEFAULT_PRESET_URL) {
                 "official"
             } else {
                 sourceId

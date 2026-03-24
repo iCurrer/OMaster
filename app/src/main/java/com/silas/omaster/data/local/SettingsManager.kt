@@ -32,6 +32,10 @@ enum class AppLanguage {
     ENGLISH     // English
 }
 
+@Deprecated(
+    "使用 ConfigCenter 替代",
+    ReplaceWith("ConfigCenter.getInstance(context)")
+)
 class SettingsManager private constructor(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
 

@@ -56,7 +56,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.silas.omaster.data.repository.PresetRepository
 
 import androidx.compose.runtime.collectAsState
-import com.silas.omaster.data.local.SettingsManager
+import com.silas.omaster.data.config.ConfigCenter
 import com.silas.omaster.ui.settings.SettingsScreen
 
 
@@ -111,8 +111,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CompositionLocalProvider(LocalActivity provides this) {
-                val settingsManager = remember { SettingsManager.getInstance(applicationContext) }
-                val currentTheme by settingsManager.themeFlow.collectAsState()
+                val config = remember { ConfigCenter.getInstance(applicationContext) }
+                val currentTheme by config.themeFlow.collectAsState()
 
                 OMasterTheme(brandTheme = currentTheme) {
                     Surface(

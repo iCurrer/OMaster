@@ -22,8 +22,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.silas.omaster.R
+import com.silas.omaster.data.config.ConfigCenter
 import com.silas.omaster.data.local.FloatingWindowMode
-import com.silas.omaster.data.local.SettingsManager
 import com.silas.omaster.model.PresetItem
 import com.silas.omaster.model.PresetSection
 import com.silas.omaster.util.IconFont
@@ -59,7 +59,7 @@ class FloatingWindowService : Service() {
     
     // 背景颜色根据设置动态计算
     private fun getBackgroundColor(context: Context): Int {
-        val opacity = SettingsManager.getInstance(context).floatingWindowOpacity
+        val opacity = ConfigCenter.getInstance(context).floatingWindowOpacity
         val alpha = (opacity * 255 / 100).coerceIn(30, 255)
         return Color.argb(alpha, 26, 26, 26) // #1A1A1A with dynamic alpha
     }
@@ -170,7 +170,7 @@ class FloatingWindowService : Service() {
         val totalCount = presetList.size
 
         // 读取悬浮窗模式设置
-        val mode = SettingsManager.getInstance(this).floatingWindowMode
+        val mode = ConfigCenter.getInstance(this).floatingWindowMode
 
         when (action) {
             ACTION_UPDATE -> {
