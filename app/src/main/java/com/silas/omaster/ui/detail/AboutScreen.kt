@@ -52,6 +52,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -77,7 +78,6 @@ import com.silas.omaster.ui.components.OMasterTopAppBar
 import com.silas.omaster.ui.theme.CardBorderLight
 import com.silas.omaster.ui.theme.DarkGray
 import com.silas.omaster.ui.theme.NearBlack
-import com.silas.omaster.data.local.SettingsManager
 import com.silas.omaster.util.UpdateChecker
 import com.silas.omaster.util.VersionInfo
 import kotlinx.coroutines.delay
@@ -87,7 +87,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import android.widget.Toast
-import com.silas.omaster.util.UpdateConfigManager
+import com.silas.omaster.data.config.ConfigCenter
 import com.silas.omaster.network.PresetRemoteManager
 import com.silas.omaster.data.repository.PresetRepository
 import kotlinx.coroutines.CoroutineScope
@@ -157,9 +157,9 @@ fun AboutScreen(
     var downloadProgress by remember { mutableIntStateOf(0) }
     var isDownloading by remember { mutableStateOf(false) }
 
-    // 获取设置管理器和更新渠道
-    val settingsManager = remember { SettingsManager.getInstance(context) }
-    val updateChannel = settingsManager.updateChannel
+    // 获取更新渠道（使用 ConfigCenter）
+    val config = remember { ConfigCenter.getInstance(context) }
+    val updateChannel by config.updateChannelFlow.collectAsState()
 
     LaunchedEffect(isScrollingUp) {
         onScrollStateChanged(isScrollingUp)
