@@ -48,3 +48,11 @@ val CardBorderHighlight = Color(0xFFFF6600).copy(alpha = 0.3f)
 val SurfaceElevated = Color(0xFF222222)
 val GradientOrangeStart = Color(0xFFFF6600)
 val GradientOrangeEnd = Color(0xFFFF8533)
+
+/**
+ * 玻璃质感 (Glassmorphism) 配色
+ */
+val GlassBackground = Color(0xFF2D2D2D).copy(alpha = 0.65f)
+val GlassBorder = Color(0xFFFFFFFF).copy(alpha = 0.12f)
+val GlassBorderHighlight = Color(0xFFFF6600).copy(alpha = 0.5f)
+val GlassSurface = Color(0xFF3D3D3D).copy(alpha = 0.4f)
