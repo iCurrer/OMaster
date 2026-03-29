@@ -191,6 +191,25 @@ class ConfigCenter private constructor(context: Context) {
             prefs.edit().putBoolean(KEY_ANALYTICS_ENABLED, value).apply()
         }
 
+    /**
+     * 是否启用高级 Glass 质感效果
+     * true: 使用 6 层 Glass 效果（收藏按钮、导航栏胶囊）
+     * false: 使用简化效果（删除按钮样式）
+     */
+    private val _premiumGlassFlow = MutableStateFlow(loadPremiumGlass())
+    val premiumGlassFlow: StateFlow<Boolean> = _premiumGlassFlow.asStateFlow()
+
+    var isPremiumGlassEnabled: Boolean
+        get() = _premiumGlassFlow.value
+        set(value) {
+            _premiumGlassFlow.value = value
+            prefs.edit().putBoolean(KEY_PREMIUM_GLASS_ENABLED, value).apply()
+        }
+
+    private fun loadPremiumGlass(): Boolean {
+        return prefs.getBoolean(KEY_PREMIUM_GLASS_ENABLED, true)
+    }
+
     private fun loadAnalytics(): Boolean {
         return prefs.getBoolean(KEY_ANALYTICS_ENABLED, true)
     }
@@ -316,6 +335,7 @@ class ConfigCenter private constructor(context: Context) {
         private const val KEY_FLOATING_WINDOW_MODE = "floating_window_mode"
         private const val KEY_DEFAULT_START_TAB = "default_start_tab"
         private const val KEY_ANALYTICS_ENABLED = "analytics_enabled"
+        private const val KEY_PREMIUM_GLASS_ENABLED = "premium_glass_enabled"
 
         // SystemConfig Keys
         private const val KEY_UPDATE_CHANNEL = "update_channel"

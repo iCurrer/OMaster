@@ -105,6 +105,10 @@
     <!-- Toast 提示 -->
     <string name="toast_language_changed">语言已切换，正在重启应用…</string>
 
+    <!-- 外观设置 -->
+    <string name="premium_glass_effect">高级 Glass 质感</string>
+    <string name="premium_glass_effect_desc">启用 6 层玻璃效果，更具立体感</string>
+
     <!-- 品牌名称 -->
     <string name="brand_hasselblad">哈苏</string>
     <string name="brand_zeiss">蔡司</string>

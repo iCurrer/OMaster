@@ -135,7 +135,10 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         } else {
-                            MainApp(navController = navController)
+                            MainApp(
+                                navController = navController,
+                                config = config
+                            )
                         }
                     }
                 }
@@ -183,7 +186,10 @@ fun WelcomeFlow(
 }
 
 @Composable
-fun MainApp(navController: NavHostController) {
+fun MainApp(
+    navController: NavHostController,
+    config: ConfigCenter
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -244,6 +250,9 @@ fun MainApp(navController: NavHostController) {
     
     // 用于触发 HomeScreen 刷新的状态
     var refreshTrigger by remember { mutableStateOf(0) }
+    
+    // 读取高级 Glass 质感配置
+    val usePremiumGlass by config.premiumGlassFlow.collectAsState()
 
     // 底部导航栏页面顺序，用于决定切换动画方向
     val mainRouteList = remember { listOf("Home", "Subscription", "About") }
@@ -354,7 +363,8 @@ fun MainApp(navController: NavHostController) {
                     onScrollStateChanged = { isScrollingUp ->
                         isHomeScrollingUp = isScrollingUp
                     },
-                    refreshTrigger = refreshTrigger
+                    refreshTrigger = refreshTrigger,
+                    usePremiumGlass = usePremiumGlass
                 )
             }
 
@@ -525,7 +535,8 @@ fun MainApp(navController: NavHostController) {
                         }
                     }
                 },
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier.align(Alignment.BottomCenter),
+                usePremiumGlass = usePremiumGlass
             )
         }
     }

@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.filled.Vibration
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -105,6 +106,7 @@ fun SettingsScreen() {
     var showLanguageDialog by remember { mutableStateOf(false) }
     var logSize by remember { mutableStateOf(LogExporter.getFormattedLogSize()) }
     var showClearLogDialog by remember { mutableStateOf(false) }
+    var premiumGlassEnabled by remember { mutableStateOf(config.isPremiumGlassEnabled) }
     val haptic = LocalHapticFeedback.current
 
     if (showThemeDialog) {
@@ -266,6 +268,21 @@ fun SettingsScreen() {
                     )
                 },
                 onClick = { showThemeDialog = true }
+            )
+
+            HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
+
+            // 高级 Glass 质感开关
+            SettingsSwitchItem(
+                icon = Icons.Default.AutoAwesome,
+                title = stringResource(R.string.premium_glass_effect),
+                subtitle = stringResource(R.string.premium_glass_effect_desc),
+                checked = premiumGlassEnabled,
+                onCheckedChange = { enabled ->
+                    haptic.perform(HapticFeedbackType.ToggleOn)
+                    premiumGlassEnabled = enabled
+                    config.isPremiumGlassEnabled = enabled
+                }
             )
         }
 

@@ -90,7 +90,8 @@ fun HomeScreen(
     onNavigateToCreate: () -> Unit,
     onScrollStateChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    refreshTrigger: Int = 0
+    refreshTrigger: Int = 0,
+    usePremiumGlass: Boolean = true
 ) {
     val context = LocalContext.current
     val repository = remember { PresetRepository.getInstance(context) }
@@ -142,6 +143,9 @@ fun HomeScreen(
     // 删除确认对话框状态
     var showDeleteConfirm by remember { mutableStateOf(false) }
     var presetToDelete by remember { mutableStateOf<String?>(null) }
+    
+    // 提取 usePremiumGlass 为局部变量，便于在 lambda 中使用
+    val usePremiumGlassLocal = usePremiumGlass
 
     // 同步 Tab 和 Pager 的状态
     LaunchedEffect(selectedTab) {
@@ -256,7 +260,8 @@ fun HomeScreen(
                                 showDeleteConfirm = true
                             },
                             onScrollStateChanged = onScrollStateChanged,
-                            onRefresh = { onComplete -> viewModel.refresh(onComplete) }
+                            onRefresh = { onComplete -> viewModel.refresh(onComplete) },
+                            usePremiumGlass = usePremiumGlass
                         )
                         1 -> PresetGrid(
                             presets = favorites,
@@ -269,7 +274,8 @@ fun HomeScreen(
                             },
                             onScrollStateChanged = onScrollStateChanged,
                             showLoadingTip = false,
-                            onRefresh = { onComplete -> viewModel.refresh(onComplete) }
+                            onRefresh = { onComplete -> viewModel.refresh(onComplete) },
+                            usePremiumGlass = usePremiumGlass
                         )
                         2 -> PresetGrid(
                             presets = customPresets,
@@ -283,7 +289,8 @@ fun HomeScreen(
                             showLoadingTip = false,
                             showTopHint = false,
                             onScrollStateChanged = onScrollStateChanged,
-                            onRefresh = { onComplete -> viewModel.refresh(onComplete) }
+                            onRefresh = { onComplete -> viewModel.refresh(onComplete) },
+                            usePremiumGlass = usePremiumGlass
                         )
                     }
                 }
@@ -368,7 +375,8 @@ private fun PresetGrid(
     onScrollStateChanged: (Boolean) -> Unit = {},
     showLoadingTip: Boolean = true,
     showTopHint: Boolean = false,
-    onRefresh: (onComplete: (HomeViewModel.RefreshResult) -> Unit) -> Unit = {}
+    onRefresh: (onComplete: (HomeViewModel.RefreshResult) -> Unit) -> Unit = {},
+    usePremiumGlass: Boolean = true
 ) {
     val listState = rememberLazyStaggeredGridState()
     val haptic = LocalHapticFeedback.current
@@ -527,6 +535,7 @@ private fun PresetGrid(
                             onNavigateToDetail = onNavigateToDetail,
                             onToggleFavorite = onToggleFavorite,
                             onDeletePreset = onDeletePreset,
+                            usePremiumGlass = usePremiumGlass,
                             modifier = Modifier.animateItem(
                                 fadeInSpec = ListItemFadeInSpec,
                                 placementSpec = ListItemPlacementSpec
@@ -564,6 +573,7 @@ private fun PresetCardItem(
     onNavigateToDetail: (MasterPreset) -> Unit,
     onToggleFavorite: (String) -> Unit,
     onDeletePreset: (String) -> Unit,
+    usePremiumGlass: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     // 使用统一的动画状态管理，减少 Animatable 实例
@@ -603,7 +613,8 @@ private fun PresetCardItem(
             onDeleteClick = { onDeletePreset(preset.id!!) },
             showFavoriteButton = true,
             showDeleteButton = tabIndex == 2,
-            imageHeight = imageHeight
+            imageHeight = imageHeight,
+            usePremiumGlass = usePremiumGlass
         )
     }
 }

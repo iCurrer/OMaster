@@ -7,8 +7,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import com.silas.omaster.ui.components.glass.GlassButton
+import com.silas.omaster.ui.components.glass.GlassEffectConfig
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +32,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -55,7 +61,8 @@ fun PresetCard(
     showFavoriteButton: Boolean = false,
     showDeleteButton: Boolean = false,
     modifier: Modifier = Modifier,
-    imageHeight: Int = 200
+    imageHeight: Int = 200,
+    usePremiumGlass: Boolean = true
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -105,36 +112,20 @@ fun PresetCard(
                 )
 
                 if (showFavoriteButton) {
-                    // 简化的 Glass 风格收藏按钮
-                    Box(
+                    // 统一使用 GlassButton 组件，根据 usePremiumGlass 参数切换模式
+                    GlassButton(
+                        isActive = preset.isFavorite,
+                        glowColor = MaterialTheme.colorScheme.primary,
+                        isPremium = usePremiumGlass,
+                        size = 36.dp,
+                        config = GlassEffectConfig.DefaultButton,
                         modifier = Modifier
                             .align(Alignment.TopEnd)
-                            .padding(8.dp)
-                            .size(36.dp)
-                            .background(
-                                color = if (preset.isFavorite)
-                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                                else
-                                    Color.White.copy(alpha = 0.12f),
-                                shape = RoundedCornerShape(18.dp)
-                            )
-                            .border(
-                                width = 0.5.dp,
-                                color = if (preset.isFavorite)
-                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
-                                else
-                                    GlassColors.BorderOuter,
-                                shape = RoundedCornerShape(18.dp)
-                            )
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                                onClick = {
-                                    haptic.perform(HapticFeedbackType.ToggleOn)
-                                    onFavoriteClick()
-                                }
-                            ),
-                        contentAlignment = Alignment.Center
+                            .padding(8.dp),
+                        onClick = {
+                            haptic.perform(HapticFeedbackType.ToggleOn)
+                            onFavoriteClick()
+                        }
                     ) {
                         Icon(
                             imageVector = if (preset.isFavorite)
@@ -148,42 +139,31 @@ fun PresetCard(
                             tint = if (preset.isFavorite)
                                 MaterialTheme.colorScheme.primary
                             else
-                                Color.White.copy(alpha = 0.9f),
+                                Color.White.copy(alpha = 0.95f),
                             modifier = Modifier.size(18.dp)
                         )
                     }
                 }
 
                 if (showDeleteButton && preset.isCustom) {
-                    // 简化的 Glass 风格删除按钮
-                    Box(
+                    // 统一使用 GlassButton 组件，根据 usePremiumGlass 参数切换模式
+                    GlassButton(
+                        isActive = false,
+                        glowColor = MaterialTheme.colorScheme.error,
+                        isPremium = usePremiumGlass,
+                        size = 36.dp,
                         modifier = Modifier
                             .align(Alignment.TopStart)
-                            .padding(8.dp)
-                            .size(36.dp)
-                            .background(
-                                color = Color.Red.copy(alpha = 0.15f),
-                                shape = RoundedCornerShape(18.dp)
-                            )
-                            .border(
-                                width = 0.5.dp,
-                                color = Color.Red.copy(alpha = 0.4f),
-                                shape = RoundedCornerShape(18.dp)
-                            )
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                                onClick = {
-                                    haptic.perform(HapticFeedbackType.Confirm)
-                                    onDeleteClick()
-                                }
-                            ),
-                        contentAlignment = Alignment.Center
+                            .padding(8.dp),
+                        onClick = {
+                            haptic.perform(HapticFeedbackType.Confirm)
+                            onDeleteClick()
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = stringResource(R.string.preset_delete),
-                            tint = Color.Red.copy(alpha = 0.9f),
+                            tint = MaterialTheme.colorScheme.error.copy(alpha = 0.9f),
                             modifier = Modifier.size(18.dp)
                         )
                     }

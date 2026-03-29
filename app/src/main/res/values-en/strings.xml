@@ -105,6 +105,10 @@
     <!-- Toast Messages -->
     <string name="toast_language_changed">Language changed, restarting app…</string>
 
+    <!-- Appearance Settings -->
+    <string name="premium_glass_effect">Premium Glass Effect</string>
+    <string name="premium_glass_effect_desc">Enable 6-layer glass effect for more depth</string>
+
     <!-- Brand Names -->
     <string name="brand_hasselblad">Hasselblad</string>
     <string name="brand_zeiss">ZEISS</string>

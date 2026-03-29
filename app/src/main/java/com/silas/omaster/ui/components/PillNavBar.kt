@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -42,6 +43,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -53,6 +55,8 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import com.silas.omaster.util.perform
 import com.silas.omaster.ui.theme.GlassColors
+import com.silas.omaster.ui.components.glass.GlassEffectConfig
+import com.silas.omaster.ui.components.glass.GlassButton
 
 private val NavBarBackground = Color(0xFF1A1A1A)
 private val NavBarBorder = Color(0xFF2A2A2A)
@@ -68,7 +72,8 @@ fun PillNavBar(
     visible: Boolean,
     currentRoute: String,
     onNavigate: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    usePremiumGlass: Boolean = true
 ) {
     val navItems = listOf(
         NavItem("home", stringResource(R.string.nav_home), Icons.Default.Home),
@@ -189,23 +194,21 @@ fun PillNavBar(
                         label = "capsuleOffset"
                     )
 
-                    // 选中胶囊背景 - Glass 风格 (使用主题色同步)
+                    // 选中胶囊背景 - 统一使用 GlassButton 组件
                     if (selectedIndex >= 0) {
-                        Box(
+                        GlassButton(
+                            isActive = true,
+                            glowColor = MaterialTheme.colorScheme.primary,
+                            isPremium = usePremiumGlass,
+                            width = 80.dp,
+                            height = 48.dp,
+                            config = GlassEffectConfig.NavigationCapsule,
                             modifier = Modifier
-                                .width(80.dp)
-                                .height(48.dp)
-                                .offset(x = capsuleOffset.dp)
-                                .clip(RoundedCornerShape(24.dp))
-                                .background(
-                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
-                                )
-                                .border(
-                                    width = 0.5.dp,
-                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                                    shape = RoundedCornerShape(24.dp)
-                                )
-                        )
+                                .offset(x = capsuleOffset.dp),
+                            onClick = { }
+                        ) {
+                            // 内容为空，只需要背景效果
+                        }
                     }
 
                     // 导航按钮
@@ -254,7 +257,7 @@ private fun NavItemButton(
 
     val contentColor = when {
         selected -> MaterialTheme.colorScheme.primary
-        else -> Color.White.copy(alpha = 0.5f)
+        else -> Color.White  // 非选中状态改为纯白
     }
 
     val iconScale by animateFloatAsState(
