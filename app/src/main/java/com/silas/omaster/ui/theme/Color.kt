@@ -6,9 +6,9 @@ import androidx.compose.ui.graphics.Color
  * 哈苏品牌色系
  * 哈苏橙是品牌的标志性颜色
  */
-val HasselbladOrange = Color(0xFFFF6600)
-val HasselbladOrangeDark = Color(0xFFE55A00)
-val HasselbladOrangeLight = Color(0xFFFF8533)
+val HasselbladOrange = Color(0xFFEC7223)
+val HasselbladOrangeDark = Color(0xFFD15F1A)
+val HasselbladOrangeLight = Color(0xFFF08A4A)
 
 /**
  * 品牌主题色
@@ -44,10 +44,10 @@ val WarningYellow = Color(0xFFFFB300)
  * UI 扩展色
  */
 val CardBorderLight = Color(0xFFFFFFFF).copy(alpha = 0.05f)
-val CardBorderHighlight = Color(0xFFFF6600).copy(alpha = 0.3f)
+val CardBorderHighlight = Color(0xFFEC7223).copy(alpha = 0.3f)
 val SurfaceElevated = Color(0xFF222222)
-val GradientOrangeStart = Color(0xFFFF6600)
-val GradientOrangeEnd = Color(0xFFFF8533)
+val GradientOrangeStart = Color(0xFFEC7223)
+val GradientOrangeEnd = Color(0xFFF08A4A)
 
 /**
  * 玻璃质感 (Glassmorphism) 配色 - 统一系统
@@ -62,11 +62,11 @@ object GlassColors {
     // 边框系统 - 双层边框结构
     val BorderOuter = Color(0xFFFFFFFF).copy(alpha = 0.18f)      // 外边框 - 更明显
     val BorderInner = Color(0xFFFFFFFF).copy(alpha = 0.06f)      // 内边框 -  subtle
-    val BorderHighlight = Color(0xFFFF6600).copy(alpha = 0.7f)   // 高亮状态
+    val BorderHighlight = Color(0xFFEC7223).copy(alpha = 0.7f)   // 高亮状态
 
     // 高光系统 - 玻璃的关键特征
     val HighlightTop = Color(0xFFFFFFFF).copy(alpha = 0.30f)     // 顶部高光
-    val HighlightGlow = Color(0xFFFF6600).copy(alpha = 0.20f)    // 橙色光晕
+    val HighlightGlow = Color(0xFFEC7223).copy(alpha = 0.20f)    // 橙色光晕
 
     // 兼容旧代码的别名
     val Background = Base
