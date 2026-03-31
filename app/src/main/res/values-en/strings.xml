@@ -369,6 +369,7 @@
 
     <!-- Footer -->
     <string name="footer_local">Pure local operation, data stored locally</string>
+    <string name="user_agreement">User Agreement</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="open_source_license">Open Source License</string>
 

@@ -308,6 +308,9 @@ fun AboutScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             FooterSection(context, onNavigateToPrivacyPolicy, onNavigateToOpenSourceLicense)
+
+            // 底部额外留白，避免内容太靠下
+            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }
@@ -964,22 +967,51 @@ private fun FooterSection(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        // 第一行：版权信息
         Text(
             text = "© 2026 OMaster",
             style = MaterialTheme.typography.bodySmall,
             color = Color.White.copy(alpha = 0.4f)
         )
 
-        Text(
-            text = stringResource(R.string.privacy_policy),
-            style = MaterialTheme.typography.bodySmall,
-            color = Color.White.copy(alpha = 0.4f),
-            modifier = Modifier.clickable {
-                onNavigateToPrivacyPolicy()
-            }
-        )
+        // 第二行：用户协议、隐私政策和开源许可并排
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.user_agreement),
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White.copy(alpha = 0.4f),
+                modifier = Modifier.clickable {
+                    // 直接打开飞书文档链接
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://ocnquih40x3i.feishu.cn/docx/WHVldUhumozJAUx7ZFhcO9uznaf?from=from_copylink"))
+                    context.startActivity(intent)
+                }
+            )
 
-        // ICP 备案号
+            Text(
+                text = stringResource(R.string.privacy_policy),
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White.copy(alpha = 0.4f),
+                modifier = Modifier.clickable {
+                    // 直接打开飞书文档链接
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://ocnquih40x3i.feishu.cn/docx/NSgednMU0oeq9RxnGmcc9vRenvd?from=from_copylink"))
+                    context.startActivity(intent)
+                }
+            )
+
+            Text(
+                text = stringResource(R.string.open_source_license),
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White.copy(alpha = 0.4f),
+                modifier = Modifier.clickable {
+                    onNavigateToOpenSourceLicense()
+                }
+            )
+        }
+
+        // 第三行：ICP 备案号
         Text(
             text = "豫ICP 备 2026011707 号 -1A",
             style = MaterialTheme.typography.bodySmall,
@@ -987,16 +1019,6 @@ private fun FooterSection(
             modifier = Modifier.clickable {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://beian.miit.gov.cn/"))
                 context.startActivity(intent)
-            }
-        )
-
-        // 开源许可
-        Text(
-            text = stringResource(R.string.open_source_license),
-            style = MaterialTheme.typography.bodySmall,
-            color = Color.White.copy(alpha = 0.4f),
-            modifier = Modifier.clickable {
-                onNavigateToOpenSourceLicense()
             }
         )
     }

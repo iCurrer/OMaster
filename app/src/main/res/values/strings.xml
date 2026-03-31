@@ -369,6 +369,7 @@
 
     <!-- 页脚 -->
     <string name="footer_local"></string>
+    <string name="user_agreement">《用户协议》</string>
     <string name="privacy_policy">《隐私政策》</string>
     <string name="open_source_license">《开源许可》</string>
 
