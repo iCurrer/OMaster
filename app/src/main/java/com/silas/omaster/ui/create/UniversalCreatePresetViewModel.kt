@@ -9,6 +9,7 @@ import com.silas.omaster.data.repository.PresetRepository
 import com.silas.omaster.model.MasterPreset
 import com.silas.omaster.model.PresetItem
 import com.silas.omaster.model.PresetSection
+import com.silas.omaster.util.PresetI18n
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,6 +34,26 @@ class UniversalCreatePresetViewModel(
     private var isLoaded = false
     private var editingPresetId: String? = null
 
+    /**
+     * 解析 PresetSection 中的资源 ID 为实际文字
+     * 将 @string/xxx 转换为对应的中文显示
+     */
+    private fun resolveSectionResources(sections: List<PresetSection>): List<PresetSection> {
+        return sections.map { section ->
+            section.copy(
+                title = section.title?.let { 
+                    PresetI18n.resolveString(context, it) 
+                },
+                items = section.items.map { item ->
+                    item.copy(
+                        label = PresetI18n.resolveString(context, item.label),
+                        value = PresetI18n.resolveValue(context, item.value)
+                    )
+                }
+            )
+        }
+    }
+
     // 加载模版或者现有预设
     fun loadTemplate(presetId: String?) {
         if (isLoaded) return
@@ -55,9 +76,12 @@ class UniversalCreatePresetViewModel(
                     preset.sections
                 }
                 
+                // ✅ 解析资源 ID 为中文，让用户看到人话
+                val resolvedSections = resolveSectionResources(sections)
+                
                 _uiState.value = UniversalPresetUiState(
                     name = if (preset.isCustom) preset.name else "${preset.name} (Copy)",
-                    sections = sections,
+                    sections = resolvedSections,
                     // Template mode: require new image
                     imageUri = null,
                     isEditMode = false
@@ -81,9 +105,12 @@ class UniversalCreatePresetViewModel(
                     preset.sections
                 }
                 
+                // ✅ 解析资源 ID 为中文，让用户看到人话
+                val resolvedSections = resolveSectionResources(sections)
+                
                 _uiState.value = UniversalPresetUiState(
                     name = preset.name,
-                    sections = sections,
+                    sections = resolvedSections,
                     imageUri = null, // Will use originalCoverPath
                     originalCoverPath = preset.coverPath,
                     isEditMode = true
@@ -161,6 +188,9 @@ class UniversalCreatePresetViewModel(
         // - Edit mode: must have imageUri OR originalCoverPath
         if (state.imageUri == null && state.originalCoverPath == null) return false
 
+        // Set saving state
+        _uiState.value = state.copy(isSaving = true)
+
         return try {
             val coverPath = if (state.imageUri != null) {
                 saveImageToInternalStorage(state.imageUri)
@@ -186,6 +216,8 @@ class UniversalCreatePresetViewModel(
         } catch (e: Exception) {
             e.printStackTrace()
             false
+        } finally {
+            _uiState.value = _uiState.value.copy(isSaving = false)
         }
     }
 
@@ -231,7 +263,8 @@ data class UniversalPresetUiState(
     val imageUri: Uri? = null,
     val sections: List<PresetSection> = emptyList(),
     val originalCoverPath: String? = null,
-    val isEditMode: Boolean = false
+    val isEditMode: Boolean = false,
+    val isSaving: Boolean = false
 )
 
 class UniversalCreatePresetViewModelFactory(
