@@ -209,7 +209,7 @@ class FloatingWindowService : Service() {
     private var titleTextView: TextView? = null
 
     /**
-     * 更新窗口内容（不重新创建窗口，避免闪动）
+     * 更新窗口内容（数据驱动刷新，避免 UI 重建）
      */
     private fun updateWindowContent(
         name: String,
@@ -234,30 +234,22 @@ class FloatingWindowService : Service() {
         }
 
         try {
-            // 更新标题
+            // ✅ 1. 直接更新标题（无动画，避免闪烁）
             titleTextView?.text = name
 
-            // 尝试直接更新视图内容，避免重建视图
+            // ✅ 2. 更新内容区域（只更新数据，不重建视图）
             val contentContainer = mainContainer?.findViewWithTag<LinearLayout>("content_container")
-            
-            // 简单起见，直接重建内容区域，因为 sections 结构可能变化
-            // 移除旧内容并添加新内容
             contentContainer?.let { container ->
-                // 使用 post 确保在 UI 线程执行
                 container.post {
-                    container.removeAllViews()
                     when (mode) {
-                        FloatingWindowMode.STANDARD -> container.addView(createContentArea(sections))
-                        FloatingWindowMode.COMPACT -> container.addView(createCompactContentArea(sections))
+                        FloatingWindowMode.STANDARD -> updateStandardContent(sections)
+                        FloatingWindowMode.COMPACT -> updateCompactContent(sections)
                     }
-                    // 请求重新布局
-                    container.requestLayout()
-                    floatingView?.requestLayout()
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            // 如果更新失败，重新创建窗口
+            // 如果更新失败（如 sections 结构变化），降级为重建窗口
             when (mode) {
                 FloatingWindowMode.STANDARD -> showExpandedWindow(
                     name, sections, params?.x ?: 50, params?.y ?: 300,
@@ -268,6 +260,60 @@ class FloatingWindowService : Service() {
                     currentIndex, totalCount
                 )
             }
+        }
+    }
+
+    /**
+     * 标准模式：只更新参数值（不重建视图）
+     */
+    private fun updateStandardContent(sections: List<PresetSection>) {
+        // 遍历所有 section 和 item，根据 tag 查找并更新 TextView
+        sections.forEach { section ->
+            section.items.forEach { item ->
+                // 为每个参数生成唯一的 tag（与创建时一致）
+                val valueTag = "value_${item.label}_${item.span}"
+                
+                // 查找所有匹配的 TextView 并更新
+                // 由于中文标签可能包含特殊字符，使用递归查找
+                floatingView?.let { root ->
+                    val valueView = findViewWithTagRecursive(root, valueTag)
+                    valueView?.text = PresetI18n.resolveValue(this, item.value)
+                }
+            }
+        }
+    }
+
+    /**
+     * 递归查找带指定 Tag 的 TextView
+     */
+    private fun findViewWithTagRecursive(root: View, tag: String): TextView? {
+        if (tag == root.tag) {
+            return root as? TextView
+        }
+        
+        if (root is android.view.ViewGroup) {
+            for (i in 0 until root.childCount) {
+                val child = root.getChildAt(i)
+                val result = findViewWithTagRecursive(child, tag)
+                if (result != null) {
+                    return result
+                }
+            }
+        }
+        
+        return null
+    }
+
+    /**
+     * 紧凑模式：只更新 8 个参数值（不重建视图）
+     */
+    private fun updateCompactContent(sections: List<PresetSection>) {
+        val paramValues = extract8Params(sections)
+        
+        // 紧凑模式有 8 个固定的参数视图，直接按索引更新
+        for (i in 0 until 8) {
+            val valueView = floatingView?.findViewWithTag<TextView>("compact_value_$i")
+            valueView?.text = paramValues[i]
         }
     }
 
@@ -555,21 +601,21 @@ class FloatingWindowService : Service() {
     }
 
     /**
-     * 创建紧凑内容区域 - 8参数横向排列
+     * 创建紧凑内容区域 - 8 参数横向排列
      */
     private fun createCompactContentArea(sections: List<PresetSection>): LinearLayout {
         return LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                dpToPx(80) // 参数区域高度80dp
+                dpToPx(80) // 参数区域高度 80dp
             )
             setPadding(dpToPx(8), dpToPx(4), dpToPx(8), dpToPx(4))
 
-            // 提取8个参数值
+            // 提取 8 个参数值
             val paramValues = extract8Params(sections)
 
-            // 第一行：参数值
+            // 第一行：参数值（带索引 Tag）
             val valuesRow = LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(
@@ -579,8 +625,9 @@ class FloatingWindowService : Service() {
                 )
                 gravity = Gravity.CENTER_VERTICAL
 
-                paramValues.forEach { value ->
-                    addView(createCompactValueCell(value))
+                // ✅ 为每个参数值传递索引，用于添加唯一 Tag
+                paramValues.forEachIndexed { index, value ->
+                    addView(createCompactValueCell(value, index))
                 }
             }
             addView(valuesRow)
@@ -644,9 +691,9 @@ class FloatingWindowService : Service() {
     }
 
     /**
-     * 创建紧凑参数值单元格
+     * 创建紧凑参数值单元格（带 Tag 用于更新）
      */
-    private fun createCompactValueCell(value: String): TextView {
+    private fun createCompactValueCell(value: String, index: Int = 0): TextView {
         return TextView(this).apply {
             text = value
             textSize = 11f
@@ -654,6 +701,8 @@ class FloatingWindowService : Service() {
             gravity = Gravity.CENTER
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             setPadding(0, dpToPx(4), 0, dpToPx(4))
+            // ✅ 添加唯一 Tag 用于数据刷新
+            tag = "compact_value_$index"
         }
     }
 
@@ -980,7 +1029,7 @@ class FloatingWindowService : Service() {
     }
 
     /**
-     * 创建高亮参数项（滤镜专用）
+     * 创建高亮参数项（滤镜专用）- 带唯一 Tag
      */
     private fun createHighlightedParam(icon: String, label: String, value: String, valueTag: String? = null): LinearLayout {
         return LinearLayout(this).apply {
@@ -1017,7 +1066,7 @@ class FloatingWindowService : Service() {
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             })
 
-            // 值
+            // 值 - ✅ 添加唯一 Tag 用于数据刷新
             addView(TextView(context).apply {
                 text = value
                 textSize = 14f
@@ -1027,16 +1076,14 @@ class FloatingWindowService : Service() {
                     cornerRadius = dpToPx(6).toFloat()
                     setColor(Color.parseColor("#30FF6B35"))
                 }
-                // 设置 Tag 方便查找更新
-                if (valueTag != null) {
-                    tag = valueTag
-                }
+                // 使用 label + span 作为唯一标识
+                tag = "value_${label}_2"
             })
         }
     }
 
     /**
-     * 创建小型参数项（用于网格）
+     * 创建小型参数项（用于网格）- 带唯一 Tag
      */
     private fun createSmallParamItem(icon: String, label: String, value: String, valueTag: String? = null): LinearLayout {
         return LinearLayout(this).apply {
@@ -1067,14 +1114,13 @@ class FloatingWindowService : Service() {
                 setTextColor(textMuted)
             })
 
+            // 值 - ✅ 添加唯一 Tag 用于数据刷新
             addView(TextView(context).apply {
                 text = value
                 textSize = 12f
                 setTextColor(textPrimary)
-                // 设置 Tag 方便查找更新
-                if (valueTag != null) {
-                    tag = valueTag
-                }
+                // 使用 label + span 作为唯一标识
+                tag = "value_${label}_1"
             })
         }
     }

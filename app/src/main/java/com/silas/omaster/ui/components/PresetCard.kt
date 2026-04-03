@@ -71,6 +71,14 @@ fun PresetCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
+            .border(
+                width = if (isPressed) 1.5.dp else 1.dp,
+                color = if (isPressed)
+                    GlassColors.BorderHighlight
+                else
+                    GlassColors.BorderOuter,
+                shape = RoundedCornerShape(16.dp)
+            )
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -85,20 +93,6 @@ fun PresetCard(
         )
     ) {
         Box {
-            // Glass 效果层
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .border(
-                        width = if (isPressed) 1.5.dp else 1.dp,
-                        color = if (isPressed)
-                            GlassColors.BorderHighlight
-                        else
-                            GlassColors.BorderOuter,
-                        shape = RoundedCornerShape(16.dp)
-                    )
-            )
-
             // 图片区域
             Box(
                 modifier = Modifier
