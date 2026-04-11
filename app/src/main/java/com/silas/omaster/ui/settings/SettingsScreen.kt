@@ -330,6 +330,16 @@ fun SettingsScreen() {
                 onClick = { showFloatingModeDialog = true }
             )
 
+            // Realme 预设提示
+            Text(
+                text = stringResource(R.string.floating_window_realme_tip),
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White.copy(alpha = 0.5f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = AppDesign.ContentPadding, vertical = 8.dp)
+            )
+
             HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
 
             // Floating Window Opacity Setting

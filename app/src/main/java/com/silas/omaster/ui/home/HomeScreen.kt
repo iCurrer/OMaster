@@ -356,16 +356,29 @@ private fun PresetGrid(
 
     // 修复：使用 snapshotFlow 安全地检测滚动方向
     // 避免在 derivedStateOf 中修改外部状态
-    var isScrollingUp by remember { mutableStateOf(false) }
+    var isScrollingUp by remember { mutableStateOf(true) }
     var previousIndex by remember { mutableIntStateOf(0) }
     var previousScrollOffset by remember { mutableIntStateOf(0) }
     var hasHapticAtTop by remember { mutableStateOf(false) }
     var hasHapticAtBottom by remember { mutableStateOf(false) }
+    // 标记是否是首次收集，避免初始化时的错误判断
+    var isInitialCollection by remember { mutableStateOf(true) }
 
     LaunchedEffect(listState) {
         snapshotFlow {
             listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset
         }.collect { (currentIndex, currentOffset) ->
+            // 首次收集时，仅记录状态，不触发回调
+            if (isInitialCollection) {
+                isInitialCollection = false
+                previousIndex = currentIndex
+                previousScrollOffset = currentOffset
+                // 页面重建时默认显示导航栏（无论是否在顶部）
+                isScrollingUp = true
+                onScrollStateChanged(true)
+                return@collect
+            }
+
             val isUp = currentIndex < previousIndex ||
                        (currentIndex == previousIndex && currentOffset <= previousScrollOffset)
             isScrollingUp = isUp

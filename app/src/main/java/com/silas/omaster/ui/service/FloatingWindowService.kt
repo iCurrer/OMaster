@@ -175,7 +175,14 @@ class FloatingWindowService : Service() {
         val totalCount = presetList.size
 
         // 读取悬浮窗模式设置
-        val mode = ConfigCenter.getInstance(this).floatingWindowMode
+        val configMode = ConfigCenter.getInstance(this).floatingWindowMode
+        
+        // Realme 预设强制使用标准悬浮窗（新版悬浮窗图标不适配 Realme 相机 UI）
+        val mode = if (isRealmePreset(sections)) {
+            FloatingWindowMode.STANDARD
+        } else {
+            configMode
+        }
 
         when (action) {
             ACTION_UPDATE -> {
@@ -684,9 +691,9 @@ class FloatingWindowService : Service() {
                 if (item.label.contains("对比度（亮部）") || item.label.contains("对比度（暗部）")) {
                     hasRealmeParams = true
                 }
-                if (item.label.contains("清晰") || item.label.contains("对比度") || 
-                    item.label.contains("褪色") || item.label.contains("颗粒") || 
-                    item.label.contains("颗粒强度")) {
+                // Realme 扩展参数检测（不包含"对比度"，因为OPPO预设也可能有对比度）
+                if (item.label.contains("清晰") || item.label.contains("褪色") || 
+                    item.label.contains("颗粒") || item.label.contains("颗粒强度")) {
                     hasRealmeExtendedParams = true
                 }
             }
@@ -771,6 +778,21 @@ class FloatingWindowService : Service() {
     }
 
     /**
+     * 检测是否为 Realme 预设
+     * Realme 预设特有参数：对比度（亮部）、对比度（暗部）
+     */
+    private fun isRealmePreset(sections: List<PresetSection>): Boolean {
+        sections.forEach { section ->
+            section.items.forEach { item ->
+                if (item.label.contains("对比度（亮部）") || item.label.contains("对比度（暗部）")) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    /**
      * 从 sections 中提取11个参数值（支持真我理光GR等11参数预设）
      * 用于更新模式，保持固定11个位置
      */
@@ -835,7 +857,7 @@ class FloatingWindowService : Service() {
             setPadding(0, dpToPx(2), 0, dpToPx(2))
             // 判断是否为 Iconfont 图标（Unicode 编码字符）
             // 如果是文字标签（如"清晰"、"褪色"、"颗粒"），使用默认字体
-            if (iconCode.startsWith("\\u") || iconCode.length == 1 && iconCode[0].code > 0xE600) {
+            if (iconCode.startsWith("\\u") || iconCode.length == 1 && iconCode[0].code >= 0xE600) {
                 typeface = IconFont.getTypeface(this@FloatingWindowService)
             } else {
                 typeface = Typeface.DEFAULT  // 文字标签使用默认字体

@@ -495,5 +495,6 @@
     <string name="floating_window_mode_standard_desc">Card layout with complete information</string>
     <string name="floating_window_mode_compact_desc">Compact parameter bar, native style</string>
     <string name="floating_window_mode_dialog_title">Select Floating Window Mode</string>
+    <string name="floating_window_realme_tip">Note: Realme presets will automatically use standard floating window (compact mode icons are not compatible with Realme camera UI)</string>
 
 </resources>

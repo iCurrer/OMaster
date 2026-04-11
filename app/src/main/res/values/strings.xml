@@ -495,5 +495,6 @@
     <string name="floating_window_mode_standard_desc">卡片式布局，信息完整</string>
     <string name="floating_window_mode_compact_desc">紧凑参数条，仿原生样式</string>
     <string name="floating_window_mode_dialog_title">选择悬浮窗模式</string>
+    <string name="floating_window_realme_tip">提示：Realme 预设将自动使用标准悬浮窗（新版悬浮窗图标不适配 Realme 相机 UI）</string>
 
 </resources>

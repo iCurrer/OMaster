@@ -1,9 +1,73 @@
 {
-  "version": 3,
+  "version": 2,
   "name": "OPPO / 一加 大师预设",
   "author": "@OMaster",
-  "build": 4,
+  "build": 6,
   "presets": [
+    {
+      "name": "德味预设",
+      "coverPath": "https://cdn.fky.ltd/dw_01.webp",
+      "galleryImages": [
+        "https://cdn.fky.ltd/dw_02.webp",
+        "https://cdn.fky.ltd/dw_03.webp"
+      ],
+      "author": "@波子Booz",
+      "isNew": true,
+      "sections": [
+        {
+          "title": "@string/section_color_grading",
+          "items": [
+            {
+              "label": "@string/param_filter",
+              "value": "明艳 100%",
+              "span": 2
+            },
+            {
+              "label": "@string/param_soft_light",
+              "value": "无",
+              "span": 1
+            },
+            {
+              "label": "@string/param_tone_curve",
+              "value": "-35",
+              "span": 1
+            },
+            {
+              "label": "@string/param_saturation",
+              "value": "0",
+              "span": 1
+            },
+            {
+              "label": "@string/param_warm_cool",
+              "value": "-5",
+              "span": 1
+            },
+            {
+              "label": "@string/param_cyan_magenta",
+              "value": "4",
+              "span": 1
+            },
+            {
+              "label": "@string/param_sharpness",
+              "value": "10",
+              "span": 1
+            },
+            {
+              "label": "@string/param_vignette",
+              "value": "开",
+              "span": 2
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "Auto"
+      ],
+      "description": {
+        "title": "Shooting Tips",
+        "content": "【环境建议】日间户外或光线充足的室内\n【场景推荐】街拍、建筑、风景、人文\n【拍摄要点】德味风格，影调偏暗，色彩浓郁，适合追求经典德系胶片质感的摄影爱好者"
+      }
+    },
     {
       "name": "富士胶片",
       "coverPath": "images/fsjp_01.webp",
@@ -1623,7 +1687,7 @@
         "https://cdn.fky.ltd/crqx_02.webp"
       ],
       "author": "@屋顶橙子味",
-      "isNew": true,
+      
       "sections": [
         {
           "title": "@string/section_color_grading",
