@@ -50,7 +50,7 @@
     <string name="settings_theme_dialog_title">Select Theme Color</string>
     <string name="floating_window_opacity">Floating Window Opacity</string>
     <string name="analytics_enabled">Enable Analytics</string>
-    <string name="analytics_restart_hint">Restart app to apply</string>
+    <string name="analytics_restart_hint">Help us understand app usage and improve product experience. Collected data is used for statistical analysis only and does not contain personal privacy information. Restart app to apply</string>
     <string name="clear_cache">Clear Image Cache</string>
     <string name="clear_cache_desc">Free up storage space, images will be re-downloaded next time</string>
     <string name="cache_cleared">Cache cleared</string>
@@ -189,6 +189,7 @@
     <string name="param_contrast_shadow">Contrast (Shadow)</string>
     <string name="param_clarity">Clarity</string>
     <string name="param_grain">Grain Intensity</string>
+    <string name="param_grain_size">Grain Size</string>
 
     <!-- Color Grading Parameters -->
     <string name="section_color_grading">Color Grading</string>
@@ -197,7 +198,9 @@
     <string name="param_tone_curve">Tone Curve</string>
     <string name="param_saturation">Saturation</string>
     <string name="param_warm_cool">Warm/Cool</string>
+    <string name="param_brightness">Brightness</string>
     <string name="param_cyan_magenta">Cyan/Magenta</string>
+    <string name="param_hue">Hue</string>
     <string name="param_sharpness">Sharpness</string>
     <string name="param_vignette">Vignette</string>
 

@@ -37,6 +37,9 @@ object IconFont {
     const val CONTRAST_HIGHLIGHT_TEXT = "亮部"    // 对比度（亮部）- 文字显示
     const val CONTRAST_SHADOW_TEXT = "暗部"      // 对比度（暗部）- 文字显示
     const val GRAIN_INTENSITY_TEXT = "颗粒"       // 颗粒强度 - 文字显示
+    const val GRAIN_SIZE_TEXT = "尺寸"            // 颗粒尺寸 - 文字显示
+    const val HUE_TEXT = "色相"                   // 色相 - 文字显示（Realme理光专用）
+    const val BRIGHTNESS_TEXT = "明暗"            // 明暗 - 文字显示（Realme理光专用，代替冷暖）
     
     // 3个扩展参数的文字标签（用于真我理光GR等11参数预设）
     // 注意：这些不是 iconfont 图标，而是文字缩写，因为原字体文件中没有对应图标

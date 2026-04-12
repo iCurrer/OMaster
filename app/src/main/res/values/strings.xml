@@ -50,7 +50,7 @@
     <string name="settings_theme_dialog_title">选择主题颜色</string>
     <string name="floating_window_opacity">悬浮窗透明度</string>
     <string name="analytics_enabled">使用友盟统计</string>
-    <string name="analytics_restart_hint">重启应用后生效</string>
+    <string name="analytics_restart_hint">开启后帮助我们了解应用使用情况，优化产品体验。收集的数据仅用于统计分析，不包含个人隐私信息。重启应用后生效</string>
     <string name="clear_cache">清理图片缓存</string>
     <string name="clear_cache_desc">释放存储空间，下次浏览时重新下载</string>
     <string name="cache_size_format">缓存大小: %.2f MB</string>
@@ -190,7 +190,9 @@
     <string name="param_tone_curve">影调</string>
     <string name="param_saturation">饱和度</string>
     <string name="param_warm_cool">冷暖</string>
+    <string name="param_brightness">明暗</string>
     <string name="param_cyan_magenta">青品</string>
+    <string name="param_hue">色相</string>
     <string name="param_sharpness">锐度</string>
     <string name="param_vignette">暗角</string>
 
@@ -200,6 +202,7 @@
     <string name="param_contrast_shadow">对比度（暗部）</string>
     <string name="param_clarity">清晰</string>
     <string name="param_grain">颗粒强度</string>
+    <string name="param_grain_size">颗粒尺寸</string>
 
     <!-- 拍摄模式 -->
     <string name="mode_pro">Pro 模式</string>

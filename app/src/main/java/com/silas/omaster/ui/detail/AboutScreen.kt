@@ -771,7 +771,9 @@ private fun CreditsCard(context: android.content.Context) {
         Contributor("@ONESTEP™", "https://xhslink.com/m/4LZ8zRdNCSv"),
         Contributor("@盒子叔", "https://xhslink.com/m/4mje9mimNXJ"),
         Contributor("@Aurora", "https://xhslink.com/m/2Ebow4iyVOE"),
-        Contributor("@屋顶橙子味", "https://v.douyin.com/YkVXPX9kZgY/")
+        Contributor("@屋顶橙子味", "https://v.douyin.com/YkVXPX9kZgY/"),
+        Contributor("@尼克lin", "https://xhslink.com/m/AjhYASTkUwq"),
+        Contributor("@波子Booz", "https://xhslink.com/m/9leyjjz68Et")
     )
 
     Card(

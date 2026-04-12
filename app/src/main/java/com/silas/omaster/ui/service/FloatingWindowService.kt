@@ -701,20 +701,21 @@ class FloatingWindowService : Service() {
 
         // 根据预设类型选择参数映射
         val labelToIcon = if (hasRealmeParams) {
-            // Realme GR预设：特有参数顺序，全部使用文字
+            // Realme GR预设：12个参数，全部使用文字
+            // 参数顺序：滤镜、饱和度、色相、影调、对比度、对比度(亮)、对比度(暗)、锐度、明暗、清晰、颗粒强度、颗粒尺寸
             listOf(
-                // Realme特有参数顺序
                 listOf("滤镜", "Filter") to IconFont.FILTER_TEXT,
                 listOf("饱和", "Saturation") to IconFont.SATURATION_TEXT,
-                listOf("冷暖", "Warm") to IconFont.WARM_COOL_TEXT,
+                listOf("色相", "Hue") to IconFont.HUE_TEXT,
                 listOf("影调", "Tone") to IconFont.TONE_TEXT,
                 listOf("对比度", "Contrast") to IconFont.CONTRAST,
-                listOf("对比度（亮部）", "contrast_highlight") to IconFont.CONTRAST_HIGHLIGHT_TEXT,
-                listOf("对比度（暗部）", "contrast_shadow") to IconFont.CONTRAST_SHADOW_TEXT,
+                listOf("对比度（亮部）", "对比度（亮）", "contrast_highlight") to IconFont.CONTRAST_HIGHLIGHT_TEXT,
+                listOf("对比度（暗部）", "对比度（暗）", "contrast_shadow") to IconFont.CONTRAST_SHADOW_TEXT,
                 listOf("锐度", "Sharpness") to IconFont.SHARPNESS_TEXT,
-                listOf("暗角", "Vignette") to IconFont.VIGNETTE_TEXT,
+                listOf("明暗", "Brightness") to IconFont.BRIGHTNESS_TEXT,
                 listOf("清晰", "Clarity") to IconFont.CLARITY,
-                listOf("颗粒", "颗粒强度", "Grain") to IconFont.GRAIN_INTENSITY_TEXT
+                listOf("颗粒", "颗粒强度", "Grain", "grain_intensity") to IconFont.GRAIN_INTENSITY_TEXT,
+                listOf("颗粒尺寸", "grain_size") to IconFont.GRAIN_SIZE_TEXT
             )
         } else if (hasRealmeExtendedParams) {
             // Realme预设（老版本）：全部使用文字
@@ -797,10 +798,66 @@ class FloatingWindowService : Service() {
      * 用于更新模式，保持固定11个位置
      */
     private fun extract11Params(sections: List<PresetSection>): List<String> {
+        // 检测是否为 Realme GR 预设
+        val isRealmeGR = sections.any { section ->
+            section.items.any { item ->
+                item.label.contains("对比度（亮部）") || item.label.contains("对比度（暗部）")
+            }
+        }
+        
+        return if (isRealmeGR) {
+            extractRealmeGRParams(sections)
+        } else {
+            extractStandard11Params(sections)
+        }
+    }
+    
+    /**
+     * 提取 Realme GR 预设的12个参数
+     * Realme GR 参数顺序：
+     * 0.滤镜、1.饱和度、2.色相(青品)、3.影调、4.对比度、5.对比度(亮)、6.对比度(暗)、
+     * 7.锐度、8.明暗(冷暖)、9.清晰、10.颗粒强度、11.颗粒尺寸
+     */
+    private fun extractRealmeGRParams(sections: List<PresetSection>): List<String> {
+        val result = MutableList(12) { "-" }
+        
+        // Realme GR 专用参数映射（12参数）
+        val labelToIndex = mapOf(
+            "滤镜" to 0, "Filter" to 0,
+            "饱和" to 1, "Saturation" to 1,
+            "色相" to 2, "Hue" to 2,
+            "影调" to 3, "Tone" to 3,
+            "对比度" to 4, "Contrast" to 4,
+            "对比度（亮部）" to 5, "对比度（亮）" to 5, "contrast_highlight" to 5,
+            "对比度（暗部）" to 6, "对比度（暗）" to 6, "contrast_shadow" to 6,
+            "锐度" to 7, "Sharpness" to 7,
+            "明暗" to 8, "Brightness" to 8,
+            "清晰" to 9, "Clarity" to 9,
+            "颗粒" to 10, "颗粒强度" to 10, "Grain" to 10, "grain_intensity" to 10,
+            "颗粒尺寸" to 11, "grain_size" to 11
+        )
+        
+        sections.forEach { section ->
+            section.items.forEach { item ->
+                labelToIndex.forEach { (label, index) ->
+                    if (item.label.contains(label)) {
+                        result[index] = PresetI18n.resolveValue(this, item.value)
+                    }
+                }
+            }
+        }
+        
+        return result
+    }
+    
+    /**
+     * 提取标准11参数（OPPO/一加/Realme老版本）
+     * 标准参数顺序：滤镜、柔光、影调、饱和、冷暖、青品、锐度、暗角、清晰、对比度、颗粒
+     */
+    private fun extractStandard11Params(sections: List<PresetSection>): List<String> {
         val result = MutableList(11) { "-" }
 
-        // 参数标签到索引的映射（11个参数）
-        // 注意：标签名称必须与 strings.xml 中的定义完全一致
+        // 标准参数标签到索引的映射
         val labelToIndex = mapOf(
             "滤镜" to 0, "Filter" to 0,
             "柔光" to 1, "Soft" to 1,
@@ -810,8 +867,8 @@ class FloatingWindowService : Service() {
             "青品" to 5, "Cyan" to 5,
             "锐度" to 6, "Sharpness" to 6,
             "暗角" to 7, "Vignette" to 7,
-            "清晰" to 8, "Clarity" to 8,  // strings.xml 中是 "清晰" 不是 "清晰度"
-            "对比度" to 9, "褪色" to 9, "Contrast" to 9, "Fade" to 9,  // 用对比度代替褪色
+            "清晰" to 8, "Clarity" to 8,
+            "对比度" to 9, "褪色" to 9, "Contrast" to 9, "Fade" to 9,
             "颗粒" to 10, "Grain" to 10, "颗粒强度" to 10
         )
 

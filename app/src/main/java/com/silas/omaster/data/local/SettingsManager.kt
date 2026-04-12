@@ -96,14 +96,14 @@ class SettingsManager private constructor(context: Context) {
             prefs.edit().putBoolean(KEY_ANALYTICS_ENABLED, value).apply()
         }
 
-    // 悬浮窗模式（默认标准模式）
+    // 悬浮窗模式（默认新版紧凑模式）
     var floatingWindowMode: FloatingWindowMode
         get() {
-            val value = prefs.getString(KEY_FLOATING_WINDOW_MODE, FloatingWindowMode.STANDARD.name)
+            val value = prefs.getString(KEY_FLOATING_WINDOW_MODE, FloatingWindowMode.COMPACT.name)
             return try {
-                FloatingWindowMode.valueOf(value ?: FloatingWindowMode.STANDARD.name)
+                FloatingWindowMode.valueOf(value ?: FloatingWindowMode.COMPACT.name)
             } catch (e: Exception) {
-                FloatingWindowMode.STANDARD
+                FloatingWindowMode.COMPACT
             }
         }
         set(value) {

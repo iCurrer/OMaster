@@ -150,11 +150,11 @@ class ConfigCenter private constructor(context: Context) {
         }
 
     private fun loadFloatingMode(): FloatingWindowMode {
-        val value = prefs.getString(KEY_FLOATING_WINDOW_MODE, FloatingWindowMode.STANDARD.name)
+        val value = prefs.getString(KEY_FLOATING_WINDOW_MODE, FloatingWindowMode.COMPACT.name)
         return try {
-            FloatingWindowMode.valueOf(value ?: FloatingWindowMode.STANDARD.name)
+            FloatingWindowMode.valueOf(value ?: FloatingWindowMode.COMPACT.name)
         } catch (e: Exception) {
-            FloatingWindowMode.STANDARD
+            FloatingWindowMode.COMPACT
         }
     }
 
