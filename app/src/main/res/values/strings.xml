@@ -117,6 +117,16 @@
     <string name="premium_glass_effect">高级 Glass 质感</string>
     <string name="premium_glass_effect_desc">启用 6 层玻璃效果，更具立体感</string>
 
+    <!-- 软件更新 -->
+    <string name="version_check_hint">点击刷新检查更新</string>
+    <string name="new_version_available">发现新版本</string>
+    <string name="downloading">下载中</string>
+    <string name="dialog_title_select_floating_mode">选择悬浮窗模式</string>
+    <string name="settings_dark_mode_dialog_title">选择深色模式</string>
+    <string name="language_dialog_title">选择语言</string>
+    <string name="auto_check_update">启动时自动检查更新</string>
+    <string name="auto_check_update_desc">每次打开应用时自动检查是否有新版本</string>
+
     <!-- 品牌名称 -->
     <string name="brand_hasselblad">哈苏</string>
     <string name="brand_zeiss">蔡司</string>
@@ -720,4 +730,6 @@
     <string name="checkin_weekday_sat">六</string>
     <string name="checkin_mark_complete">标记完成</string>
     <string name="checkin_completed">已完成</string>
+    <string name="photoframe_card_title">图片边框</string>
+    <string name="photoframe_card_desc">提取主色调，生成精美朋友圈分享图</string>
 </resources>

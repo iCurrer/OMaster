@@ -1,13 +1,7 @@
 package com.silas.omaster.ui.detail
 
-import android.app.DownloadManager
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -28,31 +22,22 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Cloud
-import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.DashboardCustomize
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -60,59 +45,38 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.silas.omaster.R
 import com.silas.omaster.ui.components.OMasterTopAppBar
 import com.silas.omaster.ui.theme.AppDesign
 import com.silas.omaster.ui.theme.CardBorderLight
-import com.silas.omaster.ui.theme.DarkGray
-import com.silas.omaster.ui.theme.NearBlack
 import com.silas.omaster.ui.theme.themedBackground
 import com.silas.omaster.ui.theme.themedCardBackground
 import com.silas.omaster.ui.theme.themedTextPrimary
 import com.silas.omaster.ui.theme.themedTextSecondary
 import com.silas.omaster.ui.theme.themedBorderLight
-import com.silas.omaster.util.UpdateChecker
 import com.silas.omaster.util.VersionInfo
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import android.widget.Toast
-import com.silas.omaster.data.config.ConfigCenter
-import com.silas.omaster.network.PresetRemoteManager
-import com.silas.omaster.data.repository.PresetRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.withContext
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalHapticFeedback
 import com.silas.omaster.util.perform
+import com.silas.omaster.util.rememberScrollHaptics
 
 @Composable
 fun ProfileScreen(
@@ -121,13 +85,11 @@ fun ProfileScreen(
     onScrollStateChanged: (Boolean) -> Unit,
     onNavigateToPrivacyPolicy: () -> Unit = {},
     onNavigateToOpenSourceLicense: () -> Unit = {},
-    currentVersionCode: Int = VersionInfo.VERSION_CODE,
     currentVersionName: String = VersionInfo.VERSION_NAME
 ) {
     val scrollState = rememberScrollState()
     var previousScrollValue by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
 
     val isScrollingUp by remember {
@@ -140,88 +102,10 @@ fun ProfileScreen(
     }
 
     // 滚动到顶/底部震感
-    var lastScrollValue by remember { mutableIntStateOf(0) }
-    var hasHapticAtTop by remember { mutableStateOf(false) }
-    var hasHapticAtBottom by remember { mutableStateOf(false) }
-
-    LaunchedEffect(scrollState.value) {
-        val currentValue = scrollState.value
-        val maxValue = scrollState.maxValue
-
-        if (currentValue == 0 && !hasHapticAtTop) {
-            haptic.perform(HapticFeedbackType.TextHandleMove)
-            hasHapticAtTop = true
-            hasHapticAtBottom = false
-        } else if (maxValue > 0 && currentValue >= maxValue && !hasHapticAtBottom) {
-            haptic.perform(HapticFeedbackType.TextHandleMove)
-            hasHapticAtBottom = true
-            hasHapticAtTop = false
-        } else if (currentValue > 0 && currentValue < maxValue) {
-            hasHapticAtTop = false
-            hasHapticAtBottom = false
-        }
-        lastScrollValue = currentValue
-    }
-
-    var isChecking by remember { mutableStateOf(false) }
-    var updateInfo by remember { mutableStateOf<UpdateChecker.UpdateInfo?>(null) }
-    var checkError by remember { mutableStateOf<String?>(null) }
-    var lastCheckTime by remember { mutableStateOf<Long?>(null) }
-    
-    // 下载进度相关状态
-    var downloadId by remember { mutableStateOf<Long>(-1L) }
-    var downloadProgress by remember { mutableIntStateOf(0) }
-    var isDownloading by remember { mutableStateOf(false) }
-
-    // 获取更新渠道（使用 ConfigCenter）
-    val config = remember { ConfigCenter.getInstance(context) }
-    val updateChannel by config.updateChannelFlow.collectAsState()
+    rememberScrollHaptics(scrollState)
 
     LaunchedEffect(isScrollingUp) {
         onScrollStateChanged(isScrollingUp)
-    }
-
-    val checkFailedText = stringResource(R.string.version_check_failed)
-
-    LaunchedEffect(Unit) {
-        delay(500)
-        if (updateInfo == null && checkError == null) {
-            isChecking = true
-            checkError = null
-            try {
-                val result = UpdateChecker.checkUpdate(context, currentVersionCode, updateChannel)
-                if (result != null) {
-                    updateInfo = result
-                    lastCheckTime = System.currentTimeMillis()
-                } else {
-                    checkError = checkFailedText
-                }
-            } catch (e: Exception) {
-                checkError = e.message ?: checkFailedText
-            } finally {
-                isChecking = false
-            }
-        }
-    }
-
-    val checkForUpdate = {
-        scope.launch {
-            isChecking = true
-            checkError = null
-            try {
-                val result = UpdateChecker.checkUpdate(context, currentVersionCode, updateChannel)
-                if (result != null) {
-                    updateInfo = result
-                    lastCheckTime = System.currentTimeMillis()
-                } else {
-                    checkError = checkFailedText
-                }
-            } catch (e: Exception) {
-                checkError = e.message ?: checkFailedText
-            } finally {
-                isChecking = false
-            }
-        }
     }
 
     Column(
@@ -256,64 +140,6 @@ fun ProfileScreen(
             ProfileMenuList(
                 onNavigateToSubscription = onNavigateToSubscription
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            UpdateCard(
-                currentVersionName = currentVersionName,
-                isChecking = isChecking,
-                updateInfo = updateInfo,
-                checkError = checkError,
-                lastCheckTime = lastCheckTime,
-                isDownloading = isDownloading,
-                downloadProgress = downloadProgress,
-                onCheckClick = { checkForUpdate() },
-                onDownloadClick = {
-                    updateInfo?.let { info ->
-                        downloadId = UpdateChecker.downloadAndInstall(context, info.downloadUrl, info.versionName)
-                        isDownloading = true
-                        downloadProgress = 0
-                    }
-                },
-                onCancelDownload = {
-                    if (downloadId != -1L) {
-                        UpdateChecker.cancelDownload(context, downloadId)
-                        isDownloading = false
-                        downloadProgress = 0
-                        downloadId = -1L
-                    }
-                },
-                onRetryClick = {
-                    checkError = null
-                    checkForUpdate()
-                }
-            )
-            
-            // 监听下载进度
-            LaunchedEffect(isDownloading, downloadId) {
-                if (isDownloading && downloadId != -1L) {
-                    while (isActive) {
-                        val (status, progress) = UpdateChecker.queryDownloadProgress(context, downloadId)
-                        downloadProgress = progress
-                        
-                        when (status) {
-                            DownloadManager.STATUS_SUCCESSFUL -> {
-                                isDownloading = false
-                                downloadProgress = 100
-                                break
-                            }
-                            DownloadManager.STATUS_FAILED -> {
-                                isDownloading = false
-                                downloadProgress = -1
-                                break
-                            }
-                        }
-                        
-                        if (!isDownloading) break
-                        delay(500) // 每500ms查询一次
-                    }
-                }
-            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -399,275 +225,6 @@ private fun AppTitleSection(currentVersionName: String) {
 }
 
 @Composable
-private fun UpdateCard(
-    currentVersionName: String,
-    isChecking: Boolean,
-    updateInfo: UpdateChecker.UpdateInfo?,
-    checkError: String?,
-    lastCheckTime: Long?,
-    isDownloading: Boolean,
-    downloadProgress: Int,
-    onCheckClick: () -> Unit,
-    onDownloadClick: () -> Unit,
-    onCancelDownload: () -> Unit,
-    onRetryClick: () -> Unit
-) {
-    val hasUpdate = updateInfo?.isNewer == true
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                width = if (hasUpdate) 1.5.dp else 1.dp,
-                color = if (hasUpdate) MaterialTheme.colorScheme.primary.copy(alpha = 0.5f) else themedBorderLight(),
-                shape = RoundedCornerShape(16.dp)
-            ),
-        colors = CardDefaults.cardColors(
-            containerColor = themedCardBackground()
-        ),
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // 顶部：图标 + 版本号 + 刷新
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(36.dp)
-                            .background(
-                                color = if (hasUpdate) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f) else themedTextPrimary().copy(alpha = 0.05f),
-                                shape = RoundedCornerShape(10.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Download,
-                            contentDescription = null,
-                            tint = if (hasUpdate) MaterialTheme.colorScheme.primary else themedTextSecondary().copy(alpha = 0.6f),
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                    Column {
-                        Text(
-                            text = "v$currentVersionName",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = themedTextPrimary()
-                        )
-                        if (lastCheckTime != null && !isChecking) {
-                            val diff = System.currentTimeMillis() - lastCheckTime
-                            val timeText = when {
-                                diff < 60000 -> stringResource(R.string.time_just_now)
-                                diff < 3600000 -> stringResource(R.string.time_minutes_ago, diff / 60000)
-                                diff < 86400000 -> stringResource(R.string.time_hours_ago, diff / 3600000)
-                                else -> stringResource(R.string.time_days_ago, diff / 86400000)
-                            }
-                            Text(
-                                text = stringResource(R.string.last_check, timeText),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = themedTextSecondary().copy(alpha = 0.6f)
-                            )
-                        }
-                    }
-                }
-
-                if (!isChecking) {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = stringResource(R.string.refresh),
-                        tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
-                        modifier = Modifier
-                            .size(20.dp)
-                            .clickable { onCheckClick() }
-                    )
-                }
-            }
-
-            // 状态显示
-            Box(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                when {
-                    isChecking -> {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(18.dp),
-                                color = MaterialTheme.colorScheme.primary,
-                                strokeWidth = 2.dp
-                            )
-                            Text(
-                                text = stringResource(R.string.checking),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = themedTextSecondary().copy(alpha = 0.8f)
-                            )
-                        }
-                    }
-                    updateInfo != null -> {
-                        if (updateInfo.isNewer) {
-                            Column {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        Box(
-                                            modifier = Modifier
-                                                .background(
-                                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
-                                                    shape = RoundedCornerShape(6.dp)
-                                                )
-                                                .padding(horizontal = 8.dp, vertical = 4.dp)
-                                        ) {
-                                            Text(
-                                                text = "v${updateInfo.versionName}",
-                                                style = MaterialTheme.typography.labelMedium,
-                                                color = MaterialTheme.colorScheme.primary,
-                                                fontWeight = FontWeight.SemiBold
-                                            )
-                                        }
-                                    }
-                                    if (isDownloading) {
-                                        // 显示下载进度
-                                        Column(
-                                            horizontalAlignment = Alignment.End
-                                        ) {
-                                            Text(
-                                                text = "$downloadProgress%",
-                                                style = MaterialTheme.typography.labelMedium,
-                                                color = MaterialTheme.colorScheme.primary
-                                            )
-                                            Spacer(modifier = Modifier.height(4.dp))
-                                            LinearProgressIndicator(
-                                                progress = { downloadProgress / 100f },
-                                                modifier = Modifier.width(120.dp),
-                                                color = MaterialTheme.colorScheme.primary,
-                                                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
-                                                drawStopIndicator = {}
-                                            )
-                                            Spacer(modifier = Modifier.height(4.dp))
-                                            Text(
-                                                text = "取消",
-                                                style = MaterialTheme.typography.labelSmall,
-                                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
-                                                modifier = Modifier.clickable { onCancelDownload() }
-                                            )
-                                        }
-                                    } else {
-                                        Button(
-                                            onClick = onDownloadClick,
-                                            colors = ButtonDefaults.buttonColors(
-                                                containerColor = MaterialTheme.colorScheme.primary
-                                            ),
-                                            shape = RoundedCornerShape(10.dp),
-                                            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-                                        ) {
-                                            Text(
-                                                stringResource(R.string.version_download_btn),
-                                                style = MaterialTheme.typography.labelMedium
-                                            )
-                                        }
-                                    }
-                                }
-                                
-                                // 显示更新日志
-                                if (updateInfo.releaseNotes.isNotBlank()) {
-                                    Spacer(modifier = Modifier.height(12.dp))
-                                    Text(
-                                        text = "更新内容",
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = updateInfo.releaseNotes,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = themedTextPrimary().copy(alpha = 0.8f),
-                                        lineHeight = MaterialTheme.typography.bodySmall.lineHeight * 1.2
-                                    )
-                                }
-                            }
-                        } else {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.CheckCircle,
-                                    contentDescription = null,
-                                    tint = Color(0xFF4CAF50),
-                                    modifier = Modifier.size(18.dp)
-                                )
-                                Text(
-                                    text = stringResource(R.string.version_is_latest),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = themedTextSecondary().copy(alpha = 0.8f)
-                                )
-                            }
-                        }
-                    }
-                    checkError != null -> {
-                        Row(
-                            modifier = Modifier.clickable { onRetryClick() },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Warning,
-                                contentDescription = null,
-                                tint = Color(0xFFFF5252),
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Text(
-                                text = stringResource(R.string.version_retry),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-                    else -> {
-                        Row(
-                            modifier = Modifier.clickable { onCheckClick() },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Refresh,
-                                contentDescription = null,
-                                tint = themedTextSecondary().copy(alpha = 0.5f),
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Text(
-                                text = stringResource(R.string.version_check),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = themedTextSecondary().copy(alpha = 0.5f)
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
 private fun FeatureList() {
     val features = listOf(
         FeatureItem(
@@ -681,7 +238,7 @@ private fun FeatureList() {
             description = stringResource(R.string.feature_cloud_desc)
         ),
         FeatureItem(
-            icon = Icons.Default.Update,
+            icon = Icons.Default.DashboardCustomize,
             title = stringResource(R.string.feature_update_title),
             description = stringResource(R.string.feature_update_desc)
         )
@@ -943,15 +500,15 @@ private fun ProjectCard(context: android.content.Context) {
                 width = 1.dp,
                 color = themedBorderLight(),
                 shape = RoundedCornerShape(16.dp)
-            )
-            .clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/iCurrer/OMaster"))
-                context.startActivity(intent)
-            },
+            ),
         colors = CardDefaults.cardColors(
             containerColor = themedCardBackground()
         ),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        onClick = {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/iCurrer/OMaster"))
+            context.startActivity(intent)
+        }
     ) {
         Row(
             modifier = Modifier
@@ -1014,55 +571,55 @@ private fun QQGroupCard(context: android.content.Context) {
                 width = 1.dp,
                 color = CardBorderLight,
                 shape = RoundedCornerShape(16.dp)
-            )
-            .clickable {
-                // 群号
-                val groupId = "1083543279"
-                
-                // 尝试使用URL Scheme打开QQ群
-                val schemes = listOf(
-                    // 方式1：使用腾讯官方API（推荐）
-                    "mqqapi://card/show_pslcard?src_type=internal&version=1&uin=$groupId&card_type=group&source=qrcode",
-                    // 方式2：使用QQ群加群链接（兼容旧版）
-                    "mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fc%2Fcgi-bin%2Fqm%2Fqr%3Fk%3D$groupId",
-                    // 方式3：使用简化版scheme
-                    "mqq://card/show_pslcard?src_type=internal&version=1&uin=$groupId&card_type=group"
-                )
-
-                var opened = false
-                for (scheme in schemes) {
-                    if (!opened) {
-                        try {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(scheme))
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            // 检查是否有应用可以处理这个intent
-                            if (intent.resolveActivity(context.packageManager) != null) {
-                                context.startActivity(intent)
-                                opened = true
-                                break
-                            }
-                        } catch (e: Exception) {
-                            // 尝试下一个方式
-                        }
-                    }
-                }
-
-                // 如果所有scheme都失败，使用网页版链接（浏览器会提示打开QQ）
-                if (!opened) {
-                    try {
-                        val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://qm.qq.com/cgi-bin/qm/qr?k=$groupId&jump_from=webapi"))
-                        webIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        context.startActivity(webIntent)
-                    } catch (e: Exception) {
-                        // 如果浏览器也打不开，提示用户
-                        android.widget.Toast.makeText(context, "无法打开QQ群，请检查是否安装QQ", android.widget.Toast.LENGTH_SHORT).show()
-                    }
-                }
-            },
+            ),
         colors = CardDefaults.cardColors(
             containerColor = themedCardBackground()
         ),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        onClick = {
+            // 群号
+            val groupId = "1083543279"
+            
+            // 尝试使用URL Scheme打开QQ群
+            val schemes = listOf(
+                // 方式1：使用腾讯官方API（推荐）
+                "mqqapi://card/show_pslcard?src_type=internal&version=1&uin=$groupId&card_type=group&source=qrcode",
+                // 方式2：使用QQ群加群链接（兼容旧版）
+                "mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fc%2Fcgi-bin%2Fqm%2Fqr%3Fk%3D$groupId",
+                // 方式3：使用简化版scheme
+                "mqq://card/show_pslcard?src_type=internal&version=1&uin=$groupId&card_type=group"
+            )
+
+            var opened = false
+            for (scheme in schemes) {
+                if (!opened) {
+                    try {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(scheme))
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        // 检查是否有应用可以处理这个intent
+                        if (intent.resolveActivity(context.packageManager) != null) {
+                            context.startActivity(intent)
+                            opened = true
+                            break
+                        }
+                    } catch (e: Exception) {
+                        // 尝试下一个方式
+                    }
+                }
+            }
+
+            // 如果所有scheme都失败，使用网页版链接（浏览器会提示打开QQ）
+            if (!opened) {
+                try {
+                    val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://qm.qq.com/cgi-bin/qm/qr?k=$groupId&jump_from=webapi"))
+                    webIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(webIntent)
+                } catch (e: Exception) {
+                    // 如果浏览器也打不开，提示用户
+                    android.widget.Toast.makeText(context, "无法打开QQ群，请检查是否安装QQ", android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     ) {
         Row(
             modifier = Modifier
@@ -1152,18 +709,25 @@ private fun ProfileMenuItem(
     title: String,
     onClick: () -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(horizontal = 16.dp, vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent
+        ),
+        shape = RoundedCornerShape(0.dp),
+        onClick = onClick
     ) {
         Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
@@ -1177,13 +741,14 @@ private fun ProfileMenuItem(
             )
         }
         Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = null,
-            tint = themedTextSecondary().copy(alpha = 0.5f),
-            modifier = Modifier.size(20.dp)
-        )
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = themedTextSecondary().copy(alpha = 0.5f),
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        }
     }
-}
 
 @Composable
 private fun FooterSection(

@@ -110,6 +110,12 @@ dependencies {
     implementation(libs.umeng.asms)
     implementation(libs.androidx.material3)
 
+    // 图片边框 - 主色调提取
+    implementation(libs.androidx.palette)
+
+    // 图片边框 - EXIF信息读取
+    implementation(libs.androidx.exifinterface)
+
     // 测试依赖（已使用 catalog）
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

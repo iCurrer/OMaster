@@ -12,8 +12,25 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -43,6 +60,7 @@ import com.silas.omaster.ui.create.UniversalCreatePresetViewModel
 import com.silas.omaster.ui.create.UniversalCreatePresetViewModelFactory
 import com.silas.omaster.ui.discover.DiscoverScreen
 import com.silas.omaster.ui.discover.ColorWalkScreen
+import com.silas.omaster.ui.frame.PhotoFrameScreen
 import com.silas.omaster.ui.detail.ProfileScreen
 import com.silas.omaster.ui.detail.DetailScreen
 import com.silas.omaster.ui.detail.OpenSourceLicenseScreen
@@ -62,6 +80,8 @@ import com.silas.omaster.data.repository.PresetRepository
 import androidx.compose.runtime.collectAsState
 import com.silas.omaster.data.config.ConfigCenter
 import com.silas.omaster.ui.settings.SettingsScreen
+import com.silas.omaster.util.UpdateChecker
+import kotlinx.coroutines.delay
 
 
 val LocalActivity = compositionLocalOf<Activity> { error("No Activity provided") }
@@ -105,6 +125,9 @@ sealed class Screen {
 
     @Serializable
     data object OpenSourceLicense : Screen()
+
+    @Serializable
+    data object PhotoFrame : Screen()
 }
 
 class MainActivity : ComponentActivity() {
@@ -295,6 +318,27 @@ fun MainApp(
     
     // 读取高级 Glass 质感配置
     val usePremiumGlass by config.premiumGlassFlow.collectAsState()
+
+    // 自动检查更新相关状态
+    val autoCheckUpdate by config.autoCheckUpdateFlow.collectAsState()
+    val updateChannel by config.updateChannelFlow.collectAsState()
+    var showUpdateDialog by remember { mutableStateOf<UpdateChecker.UpdateInfo?>(null) }
+
+    // 冷启动时自动检查更新
+    LaunchedEffect(Unit) {
+        if (autoCheckUpdate) {
+            // 延迟2秒，避免启动时立即弹窗影响用户体验
+            delay(2000)
+            try {
+                val result = UpdateChecker.checkUpdate(context, VersionInfo.VERSION_CODE, updateChannel)
+                if (result != null && result.isNewer) {
+                    showUpdateDialog = result
+                }
+            } catch (e: Exception) {
+                // 静默失败，不打扰用户
+            }
+        }
+    }
 
     // 底部导航栏页面顺序，用于决定切换动画方向
     val mainRouteList = remember { listOf("Home", "Discover", "About") }
@@ -514,9 +558,7 @@ fun MainApp(
                     },
                     onNavigateToOpenSourceLicense = {
                         navController.navigate(Screen.OpenSourceLicense)
-                    },
-                    currentVersionCode = VersionInfo.VERSION_CODE,
-                    currentVersionName = VersionInfo.VERSION_NAME
+                    }
                 )
             }
 
@@ -524,6 +566,9 @@ fun MainApp(
                 DiscoverScreen(
                     onNavigateToColorWalk = {
                         navController.navigate(Screen.ColorWalk)
+                    },
+                    onNavigateToPhotoFrame = {
+                        navController.navigate(Screen.PhotoFrame)
                     },
                     onScrollStateChanged = { isScrollingUp ->
                         isHomeScrollingUp = isScrollingUp
@@ -533,6 +578,14 @@ fun MainApp(
 
             composable<Screen.ColorWalk> {
                 ColorWalkScreen(
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            composable<Screen.PhotoFrame> {
+                PhotoFrameScreen(
                     onBack = {
                         navController.popBackStack()
                     }
@@ -609,6 +662,134 @@ fun MainApp(
                 },
                 modifier = Modifier.align(Alignment.BottomCenter),
                 usePremiumGlass = usePremiumGlass
+            )
+        }
+
+        // 自动检查更新弹窗
+        showUpdateDialog?.let { updateInfo ->
+            AlertDialog(
+                onDismissRequest = { showUpdateDialog = null },
+                title = { 
+                    Text(
+                        text = "发现新版本",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                },
+                text = {
+                    Column {
+                        // 版本信息卡片
+                        androidx.compose.material3.Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = androidx.compose.material3.CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                            ),
+                            shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = "当前版本",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                    Text(
+                                        text = "v${VersionInfo.VERSION_NAME}",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = "最新版本",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                    Text(
+                                        text = "v${updateInfo.versionName}",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
+                        }
+                        
+                        // 更新内容
+                        if (updateInfo.releaseNotes.isNotBlank()) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "更新内容",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            androidx.compose.foundation.lazy.LazyColumn(
+                                modifier = Modifier.heightIn(max = 150.dp)
+                            ) {
+                                items(updateInfo.releaseNotes.lines().filter { it.isNotBlank() }) { line ->
+                                    Row(
+                                        modifier = Modifier.padding(vertical = 2.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(6.dp)
+                                                .background(
+                                                    color = MaterialTheme.colorScheme.primary,
+                                                    shape = CircleShape
+                                                )
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = line.trim().removePrefix("-").trim(),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    androidx.compose.material3.Button(
+                        onClick = {
+                            UpdateChecker.downloadAndInstall(context, updateInfo.downloadUrl, updateInfo.versionName)
+                            showUpdateDialog = null
+                        },
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ),
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp)
+                    ) {
+                        Text("立即更新")
+                    }
+                },
+                dismissButton = {
+                    androidx.compose.material3.TextButton(
+                        onClick = { showUpdateDialog = null }
+                    ) {
+                        Text(
+                            "稍后",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                },
+                containerColor = MaterialTheme.colorScheme.surface,
+                titleContentColor = MaterialTheme.colorScheme.onSurface,
+                textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }

@@ -64,6 +64,7 @@ import com.silas.omaster.util.hapticClickable
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import com.silas.omaster.util.perform
+import com.silas.omaster.util.rememberScrollHaptics
 
 import com.silas.omaster.model.PresetSection
 
@@ -202,28 +203,7 @@ fun DetailScreen(
                 val scrollState = rememberScrollState()
 
                 // 滚动到顶/底部震感
-                var lastScrollValue by remember { mutableIntStateOf(0) }
-                var hasHapticAtTop by remember { mutableStateOf(false) }
-                var hasHapticAtBottom by remember { mutableStateOf(false) }
-
-                LaunchedEffect(scrollState.value) {
-                    val currentValue = scrollState.value
-                    val maxValue = scrollState.maxValue
-
-                    if (currentValue == 0 && !hasHapticAtTop) {
-                        haptic.perform(HapticFeedbackType.TextHandleMove)
-                        hasHapticAtTop = true
-                        hasHapticAtBottom = false
-                    } else if (maxValue > 0 && currentValue >= maxValue && !hasHapticAtBottom) {
-                        haptic.perform(HapticFeedbackType.TextHandleMove)
-                        hasHapticAtBottom = true
-                        hasHapticAtTop = false
-                    } else if (currentValue > 0 && currentValue < maxValue) {
-                        hasHapticAtTop = false
-                        hasHapticAtBottom = false
-                    }
-                    lastScrollValue = currentValue
-                }
+                rememberScrollHaptics(scrollState)
 
                 Column(
                     modifier = Modifier

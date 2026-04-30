@@ -2,6 +2,8 @@ package com.silas.omaster.data.local
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.silas.omaster.data.ColorCardLibrary
 import com.silas.omaster.model.ColorCard
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +28,7 @@ class ColorWalkManager(context: Context) {
         PREFS_NAME,
         Context.MODE_PRIVATE
     )
+    private val gson = Gson()
 
     private val _todayCardFlow: MutableStateFlow<ColorCard?>
     val todayCardFlow: StateFlow<ColorCard?>
@@ -171,28 +174,31 @@ class ColorWalkManager(context: Context) {
             history.removeAt(history.size - 1)
         }
 
-        val historyJson = history.joinToString(",") { "${it.cardId}:${it.date}" }
-        prefs.edit().putString(KEY_HISTORY, historyJson).apply()
-
+        val json = gson.toJson(history)
+        prefs.edit().putString(KEY_HISTORY, json).apply()
         _historyFlow.value = history
     }
 
-    /**
-     * 获取浏览历史
-     */
-    fun getHistory(): List<ColorCardHistory> {
-        return loadHistory()
-    }
+    fun getHistory(): List<ColorCardHistory> = loadHistory()
 
     private fun loadHistory(): List<ColorCardHistory> {
-        val historyJson = prefs.getString(KEY_HISTORY, null) ?: return emptyList()
-
-        return historyJson.split(",").mapNotNull { entry ->
-            val parts = entry.split(":")
-            if (parts.size == 2) {
-                ColorCardHistory(parts[0], parts[1])
-            } else {
-                null
+        val raw = prefs.getString(KEY_HISTORY, null) ?: return emptyList()
+        val type = object : TypeToken<List<ColorCardHistory>>() {}.type
+        return try {
+            gson.fromJson(raw, type) ?: emptyList()
+        } catch (e: Exception) {
+            try {
+                val legacy = raw.split(",").mapNotNull { entry ->
+                    val parts = entry.split(":")
+                    if (parts.size == 2) ColorCardHistory(parts[0], parts[1]) else null
+                }
+                if (legacy.isNotEmpty()) {
+                    val newJson = gson.toJson(legacy)
+                    prefs.edit().putString(KEY_HISTORY, newJson).apply()
+                }
+                legacy
+            } catch (_: Exception) {
+                emptyList()
             }
         }
     }

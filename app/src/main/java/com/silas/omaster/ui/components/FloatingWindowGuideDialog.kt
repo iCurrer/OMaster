@@ -43,8 +43,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.silas.omaster.R
-import com.silas.omaster.ui.theme.DarkGray
-import com.silas.omaster.ui.theme.NearBlack
+import com.silas.omaster.ui.theme.themedBackground
+import com.silas.omaster.ui.theme.themedCardBackground
+import com.silas.omaster.ui.theme.themedTextPrimary
+import com.silas.omaster.ui.theme.themedTextSecondary
 import kotlinx.coroutines.delay
 
 /**
@@ -58,21 +60,24 @@ fun FloatingWindowGuideDialog(
     modifier: Modifier = Modifier
 ) {
     var isVisible by remember { mutableStateOf(true) }
-    var countdown by remember { mutableIntStateOf(10) }
+    var countdown by remember { mutableIntStateOf(5) }
     var canClick by remember { mutableStateOf(false) }
 
-    // 倒计时逻辑
+    val backgroundColor = themedBackground()
+    val isDark = backgroundColor != Color.White
+
+    val cardBg = if (isDark) Color(0xFF1E1E1E) else Color.White
+    val textPrimary = if (isDark) Color.White else Color(0xFF1A1A1A)
+    val textSecondary = if (isDark) Color.White.copy(alpha = 0.7f) else Color(0xFF666666)
+    val overlayColor = if (isDark) Color.Black.copy(alpha = 0.85f) else Color.Black.copy(alpha = 0.5f)
+    val stepCardBg = if (isDark) Color(0xFF2A2A2A) else Color(0xFFF5F5F5)
+
     LaunchedEffect(Unit) {
         while (countdown > 0) {
             delay(1000)
             countdown--
         }
         canClick = true
-    }
-
-    // 调试日志
-    LaunchedEffect(Unit) {
-        android.util.Log.d("FloatingWindowGuideDialog", "对话框显示")
     }
 
     AnimatedVisibility(
@@ -83,7 +88,7 @@ fun FloatingWindowGuideDialog(
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.8f)),
+                .background(overlayColor),
             contentAlignment = Alignment.Center
         ) {
             Card(
@@ -92,7 +97,7 @@ fun FloatingWindowGuideDialog(
                     .padding(16.dp),
                 shape = RoundedCornerShape(28.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = NearBlack
+                    containerColor = cardBg
                 ),
                 elevation = CardDefaults.cardElevation(
                     defaultElevation = 12.dp
@@ -104,7 +109,6 @@ fun FloatingWindowGuideDialog(
                         .padding(28.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // 顶部装饰条
                     Box(
                         modifier = Modifier
                             .size(48.dp, 4.dp)
@@ -114,7 +118,6 @@ fun FloatingWindowGuideDialog(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // 图标
                     Box(
                         modifier = Modifier
                             .size(72.dp)
@@ -139,34 +142,31 @@ fun FloatingWindowGuideDialog(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // 标题
                     Text(
                         text = stringResource(R.string.guide_title),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White,
+                        color = textPrimary,
                         textAlign = TextAlign.Center
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // 说明文字
                     Text(
                         text = stringResource(R.string.guide_desc),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White.copy(alpha = 0.7f),
+                        color = textSecondary,
                         textAlign = TextAlign.Center,
                         lineHeight = 20.sp
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // 操作步骤卡片
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(20.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = DarkGray.copy(alpha = 0.5f)
+                            containerColor = stepCardBg
                         ),
                         border = androidx.compose.foundation.BorderStroke(
                             width = 1.dp,
@@ -195,17 +195,15 @@ fun FloatingWindowGuideDialog(
                                 )
                             }
 
-                            // 步骤列表
-                            GuideStep(number = "1", text = stringResource(R.string.guide_fail_step_1))
-                            GuideStep(number = "2", text = stringResource(R.string.guide_fail_step_2))
-                            GuideStep(number = "3", text = stringResource(R.string.guide_fail_step_3))
-                            GuideStep(number = "4", text = stringResource(R.string.guide_fail_step_4))
+                            GuideStep(number = "1", text = stringResource(R.string.guide_fail_step_1), textColor = textPrimary)
+                            GuideStep(number = "2", text = stringResource(R.string.guide_fail_step_2), textColor = textPrimary)
+                            GuideStep(number = "3", text = stringResource(R.string.guide_fail_step_3), textColor = textPrimary)
+                            GuideStep(number = "4", text = stringResource(R.string.guide_fail_step_4), textColor = textPrimary)
                         }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // 提示文字
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(horizontal = 8.dp)
@@ -218,19 +216,17 @@ fun FloatingWindowGuideDialog(
                         Text(
                             text = stringResource(R.string.guide_tip),
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.White.copy(alpha = 0.5f),
+                            color = textSecondary,
                             lineHeight = 16.sp
                         )
                     }
 
                     Spacer(modifier = Modifier.height(28.dp))
 
-                    // 按钮区域
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        // 主按钮（带倒计时）
                         Button(
                             onClick = {
                                 if (canClick) {
@@ -255,7 +251,7 @@ fun FloatingWindowGuideDialog(
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    text = if (canClick) stringResource(R.string.guide_btn_open) else stringResource(R.string.guide_btn_open),
+                                    text = stringResource(R.string.guide_btn_open),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -279,7 +275,6 @@ fun FloatingWindowGuideDialog(
                             }
                         }
 
-                        // 次要按钮
                         TextButton(
                             onClick = {
                                 isVisible = false
@@ -289,7 +284,7 @@ fun FloatingWindowGuideDialog(
                         ) {
                             Text(
                                 text = stringResource(R.string.guide_later),
-                                color = Color.White.copy(alpha = 0.5f),
+                                color = textSecondary,
                                 fontSize = 14.sp
                             )
                         }
@@ -304,6 +299,7 @@ fun FloatingWindowGuideDialog(
 private fun GuideStep(
     number: String,
     text: String,
+    textColor: Color,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -312,7 +308,6 @@ private fun GuideStep(
             .padding(vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // 步骤编号
         Box(
             modifier = Modifier
                 .size(26.dp)
@@ -330,11 +325,10 @@ private fun GuideStep(
 
         Spacer(modifier = Modifier.padding(start = 14.dp))
 
-        // 步骤文字
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.White.copy(alpha = 0.85f),
+            color = textColor.copy(alpha = 0.85f),
             lineHeight = 18.sp
         )
     }

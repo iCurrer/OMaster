@@ -1,6 +1,8 @@
 package com.silas.omaster.ui.settings
 
+import android.app.DownloadManager
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,19 +28,27 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Brush
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.DashboardCustomize
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.PrivacyTip
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.filled.Vibration
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -51,11 +61,15 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.isActive
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,6 +79,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.silas.omaster.R
@@ -77,6 +92,7 @@ import com.silas.omaster.ui.components.OMasterTopAppBar
 import com.silas.omaster.ui.theme.AppDesign
 import com.silas.omaster.ui.theme.BrandTheme
 import com.silas.omaster.ui.theme.themedBackground
+import com.silas.omaster.ui.theme.themedBorderLight
 import com.silas.omaster.ui.theme.themedCardBackground
 import com.silas.omaster.ui.theme.themedTextPrimary
 import com.silas.omaster.ui.theme.themedTextSecondary
@@ -84,11 +100,16 @@ import com.silas.omaster.util.HapticSettings
 import com.silas.omaster.util.ImageCacheManager
 import com.silas.omaster.util.LogExporter
 import com.silas.omaster.util.Logger
+import com.silas.omaster.util.UpdateChecker
+import com.silas.omaster.util.VersionInfo
 import com.silas.omaster.util.perform
+import com.silas.omaster.util.rememberScrollHaptics
 import android.content.Intent
 import android.widget.Toast
 import com.silas.omaster.MainActivity
 import androidx.compose.material.icons.filled.BugReport
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen() {
@@ -104,6 +125,7 @@ fun SettingsScreen() {
     var defaultStartTab by remember { mutableStateOf(config.defaultStartTab) }
     var updateChannel by remember { mutableStateOf(config.updateChannel) }
     var showChannelDialog by remember { mutableStateOf(false) }
+    var autoCheckUpdate by remember { mutableStateOf(config.isAutoCheckUpdateEnabled) }
     var analyticsEnabled by remember { mutableStateOf(config.isAnalyticsEnabled) }
     var cacheSize by remember { mutableStateOf(ImageCacheManager.getCacheSize(context)) }
     var showClearCacheDialog by remember { mutableStateOf(false) }
@@ -207,32 +229,7 @@ fun SettingsScreen() {
     }
 
     val scrollState = rememberScrollState()
-    var hasHapticAtTop by remember { mutableStateOf(false) }
-    var hasHapticAtBottom by remember { mutableStateOf(false) }
-
-    // 监听滚动状态，实现顶部和底部震感
-    androidx.compose.runtime.LaunchedEffect(scrollState.value) {
-        val currentValue = scrollState.value
-        val maxValue = scrollState.maxValue
-
-        if (maxValue > 0) {
-            if (currentValue <= 0 && !hasHapticAtTop) {
-                // 滚动到顶部
-                haptic.perform(HapticFeedbackType.TextHandleMove)
-                hasHapticAtTop = true
-                hasHapticAtBottom = false
-            } else if (currentValue >= maxValue && !hasHapticAtBottom) {
-                // 滚动到底部
-                haptic.perform(HapticFeedbackType.TextHandleMove)
-                hasHapticAtBottom = true
-                hasHapticAtTop = false
-            } else if (currentValue > 0 && currentValue < maxValue) {
-                // 在中间位置，重置状态
-                hasHapticAtTop = false
-                hasHapticAtBottom = false
-            }
-        }
-    }
+    rememberScrollHaptics(scrollState)
 
     Column(
         modifier = Modifier
@@ -445,20 +442,21 @@ fun SettingsScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Update Section
-        SettingsSectionCard {
-            SettingsSectionTitle(title = stringResource(R.string.settings_section_update))
-
-            SettingsClickableItem(
-                icon = Icons.Default.Update,
-                title = stringResource(R.string.update_channel),
-                subtitle = when (updateChannel) {
-                    UpdateChannel.GITEE -> stringResource(R.string.update_channel_gitee)
-                    UpdateChannel.GITHUB -> stringResource(R.string.update_channel_github)
-                },
-                onClick = { showChannelDialog = true }
-            )
-        }
+        // Update Section - 新版本检查卡片
+        SettingsUpdateSection(
+            updateChannel = updateChannel,
+            onChannelClick = { showChannelDialog = true },
+            autoCheckUpdate = autoCheckUpdate,
+            onAutoCheckUpdateChange = { enabled ->
+                autoCheckUpdate = enabled
+                config.isAutoCheckUpdateEnabled = enabled
+                if (enabled) {
+                    haptic.perform(HapticFeedbackType.ToggleOn)
+                } else {
+                    haptic.perform(HapticFeedbackType.ToggleOff)
+                }
+            }
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -588,6 +586,373 @@ fun SettingsScreen() {
 
         Spacer(modifier = Modifier.height(32.dp))
         }
+    }
+}
+
+/**
+ * 设置页面版本更新检查卡片
+ */
+@Composable
+private fun SettingsUpdateSection(
+    updateChannel: UpdateChannel,
+    onChannelClick: () -> Unit,
+    autoCheckUpdate: Boolean,
+    onAutoCheckUpdateChange: (Boolean) -> Unit
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val haptic = LocalHapticFeedback.current
+    
+    var isChecking by remember { mutableStateOf(false) }
+    var updateInfo by remember { mutableStateOf<UpdateChecker.UpdateInfo?>(null) }
+    var checkError by remember { mutableStateOf<String?>(null) }
+    var lastCheckTime by remember { mutableStateOf<Long?>(null) }
+    
+    // 下载相关状态
+    var downloadId by remember { mutableStateOf<Long>(-1L) }
+    var downloadProgress by remember { mutableIntStateOf(0) }
+    var isDownloading by remember { mutableStateOf(false) }
+
+    val currentVersionName = VersionInfo.VERSION_NAME
+    val hasUpdate = updateInfo?.isNewer == true
+
+    // 监听下载进度
+    LaunchedEffect(isDownloading, downloadId) {
+        if (isDownloading && downloadId != -1L) {
+            while (isActive) {
+                val (status, progress) = UpdateChecker.queryDownloadProgress(context, downloadId)
+                downloadProgress = progress
+                
+                when (status) {
+                    DownloadManager.STATUS_SUCCESSFUL -> {
+                        isDownloading = false
+                        downloadProgress = 100
+                        break
+                    }
+                    DownloadManager.STATUS_FAILED -> {
+                        isDownloading = false
+                        downloadProgress = -1
+                        break
+                    }
+                }
+                
+                if (!isDownloading) break
+                delay(500)
+            }
+        }
+    }
+
+    val checkForUpdate = {
+        scope.launch {
+            isChecking = true
+            checkError = null
+            haptic.perform(HapticFeedbackType.TextHandleMove)
+            try {
+                val result = UpdateChecker.checkUpdate(context, VersionInfo.VERSION_CODE, updateChannel)
+                if (result != null) {
+                    updateInfo = result
+                    lastCheckTime = System.currentTimeMillis()
+                    if (result.isNewer) {
+                        haptic.perform(HapticFeedbackType.Confirm)
+                    }
+                } else {
+                    checkError = context.getString(R.string.version_check_failed)
+                }
+            } catch (e: Exception) {
+                checkError = e.message ?: context.getString(R.string.version_check_failed)
+            } finally {
+                isChecking = false
+            }
+        }
+    }
+
+    SettingsSectionCard {
+        SettingsSectionTitle(title = stringResource(R.string.settings_section_update))
+
+        // 版本号与检查按钮卡片
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = AppDesign.ContentPadding)
+                .padding(bottom = AppDesign.ContentPadding),
+            colors = CardDefaults.cardColors(
+                containerColor = if (hasUpdate) 
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) 
+                else 
+                    themedCardBackground()
+            ),
+            shape = RoundedCornerShape(12.dp),
+            border = if (hasUpdate) {
+                androidx.compose.foundation.BorderStroke(
+                    1.dp, 
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                )
+            } else null
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // 顶部：图标 + 版本号 + 刷新按钮
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .background(
+                                    color = if (hasUpdate) 
+                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) 
+                                    else 
+                                        themedTextPrimary().copy(alpha = 0.05f),
+                                    shape = RoundedCornerShape(10.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = if (hasUpdate) Icons.Default.Download else Icons.Default.Update,
+                                contentDescription = null,
+                                tint = if (hasUpdate) 
+                                    MaterialTheme.colorScheme.primary 
+                                else 
+                                    themedTextSecondary().copy(alpha = 0.6f),
+                                modifier = Modifier.size(22.dp)
+                            )
+                        }
+                        
+                        Column {
+                            Text(
+                                text = "v$currentVersionName",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = themedTextPrimary()
+                            )
+                            if (lastCheckTime != null && !isChecking) {
+                                val diff = System.currentTimeMillis() - lastCheckTime!!
+                                val timeText = when {
+                                    diff < 60000 -> stringResource(R.string.time_just_now)
+                                    diff < 3600000 -> stringResource(R.string.time_minutes_ago, diff / 60000)
+                                    diff < 86400000 -> stringResource(R.string.time_hours_ago, diff / 3600000)
+                                    else -> stringResource(R.string.time_days_ago, diff / 86400000)
+                                }
+                                Text(
+                                    text = stringResource(R.string.last_check, timeText),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = themedTextSecondary().copy(alpha = 0.6f)
+                                )
+                            } else if (lastCheckTime == null) {
+                                Text(
+                                    text = stringResource(R.string.version_check_hint),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = themedTextSecondary().copy(alpha = 0.6f)
+                                )
+                            }
+                        }
+                    }
+
+                    // 刷新/检查按钮
+                    if (!isChecking && !isDownloading) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .clickable { checkForUpdate() },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = stringResource(R.string.refresh),
+                                tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    } else if (isChecking) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                            strokeWidth = 2.dp
+                        )
+                    }
+                }
+
+                // 状态显示区域
+                when {
+                    isDownloading -> {
+                        Column {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "${updateInfo?.versionName ?: ""} - $downloadProgress%",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                Text(
+                                    text = stringResource(R.string.downloading),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = themedTextSecondary()
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
+                            LinearProgressIndicator(
+                                progress = { downloadProgress / 100f },
+                                modifier = Modifier.fillMaxWidth(),
+                                color = MaterialTheme.colorScheme.primary,
+                                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            TextButton(
+                                onClick = {
+                                    UpdateChecker.cancelDownload(context, downloadId)
+                                    isDownloading = false
+                                    downloadProgress = 0
+                                    downloadId = -1L
+                                },
+                                modifier = Modifier.align(Alignment.End)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.cancel),
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        }
+                    }
+                    hasUpdate -> {
+                        Column {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .background(
+                                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                                                shape = RoundedCornerShape(6.dp)
+                                            )
+                                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                                    ) {
+                                        Text(
+                                            text = "v${updateInfo?.versionName}",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                    }
+                                    Text(
+                                        text = stringResource(R.string.new_version_available),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
+                            
+                            // 更新日志
+                            if (!updateInfo?.releaseNotes.isNullOrBlank()) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = updateInfo?.releaseNotes ?: "",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = themedTextPrimary().copy(alpha = 0.8f),
+                                    maxLines = 3,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                            
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Button(
+                                onClick = {
+                                    updateInfo?.let { info ->
+                                        downloadId = UpdateChecker.downloadAndInstall(context, info.downloadUrl, info.versionName)
+                                        isDownloading = true
+                                        downloadProgress = 0
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary
+                                ),
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Text(stringResource(R.string.version_download_btn))
+                            }
+                        }
+                    }
+                    checkError != null -> {
+                        Row(
+                            modifier = Modifier.clickable { checkForUpdate() },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Warning,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Text(
+                                text = checkError ?: stringResource(R.string.version_retry),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
+                    lastCheckTime != null -> {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = null,
+                                tint = Color(0xFF4CAF50),
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Text(
+                                text = stringResource(R.string.version_is_latest),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = themedTextSecondary().copy(alpha = 0.8f)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        HorizontalDivider(color = themedTextSecondary().copy(alpha = 0.1f))
+
+        // 更新渠道设置
+        SettingsClickableItem(
+            icon = Icons.Default.Cloud,
+            title = stringResource(R.string.update_channel),
+            subtitle = when (updateChannel) {
+                UpdateChannel.GITEE -> stringResource(R.string.update_channel_gitee)
+                UpdateChannel.GITHUB -> stringResource(R.string.update_channel_github)
+            },
+            onClick = onChannelClick
+        )
+
+        HorizontalDivider(color = themedTextSecondary().copy(alpha = 0.1f))
+
+        // 自动检查更新开关
+        SettingsSwitchItem(
+            icon = Icons.Default.Update,
+            title = stringResource(R.string.auto_check_update),
+            subtitle = stringResource(R.string.auto_check_update_desc),
+            checked = autoCheckUpdate,
+            onCheckedChange = onAutoCheckUpdateChange
+        )
     }
 }
 
@@ -895,8 +1260,8 @@ fun UpdateChannelDialog(
                             )
                             Text(
                                 text = when (channel) {
-                                    UpdateChannel.GITEE -> context.getString(R.string.channel_gitee_desc)
-                                    UpdateChannel.GITHUB -> context.getString(R.string.channel_github_desc)
+                                    UpdateChannel.GITEE -> "国内访问更快"
+                                    UpdateChannel.GITHUB -> "国际访问，可能较慢"
                                 },
                                 style = MaterialTheme.typography.bodySmall,
                                 color = themedTextSecondary()
@@ -917,9 +1282,9 @@ fun UpdateChannelDialog(
 }
 
 @Composable
-fun LanguageSelectionDialog(
-    currentLanguage: AppLanguage,
-    onLanguageSelected: (AppLanguage) -> Unit,
+fun FloatingWindowModeDialog(
+    currentMode: FloatingWindowMode,
+    onModeSelected: (FloatingWindowMode) -> Unit,
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
@@ -927,21 +1292,21 @@ fun LanguageSelectionDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = stringResource(R.string.dialog_title_select_language))
+            Text(text = stringResource(R.string.dialog_title_select_floating_mode))
         },
         text = {
             LazyColumn {
-                items(AppLanguage.entries) { language ->
+                items(FloatingWindowMode.entries) { mode ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { onLanguageSelected(language) }
+                            .clickable { onModeSelected(mode) }
                             .padding(vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(
-                            selected = (language == currentLanguage),
-                            onClick = { onLanguageSelected(language) },
+                            selected = (mode == currentMode),
+                            onClick = { onModeSelected(mode) },
                             colors = RadioButtonDefaults.colors(
                                 selectedColor = MaterialTheme.colorScheme.primary,
                                 unselectedColor = themedTextSecondary()
@@ -950,19 +1315,17 @@ fun LanguageSelectionDialog(
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
                             Text(
-                                text = when (language) {
-                                    AppLanguage.SYSTEM -> context.getString(R.string.language_system)
-                                    AppLanguage.CHINESE -> context.getString(R.string.language_chinese)
-                                    AppLanguage.ENGLISH -> context.getString(R.string.language_english)
+                                text = when (mode) {
+                                    FloatingWindowMode.STANDARD -> context.getString(R.string.floating_window_mode_standard)
+                                    FloatingWindowMode.COMPACT -> context.getString(R.string.floating_window_mode_compact)
                                 },
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = themedTextPrimary()
                             )
                             Text(
-                                text = when (language) {
-                                    AppLanguage.SYSTEM -> context.getString(R.string.language_system_desc)
-                                    AppLanguage.CHINESE -> context.getString(R.string.language_chinese_desc)
-                                    AppLanguage.ENGLISH -> context.getString(R.string.language_english_desc)
+                                text = when (mode) {
+                                    FloatingWindowMode.STANDARD -> context.getString(R.string.floating_window_mode_standard_desc)
+                                    FloatingWindowMode.COMPACT -> context.getString(R.string.floating_window_mode_compact_desc)
                                 },
                                 style = MaterialTheme.typography.bodySmall,
                                 color = themedTextSecondary()
@@ -993,7 +1356,7 @@ fun DarkModeSelectionDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = stringResource(R.string.settings_dark_mode))
+            Text(text = stringResource(R.string.settings_dark_mode_dialog_title))
         },
         text = {
             LazyColumn {
@@ -1014,26 +1377,15 @@ fun DarkModeSelectionDialog(
                             )
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        Column {
-                            Text(
-                                text = when (mode) {
-                                    DarkMode.SYSTEM -> context.getString(R.string.dark_mode_system)
-                                    DarkMode.LIGHT -> context.getString(R.string.dark_mode_light)
-                                    DarkMode.DARK -> context.getString(R.string.dark_mode_dark)
-                                },
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = themedTextPrimary()
-                            )
-                            Text(
-                                text = when (mode) {
-                                    DarkMode.SYSTEM -> context.getString(R.string.dark_mode_system_desc)
-                                    DarkMode.LIGHT -> context.getString(R.string.dark_mode_light_desc)
-                                    DarkMode.DARK -> context.getString(R.string.dark_mode_dark_desc)
-                                },
-                                style = MaterialTheme.typography.bodySmall,
-                                color = themedTextSecondary()
-                            )
-                        }
+                        Text(
+                            text = when (mode) {
+                                DarkMode.SYSTEM -> context.getString(R.string.dark_mode_system)
+                                DarkMode.LIGHT -> context.getString(R.string.dark_mode_light)
+                                DarkMode.DARK -> context.getString(R.string.dark_mode_dark)
+                            },
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = themedTextPrimary()
+                        )
                     }
                 }
             }
@@ -1049,53 +1401,46 @@ fun DarkModeSelectionDialog(
 }
 
 @Composable
-fun FloatingWindowModeDialog(
-    currentMode: FloatingWindowMode,
-    onModeSelected: (FloatingWindowMode) -> Unit,
+fun LanguageSelectionDialog(
+    currentLanguage: AppLanguage,
+    onLanguageSelected: (AppLanguage) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val modes = listOf(
-        FloatingWindowMode.STANDARD to stringResource(R.string.floating_window_mode_standard) to stringResource(R.string.floating_window_mode_standard_desc),
-        FloatingWindowMode.COMPACT to stringResource(R.string.floating_window_mode_compact) to stringResource(R.string.floating_window_mode_compact_desc)
-    )
+    val context = LocalContext.current
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = stringResource(R.string.floating_window_mode_dialog_title))
+            Text(text = stringResource(R.string.language_dialog_title))
         },
         text = {
             LazyColumn {
-                items(modes) { (pair, desc) ->
-                    val (mode, name) = pair
+                items(AppLanguage.entries) { language ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { onModeSelected(mode) }
+                            .clickable { onLanguageSelected(language) }
                             .padding(vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(
-                            selected = (mode == currentMode),
-                            onClick = { onModeSelected(mode) },
+                            selected = (language == currentLanguage),
+                            onClick = { onLanguageSelected(language) },
                             colors = RadioButtonDefaults.colors(
                                 selectedColor = MaterialTheme.colorScheme.primary,
                                 unselectedColor = themedTextSecondary()
                             )
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        Column {
-                            Text(
-                                text = name,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = themedTextPrimary()
-                            )
-                            Text(
-                                text = desc,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = themedTextSecondary()
-                            )
-                        }
+                        Text(
+                            text = when (language) {
+                                AppLanguage.SYSTEM -> context.getString(R.string.language_system)
+                                AppLanguage.CHINESE -> context.getString(R.string.language_chinese)
+                                AppLanguage.ENGLISH -> context.getString(R.string.language_english)
+                            },
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = themedTextPrimary()
+                        )
                     }
                 }
             }

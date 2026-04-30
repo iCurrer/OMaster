@@ -304,8 +304,7 @@ private fun DayCell(
 
     Card(
         modifier = modifier
-            .aspectRatio(1f)
-            .clickable { onClick() },
+            .aspectRatio(1f),
         colors = CardDefaults.cardColors(
             containerColor = when {
                 isToday && hasRecord -> MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)
@@ -314,7 +313,8 @@ private fun DayCell(
                 else -> Color.Transparent
             }
         ),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        onClick = onClick
     ) {
         Column(
             modifier = Modifier

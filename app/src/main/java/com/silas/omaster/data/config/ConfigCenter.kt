@@ -280,6 +280,24 @@ class ConfigCenter private constructor(context: Context) {
     }
 
     // ═══════════════════════════════════════════════════════════
+    // 系统配置 - 自动检查更新
+    // ═══════════════════════════════════════════════════════════
+
+    private val _autoCheckUpdateFlow = MutableStateFlow(loadAutoCheckUpdate())
+    val autoCheckUpdateFlow: StateFlow<Boolean> = _autoCheckUpdateFlow.asStateFlow()
+
+    var isAutoCheckUpdateEnabled: Boolean
+        get() = _autoCheckUpdateFlow.value
+        set(value) {
+            _autoCheckUpdateFlow.value = value
+            prefs.edit().putBoolean(KEY_AUTO_CHECK_UPDATE, value).apply()
+        }
+
+    private fun loadAutoCheckUpdate(): Boolean {
+        return prefs.getBoolean(KEY_AUTO_CHECK_UPDATE, true)  // 默认开启
+    }
+
+    // ═══════════════════════════════════════════════════════════
     // 订阅配置 - 委托给 SubscriptionConfig
     // ═══════════════════════════════════════════════════════════
 
@@ -385,6 +403,7 @@ class ConfigCenter private constructor(context: Context) {
 
         // SystemConfig Keys
         private const val KEY_UPDATE_CHANNEL = "update_channel"
+        private const val KEY_AUTO_CHECK_UPDATE = "auto_check_update"
 
         @Volatile
         private var INSTANCE: ConfigCenter? = null

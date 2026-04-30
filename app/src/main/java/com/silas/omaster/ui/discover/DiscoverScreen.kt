@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -61,6 +62,7 @@ import java.time.LocalDate
 @Composable
 fun DiscoverScreen(
     onNavigateToColorWalk: () -> Unit = {},
+    onNavigateToPhotoFrame: () -> Unit = {},
     onScrollStateChanged: (Boolean) -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -121,6 +123,16 @@ fun DiscoverScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            FeatureCard(
+                icon = Icons.Default.PhotoLibrary,
+                title = stringResource(R.string.photoframe_card_title),
+                description = stringResource(R.string.photoframe_card_desc),
+                onClick = onNavigateToPhotoFrame,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             ComingSoonCard(modifier = Modifier.fillMaxWidth())
 
             Spacer(modifier = Modifier.height(48.dp))
@@ -151,9 +163,10 @@ private fun FeatureCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.clickable { onClick() },
+        modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = themedCardBackground()),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier
@@ -219,9 +232,10 @@ private fun CheckInEntryCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.clickable { onClick() },
+        modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = themedCardBackground()),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier

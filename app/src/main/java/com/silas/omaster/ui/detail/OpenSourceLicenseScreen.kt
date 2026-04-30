@@ -2,6 +2,7 @@ package com.silas.omaster.ui.detail
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,7 +40,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.silas.omaster.R
 import com.silas.omaster.ui.components.OMasterTopAppBar
-import com.silas.omaster.ui.theme.DarkGray
+import com.silas.omaster.ui.theme.themedBackground
 import com.silas.omaster.ui.theme.themedCardBackground
 import com.silas.omaster.ui.theme.themedTextPrimary
 import com.silas.omaster.ui.theme.themedTextSecondary
@@ -49,7 +50,9 @@ fun OpenSourceLicenseScreen(
     onBack: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(themedBackground())
     ) {
         OMasterTopAppBar(
             title = stringResource(R.string.open_source_license_title),
@@ -83,7 +86,7 @@ private fun AppLicenseCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = DarkGray
+            containerColor = themedCardBackground()
         )
     ) {
         Column(
@@ -288,6 +291,26 @@ private fun OpenSourceLibraryList() {
             name = "Ktor",
             license = "Apache License 2.0",
             link = "https://ktor.io/"
+        ),
+        LibraryInfo(
+            name = "AndroidX Lifecycle",
+            license = "Apache License 2.0",
+            link = "https://developer.android.com/jetpack/androidx/releases/lifecycle"
+        ),
+        LibraryInfo(
+            name = "AndroidX Navigation",
+            license = "Apache License 2.0",
+            link = "https://developer.android.com/jetpack/androidx/releases/navigation"
+        ),
+        LibraryInfo(
+            name = "AndroidX Activity",
+            license = "Apache License 2.0",
+            link = "https://developer.android.com/jetpack/androidx/releases/activity"
+        ),
+        LibraryInfo(
+            name = "友盟统计 UMEng",
+            license = "自定义许可证",
+            link = "https://www.umeng.com/"
         ),
         LibraryInfo(
             name = "Material Design Icons",

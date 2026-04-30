@@ -1,34 +1,50 @@
 package com.silas.omaster.ui.create
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.silas.omaster.R
 import com.silas.omaster.data.repository.PresetRepository
-import com.silas.omaster.model.MasterPreset
+import com.silas.omaster.ui.components.OMasterTopAppBar
 import com.silas.omaster.ui.components.PresetCard
-import com.silas.omaster.ui.home.HomeViewModel
-import com.silas.omaster.ui.home.HomeViewModelFactory
+import com.silas.omaster.ui.theme.AppDesign
+import com.silas.omaster.ui.theme.themedBackground
+import com.silas.omaster.ui.theme.themedTextSecondary
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PresetSelectionScreen(
     onPresetSelected: (String?) -> Unit,
@@ -36,60 +52,70 @@ fun PresetSelectionScreen(
 ) {
     val context = LocalContext.current
     val repository = remember { PresetRepository.getInstance(context) }
-    // Reuse HomeViewModel to get presets or create a simple one. 
-    // Using HomeViewModel might be overkill but it already has the logic to fetch presets.
-    // Alternatively, just fetch directly in a LaunchedEffect or a simple ViewModel.
-    // Let's use a simple direct fetch for now as we just need the list.
     val presets by repository.getAllPresets().collectAsState(initial = emptyList())
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.select_template)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
-                    }
-                }
-            )
-        }
-    ) { padding ->
-        Column(modifier = Modifier.padding(padding)) {
-            // Option 1: Start from Scratch
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(themedBackground())
+    ) {
+        OMasterTopAppBar(
+            title = stringResource(R.string.select_template),
+            modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
+            onBack = onBack
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = AppDesign.ScreenPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(Modifier.height(AppDesign.ItemSpacing))
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
                     .clickable { onPresetSelected(null) },
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                shape = RoundedCornerShape(AppDesign.MediumRadius),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+                )
             ) {
                 Row(
-                    modifier = Modifier.padding(24.dp),
+                    modifier = Modifier.padding(20.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Icon(Icons.Default.Add, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Icon(
+                        Icons.Default.Add, null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(22.dp)
+                    )
+                    Spacer(Modifier.width(12.dp))
                     Text(
                         stringResource(R.string.start_from_scratch),
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        fontWeight = FontWeight.Bold
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             }
 
+            Spacer(Modifier.height(AppDesign.SectionSpacing))
+
             Text(
                 stringResource(R.string.or_choose_template),
                 style = MaterialTheme.typography.labelLarge,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                color = Color.Gray
+                color = themedTextSecondary(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp)
             )
 
-            // Option 2: Select from existing
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(16.dp),
+                contentPadding = PaddingValues(bottom = 80.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
