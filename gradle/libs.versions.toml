@@ -10,12 +10,12 @@ kotlin = "2.3.21"
 composeBom = "2026.03.01"
 # 新增依赖版本
 coil = "2.7.0"
-gson = "2.13.2"
+gson = "2.14.0"
 navigationCompose = "2.9.8"
-kotlinxSerialization = "1.10.0"
-material = "1.10.4"
+kotlinxSerialization = "1.11.0"
+# material = "1.10.6" 被 BOM 覆盖
 ktor = "3.4.3"
-umeng-common = "9.8.9"
+umeng-common = "9.9.1"
 umeng-asms = "1.8.7.2"
 material3 = "1.4.0"
 
@@ -42,7 +42,8 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 # ===== 新增硬编码依赖 =====
 # Compose Material（用于 pull-to-refresh）
-androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "material" }
+# androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "material" }
+androidx-compose-material = { group = "androidx.compose.material", name = "material" }
 
 # Ktor 全家桶
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }

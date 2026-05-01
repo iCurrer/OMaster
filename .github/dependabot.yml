@@ -1,11 +1,30 @@
 # .github/dependabot.yml
 
 version: 2
+registries:
+  # 阿里云公共镜像（包含 Maven Central 的大部分内容）
+  aliyun-public:
+    type: maven-repository
+    url: https://maven.aliyun.com/repository/public
+  # 阿里云 Google 镜像（包含 Android 和 Jetpack 库）
+  aliyun-google:
+    type: maven-repository
+    url: https://maven.aliyun.com/repository/google
+  # 阿里云 Gradle Plugin 镜像（包含 com.android.application 等插件）
+  aliyun-gradle-plugin:
+    type: maven-repository
+    url: https://maven.aliyun.com/repository/gradle-plugin
+
 updates:
   - package-ecosystem: "gradle"
     directory: "/"
+    registries:
+      - aliyun-public
+      - aliyun-google
+      - aliyun-gradle-plugin
     schedule:
       interval: "monthly"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
