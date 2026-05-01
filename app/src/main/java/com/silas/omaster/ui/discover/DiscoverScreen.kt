@@ -1,7 +1,6 @@
 package com.silas.omaster.ui.discover
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,14 +16,15 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.PhotoLibrary
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,6 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -71,10 +73,11 @@ fun DiscoverScreen(
     var previousScrollValue by remember { mutableIntStateOf(0) }
     var isScrollingUp by remember { mutableStateOf(true) }
 
-    var showCheckInCalendar by remember { mutableStateOf(false) }
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+    var showCheckInSheet by remember { mutableStateOf(false) }
+    var sheetDetailDate by remember { mutableStateOf<LocalDate?>(null) }
 
     val currentStreak = checkInManager.getCurrentStreak()
+    val todayRecord = remember { checkInManager.getTodayRecord() }
 
     LaunchedEffect(scrollState.value) {
         val currentValue = scrollState.value
@@ -106,32 +109,35 @@ fun DiscoverScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             FeatureCard(
-                icon = Icons.Default.AutoAwesome,
+                icon = Icons.Default.Palette,
                 title = stringResource(R.string.colorwalk_card_title),
                 description = stringResource(R.string.colorwalk_card_desc),
+                gradient = listOf(Color(0xFFFF7E5F), Color(0xFFFEB47B)),
                 onClick = onNavigateToColorWalk,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            CheckInEntryCard(
-                currentStreak = currentStreak,
-                onClick = { showCheckInCalendar = true },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(AppDesign.ItemSpacing))
 
             FeatureCard(
-                icon = Icons.Default.PhotoLibrary,
+                icon = Icons.Default.CameraAlt,
                 title = stringResource(R.string.photoframe_card_title),
                 description = stringResource(R.string.photoframe_card_desc),
+                gradient = listOf(Color(0xFF4FACFE), Color(0xFF00F2FE)),
                 onClick = onNavigateToPhotoFrame,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(AppDesign.ItemSpacing))
+
+            CheckInEntryCard(
+                currentStreak = currentStreak,
+                hasCheckedInToday = todayRecord != null,
+                onClick = { showCheckInSheet = true },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(AppDesign.SectionSpacing))
 
             ComingSoonCard(modifier = Modifier.fillMaxWidth())
 
@@ -139,26 +145,39 @@ fun DiscoverScreen(
         }
     }
 
-    if (showCheckInCalendar) {
-        CheckInCalendarSheet(
-            onDismiss = { showCheckInCalendar = false },
-            onDateClick = { date -> selectedDate = date }
-        )
-    }
-
-    selectedDate?.let { date ->
-        CheckInDetailDialog(
-            selectedDate = date,
-            onDismiss = { selectedDate = null }
-        )
+    if (showCheckInSheet) {
+        val sheetState = rememberModalBottomSheetState()
+        ModalBottomSheet(
+            onDismissRequest = {
+                showCheckInSheet = false
+                sheetDetailDate = null
+            },
+            sheetState = sheetState
+        ) {
+            if (sheetDetailDate != null) {
+                val record = checkInManager.getRecordForDate(sheetDetailDate!!)
+                CheckInDetailContent(
+                    selectedDate = sheetDetailDate!!,
+                    record = record
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+            } else {
+                CheckInCalendar(
+                    onDateClick = { date -> sheetDetailDate = date },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+        }
     }
 }
 
 @Composable
 private fun FeatureCard(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: ImageVector,
     title: String,
     description: String,
+    gradient: List<Color>,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -169,31 +188,28 @@ private fun FeatureCard(
         onClick = onClick
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(52.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(
-                        Brush.linearGradient(
-                            colors = listOf(Color(0xFF667EEA), Color(0xFF764BA2))
-                        )
-                    ),
+                    .size(56.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(Brush.linearGradient(gradient)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(26.dp)
-                )
+                Box(
+                    modifier = Modifier
+                        .size(42.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(Color.White.copy(alpha = 0.15f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(icon, null, tint = Color.White, modifier = Modifier.size(24.dp))
+                }
             }
 
-            Spacer(modifier = Modifier.width(14.dp))
+            Spacer(modifier = Modifier.width(16.dp))
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -202,9 +218,7 @@ private fun FeatureCard(
                     color = themedTextPrimary(),
                     fontWeight = FontWeight.Bold
                 )
-
                 Spacer(modifier = Modifier.height(4.dp))
-
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodySmall,
@@ -213,12 +227,9 @@ private fun FeatureCard(
                 )
             }
 
-            Spacer(modifier = Modifier.width(8.dp))
-
             Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = null,
-                tint = themedTextSecondary(),
+                Icons.Default.ChevronRight, null,
+                tint = themedTextSecondary().copy(alpha = 0.5f),
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -228,6 +239,7 @@ private fun FeatureCard(
 @Composable
 private fun CheckInEntryCard(
     currentStreak: Int,
+    hasCheckedInToday: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -238,45 +250,42 @@ private fun CheckInEntryCard(
         onClick = onClick
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(52.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(
-                        Brush.linearGradient(
-                            colors = listOf(Color(0xFF4CAF50), Color(0xFF8BC34A))
-                        )
-                    ),
+                    .size(56.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(Brush.linearGradient(listOf(Color(0xFF11998E), Color(0xFF38EF7D)))),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.CalendarMonth,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(26.dp)
-                )
+                Box(
+                    modifier = Modifier
+                        .size(42.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(Color.White.copy(alpha = 0.15f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(Icons.Default.CalendarMonth, null, tint = Color.White, modifier = Modifier.size(24.dp))
+                }
             }
 
-            Spacer(modifier = Modifier.width(14.dp))
+            Spacer(modifier = Modifier.width(16.dp))
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = stringResource(R.string.discover_checkin_title),
+                    stringResource(R.string.discover_checkin_title),
                     style = MaterialTheme.typography.titleMedium,
                     color = themedTextPrimary(),
                     fontWeight = FontWeight.Bold
                 )
-
                 Spacer(modifier = Modifier.height(4.dp))
-
                 Text(
                     text = if (currentStreak > 0) {
                         stringResource(R.string.discover_checkin_subtitle_active, currentStreak)
+                    } else if (!hasCheckedInToday) {
+                        stringResource(R.string.discover_checkin_not_today)
                     } else {
                         stringResource(R.string.discover_checkin_subtitle)
                     },
@@ -286,12 +295,9 @@ private fun CheckInEntryCard(
                 )
             }
 
-            Spacer(modifier = Modifier.width(8.dp))
-
             Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = null,
-                tint = themedTextSecondary(),
+                Icons.Default.ChevronRight, null,
+                tint = themedTextSecondary().copy(alpha = 0.5f),
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -306,69 +312,37 @@ private fun ComingSoonCard(modifier: Modifier = Modifier) {
         shape = RoundedCornerShape(16.dp)
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
+            modifier = Modifier.fillMaxWidth().padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = null,
-                tint = themedTextSecondary(),
-                modifier = Modifier.size(36.dp)
-            )
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    Icons.Outlined.Star, null,
+                    tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = stringResource(R.string.discover_more_coming),
+                stringResource(R.string.discover_more_coming),
                 style = MaterialTheme.typography.bodyMedium,
                 color = themedTextSecondary(),
                 fontWeight = FontWeight.Medium
             )
-
             Spacer(modifier = Modifier.height(4.dp))
-
             Text(
-                text = stringResource(R.string.discover_stay_tuned),
+                stringResource(R.string.discover_stay_tuned),
                 style = MaterialTheme.typography.bodySmall,
-                color = themedTextSecondary().copy(alpha = 0.7f)
+                color = themedTextSecondary().copy(alpha = 0.6f)
             )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun CheckInCalendarSheet(
-    onDismiss: () -> Unit,
-    onDateClick: (LocalDate) -> Unit
-) {
-    ModalBottomSheet(onDismissRequest = onDismiss) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 24.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.checkin_sheet_title),
-                style = MaterialTheme.typography.titleLarge,
-                color = themedTextPrimary(),
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CheckInCalendar(
-                onDateClick = { date ->
-                    onDateClick(date)
-                    onDismiss()
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

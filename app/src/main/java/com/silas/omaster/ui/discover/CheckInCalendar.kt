@@ -17,7 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.material.icons.filled.Today
 import androidx.compose.material3.Card
@@ -110,21 +110,21 @@ private fun CheckInHeader(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         StatCard(
-            icon = Icons.Default.LocalFireDepartment,
+            icon = Icons.Default.Today,
             label = stringResource(R.string.checkin_current_streak),
             value = stringResource(R.string.checkin_days_unit, currentStreak),
             modifier = Modifier.weight(1f)
         )
 
         StatCard(
-            icon = Icons.Default.Timeline,
+            icon = Icons.Default.EmojiEvents,
             label = stringResource(R.string.checkin_longest_streak),
             value = stringResource(R.string.checkin_days_unit, longestStreak),
             modifier = Modifier.weight(1f)
         )
 
         StatCard(
-            icon = Icons.Default.Today,
+            icon = Icons.Default.Timeline,
             label = stringResource(R.string.checkin_month_total),
             value = stringResource(R.string.checkin_days_unit, monthlyCount),
             modifier = Modifier.weight(1f)
@@ -335,7 +335,7 @@ private fun DayCell(
             )
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(3.dp),
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IndicatorDot(
@@ -345,10 +345,6 @@ private fun DayCell(
                 IndicatorDot(
                     visible = record?.hasCompletedChallenge == true,
                     color = Color(0xFF4CAF50)
-                )
-                IndicatorDot(
-                    visible = record?.hasFavorited == true,
-                    color = Color(0xFFE91E63)
                 )
             }
         }

@@ -63,6 +63,7 @@ import com.silas.omaster.ui.theme.themedCardBackground
 import com.silas.omaster.ui.theme.themedTextPrimary
 import com.silas.omaster.ui.theme.themedTextSecondary
 import com.silas.omaster.util.ImageExporter
+import com.silas.omaster.util.OutputRatio
 
 @Composable
 fun PhotoFrameScreen(
@@ -75,6 +76,7 @@ fun PhotoFrameScreen(
     var dateTimeText by remember { mutableStateOf("") }
     var exifSynced by remember { mutableStateOf(false) }
     var useRounded by remember { mutableStateOf(true) }
+    var selectedRatio by remember { mutableStateOf(OutputRatio.FULL) }
 
     val scrollState = rememberScrollState()
 
@@ -148,6 +150,7 @@ fun PhotoFrameScreen(
                     EditPanel(
                         dateTimeText = dateTimeText,
                         useRounded = useRounded,
+                        selectedRatio = selectedRatio,
                         onDateTimeChange = {
                             dateTimeText = it
                             viewModel.updateTitle(it)
@@ -155,6 +158,10 @@ fun PhotoFrameScreen(
                         onRoundedChanged = {
                             useRounded = it
                             viewModel.toggleRoundedCorners(it)
+                        },
+                        onRatioChanged = {
+                            selectedRatio = it
+                            viewModel.selectRatio(it)
                         },
                         onPickNewImage = {
                             exifSynced = false
@@ -212,8 +219,10 @@ private fun PreviewArea(state: FrameState) {
 private fun EditPanel(
     dateTimeText: String,
     useRounded: Boolean,
+    selectedRatio: OutputRatio,
     onDateTimeChange: (String) -> Unit,
     onRoundedChanged: (Boolean) -> Unit,
+    onRatioChanged: (OutputRatio) -> Unit,
     onPickNewImage: () -> Unit
 ) {
     val fieldColors = OutlinedTextFieldDefaults.colors(
@@ -227,6 +236,34 @@ private fun EditPanel(
         shape = RoundedCornerShape(AppDesign.LargeRadius)
     ) {
         Column(Modifier.padding(16.dp)) {
+            Text("画面比例", style = MaterialTheme.typography.bodyMedium, color = themedTextPrimary())
+
+            Spacer(Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                val ratios = listOf(
+                    OutputRatio.SQUARE to Icons.Default.CropSquare,
+                    OutputRatio.PORTRAIT_4_5 to Icons.Default.CropSquare,
+                    OutputRatio.PORTRAIT_3_4 to Icons.Default.CropSquare,
+                    OutputRatio.FULL to Icons.Default.Crop169,
+                    OutputRatio.LANDSCAPE_16_9 to Icons.Default.Crop169,
+                )
+                ratios.forEachIndexed { index, (ratio, icon) ->
+                    StyleButton(
+                        icon = icon,
+                        label = ratio.label,
+                        selected = selectedRatio == ratio,
+                        onClick = { onRatioChanged(ratio) },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
             OutlinedTextField(
                 value = dateTimeText,
                 onValueChange = onDateTimeChange,
@@ -250,14 +287,14 @@ private fun EditPanel(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 StyleButton(
-                    icon = Icons.Default.Crop169,
+                    icon = Icons.Default.CropSquare,
                     label = "圆角",
                     selected = useRounded,
                     onClick = { onRoundedChanged(true) },
                     modifier = Modifier.weight(1f)
                 )
                 StyleButton(
-                    icon = Icons.Default.CropSquare,
+                    icon = Icons.Default.Crop169,
                     label = "直角",
                     selected = !useRounded,
                     onClick = { onRoundedChanged(false) },
@@ -297,20 +334,19 @@ private fun StyleButton(
         border = if (selected) BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary) else null,
         onClick = onClick
     ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+        Column(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
                 icon, null,
                 tint = if (selected) MaterialTheme.colorScheme.primary else themedTextSecondary(),
                 modifier = Modifier.size(20.dp)
             )
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.height(4.dp))
             Text(
                 label,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.labelSmall,
                 color = if (selected) MaterialTheme.colorScheme.primary else themedTextSecondary(),
                 fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
             )

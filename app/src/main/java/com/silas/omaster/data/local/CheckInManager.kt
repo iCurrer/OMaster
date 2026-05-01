@@ -16,7 +16,6 @@ data class CheckInRecord(
     val cardId: String? = null,
     val cardTheme: String? = null,
     val hasCompletedChallenge: Boolean = false,
-    val hasFavorited: Boolean = false,
     val timestamp: Long = System.currentTimeMillis()
 )
 
@@ -107,25 +106,6 @@ class CheckInManager(context: Context) {
     }
 
     /**
-     * 标记收藏
-     */
-    fun markFavorited() {
-        val today = LocalDate.now().format(DATE_FORMATTER)
-        val records = getAllRecords().toMutableMap()
-
-        val existingRecord = records[today]
-        val newRecord = if (existingRecord != null) {
-            existingRecord.copy(hasFavorited = true, timestamp = System.currentTimeMillis())
-        } else {
-            CheckInRecord(date = today, hasFavorited = true)
-        }
-
-        records[today] = newRecord
-        saveRecords(records)
-        updateStreak()
-    }
-
-    /**
      * 获取今日打卡记录
      */
     fun getTodayRecord(): CheckInRecord? {
@@ -207,13 +187,6 @@ class CheckInManager(context: Context) {
      */
     fun getMonthlyChallengeCount(year: Int, month: Int): Int {
         return getRecordsForMonth(year, month).values.count { it.hasCompletedChallenge }
-    }
-
-    /**
-     * 获取本月收藏次数
-     */
-    fun getMonthlyFavoriteCount(year: Int, month: Int): Int {
-        return getRecordsForMonth(year, month).values.count { it.hasFavorited }
     }
 
     /**

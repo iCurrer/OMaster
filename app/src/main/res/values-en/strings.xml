@@ -687,10 +687,11 @@
     <!-- Discover / Check-in -->
     <string name="discover_more_coming">More features are on the way...</string>
     <string name="discover_stay_tuned">Stay tuned</string>
-    <string name="discover_checkin_title">Photo Habit Log</string>
-    <string name="discover_checkin_subtitle">Keep a record of your shooting rhythm</string>
+    <string name="discover_checkin_title">Shutter Diary</string>
+    <string name="discover_checkin_subtitle">Every shutter click, your exclusive memory</string>
+    <string name="discover_checkin_not_today">Haven\'t checked in yet today</string>
     <string name="discover_checkin_subtitle_active">Active for %1$d days in a row</string>
-    <string name="checkin_sheet_title">Photo Habit Log</string>
+    <string name="checkin_sheet_title">Shutter Diary</string>
     <string name="checkin_current_streak">Current Streak</string>
     <string name="checkin_longest_streak">Best Streak</string>
     <string name="checkin_month_total">This Month</string>
@@ -715,5 +716,6 @@
     <string name="checkin_weekday_sat">S</string>
     <string name="checkin_mark_complete">Mark complete</string>
     <string name="checkin_completed">Completed</string>
-
+    <string name="photoframe_card_title">Frame Art</string>
+    <string name="photoframe_card_desc">Frame your photo with palette colors for sharing</string>
 </resources>

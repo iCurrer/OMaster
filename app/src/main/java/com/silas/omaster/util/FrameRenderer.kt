@@ -9,17 +9,23 @@ import android.graphics.Path
 import android.graphics.RectF
 import android.graphics.Typeface
 
+enum class OutputRatio(val label: String, val widthToHeight: Float, val platform: String) {
+    SQUARE("1:1", 1f, "Instagram"),
+    PORTRAIT_4_5("4:5", 0.8f, "Instagram"),
+    PORTRAIT_3_4("3:4", 0.75f, "小红书"),
+    FULL("9:16", 9f / 16f, "朋友圈/Stories"),
+    LANDSCAPE_16_9("16:9", 16f / 9f, "封面/B站")
+}
+
 object FrameRenderer {
 
-    private const val OUTPUT_WIDTH = 1080
-    private const val OUTPUT_HEIGHT = 1920
+    private const val BASE = 1080
+    private const val TOP_AREA_RATIO = 0.30f
+    private const val IMAGE_PADDING = 36f
+    private const val BOTTOM_RESERVED = 60f
 
-    private const val TOP_AREA_RATIO = 0.35f
-    private const val IMAGE_PADDING_H = 40f
-    private const val IMAGE_PADDING_BOTTOM = 80f
-
-    private const val TITLE_SIZE = 56f
-    private const val WATERMARK_SIZE = 24f
+    private const val TITLE_SIZE = 52f
+    private const val WATERMARK_SIZE = 22f
     private const val ROUNDED_RADIUS = 48f
 
     data class Params(
@@ -28,26 +34,39 @@ object FrameRenderer {
         val textColor: Int,
         val title: String = "",
         val useRoundedCorners: Boolean = true,
+        val ratio: OutputRatio = OutputRatio.FULL,
         val showWatermark: Boolean = true
     )
 
     fun render(params: Params): Bitmap = with(params) {
-        val output = Bitmap.createBitmap(OUTPUT_WIDTH, OUTPUT_HEIGHT, Bitmap.Config.ARGB_8888)
+        val isLandscape = ratio.widthToHeight > 1f
+        val ratioValue = if (isLandscape) 1f / ratio.widthToHeight else ratio.widthToHeight
+
+        val outputWidth: Int
+        val outputHeight: Int
+        if (isLandscape) {
+            outputHeight = BASE
+            outputWidth = (BASE / ratioValue).toInt()
+        } else {
+            outputWidth = BASE
+            outputHeight = (BASE / ratioValue).toInt()
+        }
+
+        val output = Bitmap.createBitmap(outputWidth, outputHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(output)
 
-        drawBackground(canvas, dominantColor)
+        drawBackground(canvas, dominantColor, outputWidth, outputHeight)
 
-        val topAreaBottom = OUTPUT_HEIGHT * TOP_AREA_RATIO
+        val topAreaBottom = outputHeight * TOP_AREA_RATIO
         val hasTitle = title.isNotBlank()
 
         if (hasTitle) {
-            drawTitleText(canvas, title, textColor, topAreaBottom)
+            drawTitleText(canvas, title, textColor, outputWidth, topAreaBottom)
         }
 
-        val imageTop = topAreaBottom + IMAGE_PADDING_H
-        val imageLeft = IMAGE_PADDING_H
-        val imageMaxWidth = OUTPUT_WIDTH - IMAGE_PADDING_H * 2
-        val imageMaxHeight = OUTPUT_HEIGHT - imageTop - IMAGE_PADDING_BOTTOM
+        val imageTop = topAreaBottom + IMAGE_PADDING
+        val imageMaxWidth = outputWidth - IMAGE_PADDING * 2
+        val imageMaxHeight = outputHeight - imageTop - BOTTOM_RESERVED
 
         val scale = minOf(
             imageMaxWidth / source.width.toFloat(),
@@ -55,7 +74,7 @@ object FrameRenderer {
         )
         val drawWidth = source.width * scale
         val drawHeight = source.height * scale
-        val drawLeft = (OUTPUT_WIDTH - drawWidth) / 2f
+        val drawLeft = (outputWidth - drawWidth) / 2f
         val drawTop = imageTop + (imageMaxHeight - drawHeight) / 2f
 
         val imageRect = RectF(drawLeft, drawTop, drawLeft + drawWidth, drawTop + drawHeight)
@@ -77,24 +96,24 @@ object FrameRenderer {
         canvas.restore()
 
         if (showWatermark) {
-            drawWatermark(canvas, textColor)
+            drawWatermark(canvas, textColor, outputWidth, outputHeight)
         }
 
         output
     }
 
-    private fun drawBackground(canvas: Canvas, color: Int) {
+    private fun drawBackground(canvas: Canvas, color: Int, w: Int, h: Int) {
         val lighter = adjustBrightness(color, 1.06f)
         val paint = Paint().apply {
             isAntiAlias = true
             shader = android.graphics.LinearGradient(
-                0f, 0f, 0f, OUTPUT_HEIGHT.toFloat(),
+                0f, 0f, 0f, h.toFloat(),
                 intArrayOf(lighter, color),
                 floatArrayOf(0f, 1f),
                 android.graphics.Shader.TileMode.CLAMP
             )
         }
-        canvas.drawRect(0f, 0f, OUTPUT_WIDTH.toFloat(), OUTPUT_HEIGHT.toFloat(), paint)
+        canvas.drawRect(0f, 0f, w.toFloat(), h.toFloat(), paint)
     }
 
     private fun adjustBrightness(color: Int, factor: Float): Int {
@@ -104,12 +123,7 @@ object FrameRenderer {
         return AndroidColor.HSVToColor(hsv)
     }
 
-    private fun drawTitleText(
-        canvas: Canvas,
-        title: String,
-        textColor: Int,
-        topAreaBottom: Float
-    ) {
+    private fun drawTitleText(canvas: Canvas, title: String, textColor: Int, w: Int, topBottom: Float) {
         val paint = Paint().apply {
             color = textColor
             textSize = TITLE_SIZE
@@ -117,7 +131,7 @@ object FrameRenderer {
             isAntiAlias = true
             textAlign = Paint.Align.CENTER
         }
-        canvas.drawText(title, OUTPUT_WIDTH / 2f, topAreaBottom / 2 + TITLE_SIZE / 3, paint)
+        canvas.drawText(title, w / 2f, topBottom / 2 + TITLE_SIZE / 3, paint)
     }
 
     private fun drawImageShadow(canvas: Canvas, rect: RectF) {
@@ -126,23 +140,20 @@ object FrameRenderer {
             color = 0x22000000
             maskFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
         }
-        val shadowRect = RectF(
-            rect.left + 4f, rect.top + 8f,
-            rect.right - 2f, rect.bottom + 8f
-        )
+        val shadowRect = RectF(rect.left + 4f, rect.top + 8f, rect.right - 2f, rect.bottom + 8f)
         val shadowPath = Path().apply {
             addRoundRect(shadowRect, ROUNDED_RADIUS, ROUNDED_RADIUS, Path.Direction.CW)
         }
         canvas.drawPath(shadowPath, shadowPaint)
     }
 
-    private fun drawWatermark(canvas: Canvas, textColor: Int) {
+    private fun drawWatermark(canvas: Canvas, textColor: Int, w: Int, h: Int) {
         val paint = Paint().apply {
             color = textColor and 0x00FFFFFF or 0x35000000
             textSize = WATERMARK_SIZE
             isAntiAlias = true
             textAlign = Paint.Align.CENTER
         }
-        canvas.drawText("OMaster", OUTPUT_WIDTH / 2f, OUTPUT_HEIGHT - 40f, paint)
+        canvas.drawText("OMaster", w / 2f, h - 36f, paint)
     }
 }

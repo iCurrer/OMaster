@@ -702,10 +702,11 @@
     <string name="colorwalk_challenge_autumn_leaves">用落叶或金色树叶做前景，让秋天的季节感更具体。</string>
     <string name="discover_more_coming">更多玩法开发中...</string>
     <string name="discover_stay_tuned">敬请期待</string>
-    <string name="discover_checkin_title">摄影习惯档案</string>
-    <string name="discover_checkin_subtitle">记录你的拍摄节奏与灵感轨迹</string>
+    <string name="discover_checkin_title">快门日记</string>
+    <string name="discover_checkin_subtitle">每一次快门，都是你的独家记忆</string>
+    <string name="discover_checkin_not_today">今天还没打卡，快来记录吧</string>
     <string name="discover_checkin_subtitle_active">已连续记录 %1$d 天</string>
-    <string name="checkin_sheet_title">摄影习惯档案</string>
+    <string name="checkin_sheet_title">快门日记</string>
     <string name="checkin_current_streak">当前连续</string>
     <string name="checkin_longest_streak">历史最长</string>
     <string name="checkin_month_total">本月记录</string>
@@ -730,6 +731,6 @@
     <string name="checkin_weekday_sat">六</string>
     <string name="checkin_mark_complete">标记完成</string>
     <string name="checkin_completed">已完成</string>
-    <string name="photoframe_card_title">图片边框</string>
-    <string name="photoframe_card_desc">提取主色调，生成精美朋友圈分享图</string>
+    <string name="photoframe_card_title">画映</string>
+    <string name="photoframe_card_desc">以画入框，以彩映心，生成你的专属分享图</string>
 </resources>

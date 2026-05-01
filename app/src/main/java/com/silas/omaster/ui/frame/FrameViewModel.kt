@@ -11,6 +11,7 @@ import com.silas.omaster.util.ColorExtractor
 import com.silas.omaster.util.DominantColorResult
 import com.silas.omaster.util.ExifReader
 import com.silas.omaster.util.FrameRenderer
+import com.silas.omaster.util.OutputRatio
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,6 +64,11 @@ class FrameViewModel(
         renderInternal()
     }
 
+    fun selectRatio(ratio: OutputRatio) {
+        _state.value = _state.value.copy(outputRatio = ratio)
+        renderInternal()
+    }
+
     private fun renderInternal() {
         val s = _state.value
         if (s.sourceBitmap == null || s.colors == null) return
@@ -76,7 +82,8 @@ class FrameViewModel(
                         dominantColor = s.colors.dominant,
                         textColor = s.colors.textColor,
                         title = s.dateTime ?: "",
-                        useRoundedCorners = s.useRoundedCorners
+                        useRoundedCorners = s.useRoundedCorners,
+                        ratio = s.outputRatio
                     )
                 )
                 _state.value = _state.value.copy(renderedBitmap = result)
@@ -91,7 +98,7 @@ class FrameViewModel(
         val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         context.contentResolver.openInputStream(uri)?.use { s -> BitmapFactory.decodeStream(s, null, options) }
         options.apply {
-            inSampleSize = calculateInSampleSize(options, 1080, 1920)
+            inSampleSize = calculateInSampleSize(options, 1920, 1920)
             inJustDecodeBounds = false
         }
         context.contentResolver.openInputStream(uri)?.use { s ->
@@ -119,6 +126,7 @@ data class FrameState(
     val renderedBitmap: Bitmap? = null,
     val dateTime: String? = null,
     val useRoundedCorners: Boolean = true,
+    val outputRatio: OutputRatio = OutputRatio.FULL,
     val isLoading: Boolean = false,
     val error: String? = null
 )
