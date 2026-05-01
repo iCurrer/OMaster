@@ -11,7 +11,7 @@ composeBom = "2026.03.01"
 # 新增依赖版本
 coil = "2.7.0"
 gson = "2.13.2"
-navigationCompose = "2.9.7"
+navigationCompose = "2.9.8"
 kotlinxSerialization = "1.10.0"
 material = "1.10.4"
 ktor = "3.4.2"
