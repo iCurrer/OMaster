@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.silas.omaster"
-        minSdk = 33  // Android 13
+        minSdk = 23  // Android 6
         targetSdk = 36
         // 版本号规范：
         // versionCode: 内部版本号，每次发布必须递增
