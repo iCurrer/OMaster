@@ -139,7 +139,7 @@ jobs:
           git config --local user.name "GitHub Action"
 
       - name: Install git-cliff
-        uses: taiki-e/install-action@v2
+        uses: taiki-e/install-action@v2.85.4
         with:
           tool: git-cliff
 
