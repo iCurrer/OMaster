@@ -70,6 +70,7 @@
     <string name="language_chinese">Simplified Chinese</string>
     <string name="language_english">English</string>
     <string name="language_japanese">Japanese</string>
+    <string name="language_vietnamese">Vietnamese</string>
 
     <!-- Update Settings -->
     <string name="settings_section_update">Update</string>
@@ -99,6 +100,8 @@
     <string name="dialog_title_select_tab">Select Default Tab</string>
     <string name="dialog_title_select_channel">Select Update Channel</string>
     <string name="dialog_title_select_language">Select Language</string>
+    <string name="language_dialog_title">Select Language</string>
+    <string name="dialog_title_select_floating_mode">Select Floating Window Mode</string>
 
     <!-- Tab Names -->
     <string name="tab_all">All</string>
@@ -114,6 +117,7 @@
     <string name="language_chinese_desc">Simplified Chinese</string>
     <string name="language_english_desc">English</string>
     <string name="language_japanese_desc">Japanese</string>
+    <string name="language_vietnamese_desc">Tiếng Việt</string>
 
     <!-- Toast Messages -->
     <string name="toast_language_changed">Language changed, restarting app…</string>
@@ -763,6 +767,8 @@
 
     <!-- Version Check Hint -->
     <string name="version_check_hint">Tap to check for updates</string>
+    <string name="new_version_available">New version available</string>
+    <string name="downloading">Downloading</string>
 
     <!-- Holiday Greetings -->
     <string name="holiday_new_year_title">Happy New Year</string>

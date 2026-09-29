@@ -74,6 +74,7 @@
     <string name="language_chinese">簡体字中国語</string>
     <string name="language_english">English</string>
     <string name="language_japanese">日本語</string>
+    <string name="language_vietnamese">ベトナム語</string>
 
     <!-- 更新設定 -->
     <string name="settings_section_update">更新設定</string>
@@ -119,6 +120,7 @@
     <string name="language_chinese_desc">簡体字中国語</string>
     <string name="language_english_desc">英語</string>
     <string name="language_japanese_desc">日本語</string>
+    <string name="language_vietnamese_desc">Tiếng Việt</string>
 
     <!-- Toastメッセージ -->
     <string name="toast_language_changed">言語を変更しました、アプリを再起動しています…</string>
@@ -132,6 +134,7 @@
     <string name="new_version_available">新しいバージョンが見つかりました</string>
     <string name="downloading">ダウンロード中</string>
     <string name="dialog_title_select_floating_mode">フローティングウィンドウモードを選択</string>
+    <string name="floating_window_mode_dialog_title">フローティングウィンドウモードを選択</string>
     <string name="settings_dark_mode_dialog_title">ダークモードを選択</string>
     <string name="language_dialog_title">言語を選択</string>
 

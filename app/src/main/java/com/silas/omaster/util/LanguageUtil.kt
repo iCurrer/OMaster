@@ -32,6 +32,7 @@ object LanguageUtil {
             AppLanguage.CHINESE -> Locale.SIMPLIFIED_CHINESE
             AppLanguage.ENGLISH -> Locale.ENGLISH
             AppLanguage.JAPANESE -> Locale.JAPANESE
+            AppLanguage.VIETNAMESE -> Locale.forLanguageTag("vi")
         }
     }
 
@@ -44,6 +45,7 @@ object LanguageUtil {
             AppLanguage.CHINESE -> Locale.SIMPLIFIED_CHINESE
             AppLanguage.ENGLISH -> Locale.ENGLISH
             AppLanguage.JAPANESE -> Locale.JAPANESE
+            AppLanguage.VIETNAMESE -> Locale.forLanguageTag("vi")
         }
 
         Locale.setDefault(locale)

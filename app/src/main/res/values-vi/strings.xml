@@ -1,0 +1,811 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">OMaster</string>
+    <string name="app_slogan">Thư viện chỉnh màu Master Mode</string>
+
+    <!-- Common Buttons -->
+    <string name="confirm">Xác nhận</string>
+    <string name="cancel">Hủy</string>
+    <string name="close">Đóng</string>
+    <string name="save">Lưu</string>
+    <string name="delete">Xóa</string>
+    <string name="edit">Sửa</string>
+    <string name="back">Quay lại</string>
+    <string name="refresh">Làm mới</string>
+    <string name="update">Cập nhật</string>
+    <string name="retry">Thử lại</string>
+    <string name="loading">Đang tải…</string>
+    <string name="checking">Đang kiểm tra…</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_discover">Khám phá</string>
+    <string name="nav_about">Giới thiệu</string>
+    <string name="nav_settings">Cài đặt</string>
+
+    <!-- Subscription -->
+    <string name="sub_title">Quản lý đăng ký</string>
+    <string name="sub_add">Thêm đăng ký</string>
+    <string name="sub_url_label">Liên kết (JSON URL)</string>
+    <string name="sub_name_label">Tên (Tùy chọn)</string>
+    <string name="sub_empty">Chưa có đăng ký nào</string>
+
+    <!-- Auto Update Subscription -->
+    <string name="sub_auto_update">Tự động cập nhật hằng ngày</string>
+    <string name="sub_auto_update_desc">Kiểm tra cập nhật đăng ký khi mở ứng dụng</string>
+    <string name="sub_delete_confirm_title">Xác nhận xóa</string>
+    <string name="sub_delete_confirm_msg">Xác nhận xóa? Các preset liên quan cũng sẽ bị xóa.</string>
+    <string name="sub_details">Chi tiết</string>
+    <string name="sub_edit_title">Sửa</string>
+    <string name="sub_update_status">Đã cập nhật xong: %1$d/%2$d</string>
+    <string name="sub_preset_count">Preset: %1$d</string>
+    <string name="sub_last_update">Cập nhật: %1$s</string>
+    <string name="sub_no_name">Đăng ký chưa đặt tên</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Cài đặt</string>
+    <string name="settings_section_general">Chung</string>
+    <string name="settings_section_appearance">Giao diện</string>
+    <string name="settings_section_floating_window">Cửa sổ nổi</string>
+    <string name="settings_section_privacy">Quyền riêng tư</string>
+    <string name="vibration_feedback">Rung phản hồi</string>
+    <string name="default_start_tab">Tab mặc định khi mở</string>
+    <string name="settings_theme_title">Màu chủ đề</string>
+    <string name="settings_theme_dialog_title">Chọn màu chủ đề</string>
+    <string name="settings_dark_mode">Chế độ tối</string>
+    <string name="settings_dark_mode_desc">Chuyển đổi giữa giao diện tối và sáng</string>
+    <string name="dark_mode_system">Theo hệ thống</string>
+    <string name="dark_mode_light">Chế độ sáng</string>
+    <string name="dark_mode_dark">Chế độ tối</string>
+    <string name="floating_window_opacity">Độ trong suốt cửa sổ nổi</string>
+    <string name="analytics_enabled">Bật thống kê</string>
+    <string name="analytics_restart_hint">Giúp chúng tôi hiểu cách dùng ứng dụng và cải thiện sản phẩm. Dữ liệu thu thập chỉ dùng cho phân tích thống kê và không chứa thông tin cá nhân. Khởi động lại ứng dụng để áp dụng</string>
+    <string name="clear_cache">Xóa bộ nhớ đệm hình ảnh</string>
+    <string name="clear_cache_desc">Giải phóng dung lượng, hình ảnh sẽ được tải lại lần sau</string>
+    <string name="cache_cleared">Đã xóa bộ nhớ đệm</string>
+
+    <!-- Language Settings -->
+    <string name="language">Ngôn ngữ</string>
+    <string name="language_system">Theo hệ thống</string>
+    <string name="language_chinese">Tiếng Trung giản thể</string>
+    <string name="language_english">Tiếng Anh</string>
+    <string name="language_japanese">Tiếng Nhật</string>
+    <string name="language_vietnamese">Tiếng Việt</string>
+
+    <!-- Update Settings -->
+    <string name="settings_section_update">Cập nhật</string>
+    <string name="update_channel">Kênh cập nhật</string>
+    <string name="update_channel_gitee">Gitee (Trung Quốc)</string>
+    <string name="update_channel_github">GitHub (Quốc tế)</string>
+    <string name="auto_check_update">Tự động kiểm tra cập nhật</string>
+    <string name="auto_check_update_desc">Tự động kiểm tra phiên bản mới khi mở ứng dụng</string>
+
+    <!-- Storage -->
+    <string name="settings_section_storage">Lưu trữ</string>
+    <string name="export_logs">Xuất nhật ký</string>
+    <string name="log_size">Dung lượng nhật ký: %1$s</string>
+    <string name="clear_logs">Xóa nhật ký</string>
+    <string name="clear_logs_confirm_title">Xóa nhật ký</string>
+    <string name="clear_logs_confirm_msg">Bạn có chắc muốn xóa toàn bộ tệp nhật ký không? Hành động này không thể hoàn tác.</string>
+    <string name="logs_cleared">Đã xóa nhật ký</string>
+
+    <!-- Dialogs -->
+    <string name="cache_clear_confirm">Dung lượng bộ nhớ đệm hiện tại là %.2f MB. Xóa sẽ giải phóng dung lượng, hình ảnh sẽ được tải lại lần sau.</string>
+    <string name="cache_empty">Không có hình ảnh trong bộ nhớ đệm</string>
+    <string name="clear">Xóa</string>
+    <string name="recommended">Đề xuất</string>
+    <string name="cache_size_format">Dung lượng bộ nhớ đệm: %.2f MB</string>
+
+    <!-- Dialog Titles -->
+    <string name="dialog_title_select_tab">Chọn tab mặc định</string>
+    <string name="dialog_title_select_channel">Chọn kênh cập nhật</string>
+    <string name="dialog_title_select_language">Chọn ngôn ngữ</string>
+    <string name="language_dialog_title">Chọn ngôn ngữ</string>
+    <string name="dialog_title_select_floating_mode">Chọn chế độ cửa sổ nổi</string>
+
+    <!-- Tab Names -->
+    <string name="tab_all">Tất cả</string>
+    <string name="tab_favorites">Yêu thích</string>
+    <string name="tab_my">Preset của tôi</string>
+
+    <!-- Channel Descriptions -->
+    <string name="channel_gitee_desc">Truy cập nhanh tại Trung Quốc</string>
+    <string name="channel_github_desc">Truy cập quốc tế, có thể cần proxy tại Trung Quốc</string>
+
+    <!-- Language Descriptions -->
+    <string name="language_system_desc">Dùng ngôn ngữ mặc định của hệ thống</string>
+    <string name="language_chinese_desc">Tiếng Trung giản thể</string>
+    <string name="language_english_desc">Tiếng Anh</string>
+    <string name="language_japanese_desc">Tiếng Nhật</string>
+    <string name="language_vietnamese_desc">Tiếng Việt</string>
+
+    <!-- Toast Messages -->
+    <string name="toast_language_changed">Đã đổi ngôn ngữ, đang khởi động lại ứng dụng…</string>
+
+    <!-- Appearance Settings -->
+    <string name="premium_glass_effect">Hiệu ứng kính cao cấp</string>
+    <string name="premium_glass_effect_desc">Bật hiệu ứng kính 6 lớp để tăng chiều sâu</string>
+
+    <!-- Brand Names -->
+    <string name="brand_hasselblad">Hasselblad</string>
+    <string name="brand_zeiss">ZEISS</string>
+    <string name="brand_leica">Leica</string>
+    <string name="brand_ricoh">Ricoh</string>
+    <string name="brand_fujifilm">Fujifilm</string>
+    <string name="brand_canon">Canon</string>
+    <string name="brand_nikon">Nikon</string>
+    <string name="brand_sony">Sony</string>
+    <string name="brand_phaseone">Phase One</string>
+
+    <!-- Brand Color Names -->
+    <string name="color_hasselblad_orange">Cam Hasselblad</string>
+    <string name="color_zeiss_blue">Xanh ZEISS</string>
+    <string name="color_leica_red">Đỏ Leica</string>
+    <string name="color_ricoh_green">Xanh lá Ricoh</string>
+    <string name="color_fujifilm_green">Xanh lá Fujifilm</string>
+    <string name="color_canon_red">Đỏ Canon</string>
+    <string name="color_nikon_yellow">Vàng Nikon</string>
+    <string name="color_sony_orange">Cam Sony</string>
+    <string name="color_phaseone_grey">Xám Phase One</string>
+
+    <!-- Home Tabs -->
+    <string name="tab_my_home">Của tôi</string>
+
+    <!-- Home Actions -->
+    <string name="create_preset">Tạo preset</string>
+    <string name="delete_preset_title">Xác nhận xóa</string>
+    <string name="delete_preset_message">Bạn có chắc muốn xóa preset này không? Hành động này không thể hoàn tác.</string>
+
+    <!-- Empty States -->
+    <string name="empty_no_presets">Chưa có preset nào</string>
+    <string name="empty_no_favorites">Chưa có preset yêu thích</string>
+    <string name="empty_no_custom">Chưa có preset tùy chỉnh</string>
+    <string name="empty_no_data">Không có dữ liệu</string>
+    <string name="empty_hint_add_presets">Thêm đăng ký trong mục "Giới thiệu" hoặc tạo preset mới</string>
+    <string name="empty_hint_favorite">Chạm vào biểu tượng trái tim để yêu thích preset</string>
+    <string name="empty_hint_create">Chạm nút ở góc dưới bên phải để tạo preset</string>
+    <string name="load_more_hint">Sắp có thêm · Hãy đón chờ</string>
+    <string name="loading_more">Đang tải thêm…</string>
+    <string name="no_more_data">Không còn dữ liệu</string>
+
+    <!-- Config Update -->
+    <string name="config_update_title">Cập nhật cấu hình</string>
+    <string name="set_update_url">Đặt URL cập nhật</string>
+    <string name="fetch_presets_desc">Lấy cấu hình preset mới nhất từ máy chủ</string>
+    <string name="config_update_success">Cập nhật cấu hình thành công</string>
+    <string name="config_update_failed">Cập nhật cấu hình thất bại</string>
+    <string name="config_update_failed_prefix">Cập nhật cấu hình thất bại: </string>
+    <string name="updating">Đang cập nhật...</string>
+    <string name="check_now">Kiểm tra ngay</string>
+    <string name="update_url_saved">Đã lưu URL cập nhật</string>
+
+    <!-- Preset Card -->
+    <string name="preset_favorite">Yêu thích</string>
+    <string name="preset_favorited">Đã yêu thích</string>
+    <string name="preset_delete">Xóa</string>
+    <string name="preset_new">MỚI</string>
+
+    <!-- Detail Page -->
+    <string name="detail_title">Chi tiết preset</string>
+    <string name="detail_load_failed">Không tải được dữ liệu preset</string>
+    <string name="floating_window">Cửa sổ nổi</string>
+
+    <!-- Professional Parameters -->
+    <string name="param_iso">ISO</string>
+    <string name="param_shutter">Tốc độ màn trập</string>
+    <string name="param_exposure">Bù phơi sáng</string>
+    <string name="param_color_temp">Nhiệt độ màu</string>
+    <string name="param_white_balance">Cân bằng trắng</string>
+    <string name="param_tone">Tông màu</string>
+    <string name="param_tone_style">Kiểu tông màu</string>
+    <string name="param_pro_adjust">Thông số chuyên nghiệp (Điều chỉnh theo môi trường)</string>
+
+    <!-- Realme Specific Parameters -->
+    <string name="param_contrast">Độ tương phản</string>
+    <string name="param_contrast_highlight">Tương phản (Vùng sáng)</string>
+    <string name="param_contrast_shadow">Tương phản (Vùng tối)</string>
+    <string name="param_clarity">Độ rõ nét</string>
+    <string name="param_grain">Cường độ hạt</string>
+    <string name="param_grain_size">Kích thước hạt</string>
+
+    <!-- Color Grading Parameters -->
+    <string name="section_color_grading">Chỉnh màu</string>
+    <string name="param_filter">Bộ lọc</string>
+    <string name="param_soft_light">Ánh sáng mềm</string>
+    <string name="param_tone_curve">Đường cong tông màu</string>
+    <string name="param_saturation">Độ bão hòa</string>
+    <string name="param_warm_cool">Ấm/Lạnh</string>
+    <string name="param_brightness">Độ sáng</string>
+    <string name="param_cyan_magenta">Lục lam/Đỏ tím</string>
+    <string name="param_hue">Sắc độ</string>
+    <string name="param_sharpness">Độ sắc nét</string>
+    <string name="param_vignette">Tối góc</string>
+
+    <!-- Shooting Modes -->
+    <string name="mode_pro">Chế độ Pro</string>
+    <string name="mode_auto">Chế độ tự động</string>
+
+    <!-- Create/Edit Preset -->
+    <string name="create_preset_title">Tạo preset</string>
+    <string name="edit_preset_title">Sửa preset</string>
+    <string name="save_preset">Lưu preset</string>
+    <string name="save_changes">Lưu thay đổi</string>
+    <string name="save_failed">Lưu thất bại, vui lòng thử lại</string>
+    <string name="feature_coming_soon">Sắp ra mắt</string>
+    <string name="add_item">Thêm thông số</string>
+    <string name="edit_item">Sửa thông số</string>
+    <string name="param_label">Nhãn</string>
+    <string name="param_value">Giá trị</string>
+    <string name="span_label">Độ rộng: %1$d</string>
+    <string name="add_section">Thêm mục</string>
+    <string name="section_name">Tên mục</string>
+    <string name="remove_item">Xóa thông số</string>
+    <string name="remove_section">Xóa mục</string>
+    <string name="select_template">Chọn mẫu</string>
+    <string name="start_from_scratch">Bắt đầu từ đầu</string>
+    <string name="or_choose_template">Hoặc chọn một preset có sẵn làm điểm bắt đầu:</string>
+    <string name="upload_cover_hint">Chạm để tải ảnh bìa lên</string>
+    <string name="unnamed_section">Mục chưa đặt tên</string>
+
+    <!-- Cover Image -->
+    <string name="cover_image">Ảnh bìa</string>
+    <string name="change_image">Chạm để đổi ảnh</string>
+    <string name="select_image">Chọn ảnh bìa</string>
+    <string name="image_ratio_hint">Khuyên dùng tỷ lệ 16:9</string>
+
+    <!-- Preset Name -->
+    <string name="preset_name">Tên preset</string>
+    <string name="preset_name_hint">Đặt tên cho preset của bạn</string>
+
+    <!-- Parameter Sections -->
+    <string name="section_basic">Cơ bản</string>
+    <string name="section_pro">Pro</string>
+    <string name="section_color">Màu sắc</string>
+    <string name="section_other">Khác</string>
+    <string name="shooting_mode">Chế độ chụp</string>
+    <string name="shooting_tips">Mẹo chụp</string>
+    <string name="filter_style">Kiểu bộ lọc</string>
+    <string name="filter_intensity">Cường độ bộ lọc</string>
+    <string name="soft_light_effect">Hiệu ứng ánh sáng mềm</string>
+
+    <!-- Filter Options -->
+    <string name="filter_standard">Tiêu chuẩn</string>
+    <string name="filter_neon">Neon</string>
+    <string name="filter_fresh">Tươi mát</string>
+    <string name="filter_vintage">Cổ điển</string>
+    <string name="filter_clear">Trong trẻo</string>
+    <string name="filter_vivid">Sống động</string>
+    <string name="filter_fairy">Cổ tích</string>
+    <string name="filter_humanities">Nhân văn</string>
+    <string name="filter_natural">Tự nhiên</string>
+    <string name="filter_delicious">Ngon miệng</string>
+    <string name="filter_cool">Lạnh</string>
+    <string name="filter_warm">Ấm</string>
+    <string name="filter_rich">Đậm đà</string>
+    <string name="filter_advanced_gray">Xám cao cấp</string>
+    <string name="filter_bw">Đen trắng</string>
+    <string name="filter_mono">Đơn sắc</string>
+    <string name="filter_cyberpunk">Cyberpunk</string>
+
+    <!-- Soft Light Options -->
+    <string name="soft_none">Không</string>
+    <string name="soft_gentle">Nhẹ nhàng</string>
+    <string name="soft_dreamy">Mơ màng</string>
+    <string name="soft_hazy">Mờ ảo</string>
+
+    <!-- Vignette Options -->
+    <string name="vignette_on">Bật</string>
+    <string name="vignette_off">Tắt</string>
+
+    <!-- White Balance Options -->
+    <string name="white_balance_cloudy">Trời nhiều mây</string>
+    <string name="white_balance_daylight">Ánh sáng ban ngày</string>
+    <string name="white_balance_fluorescent">Đèn huỳnh quang</string>
+    <string name="white_balance_incandescent">Đèn sợi đốt</string>
+    <string name="white_balance_auto">Tự động</string>
+
+    <!-- Color Tone Options -->
+    <string name="tone_warm">Ấm</string>
+    <string name="tone_cool">Lạnh</string>
+
+    <!-- Preset Names -->
+    <string name="preset_fuji_film">Fuji Cổ Điển</string>
+    <string name="preset_film_feel">Hồn Phim</string>
+    <string name="preset_fairy_tale">Xứ Sở Thần Tiên</string>
+    <string name="preset_high_contrast_bw">Noir Tương Phản</string>
+    <string name="preset_ricoh_green">Ricoh Xanh Lá</string>
+    <string name="preset_ricoh_blue">Ricoh Xanh Biển</string>
+    <string name="preset_blue_hour">Khoảnh Khắc Xanh</string>
+    <string name="preset_dreamy_blackmist">Sương Mờ Mộng Mị</string>
+    <string name="preset_fuji_nc">Fuji NC</string>
+    <string name="preset_humanities">Hồn Phố</string>
+    <string name="preset_fresh_humanities">Cuộc Sống Tươi Mới</string>
+    <string name="preset_snowy_night">Ánh Đông</string>
+    <string name="preset_delicious">Nghệ Thuật Ẩm Thực</string>
+    <string name="preset_mobile_leica">Chất Leica</string>
+    <string name="preset_dreamy_fuji">Fuji Mộng Mị</string>
+    <string name="preset_hasselblad_rich">Sắc Hasselblad</string>
+    <string name="preset_holiday_fresh">Không Khí Kỳ Nghỉ</string>
+    <string name="preset_dreamy_bw">Noir Mộng Mị</string>
+    <string name="preset_delicious_dream">Giấc Mơ Ngọt Ngào</string>
+    <string name="preset_blue_clear">Xanh Trong Vắt</string>
+    <string name="preset_sunny_vintage">Cổ Điển Nắng Ấm</string>
+    <string name="preset_neon_lights">Ánh Neon</string>
+    <string name="preset_retro_nostalgia">Hoài Niệm Retro</string>
+
+    <!-- Shooting Tips -->
+    <string name="tips_fuji_film">[Môi trường] Ngoài trời ban ngày hoặc trong nhà đủ sáng&#10;[Cảnh] Đường phố, chân dung, phong cảnh, kiến trúc&#10;[Mẹo] Thẩm mỹ phim cổ điển với màu sắc đậm, hoài cổ. Tìm cảnh có độ tương phản sáng tối để tăng chiều sâu</string>
+    <string name="tips_film_feel">[Môi trường] Ánh sáng tự nhiên hoặc ánh sáng nhân tạo dịu&#10;[Cảnh] Chân dung, tĩnh vật, quán cà phê, cảnh nghệ thuật&#10;[Mẹo] Ánh sáng mềm tạo không khí mơ màng. Rất hợp cho ảnh giàu cảm xúc. Giữ chủ thể thật nét</string>
+    <string name="tips_fairy_tale">[Môi trường] Buổi sáng, hoàng hôn hoặc ánh sáng khuếch tán khi trời âm u&#10;[Cảnh] Trẻ em, khu vườn, công viên, cảnh lãng mạn&#10;[Mẹo] Tông tối tạo cảm giác huyền bí. Ánh sáng mềm mơ màng cho không khí cổ tích. Hãy tìm cảnh nhiều màu sắc</string>
+    <string name="tips_high_contrast_bw">[Môi trường] Tương phản sáng tối mạnh, nắng trực tiếp hoặc đèn rọi&#10;[Cảnh] Kiến trúc, phóng sự, đường phố, chân dung nghệ thuật&#10;[Mẹo] Dùng độ tương phản để làm nổi bật đường nét chủ thể. Rất hợp với đường nét hình học và kết cấu phong phú. Giữ bố cục gọn gàng</string>
+    <string name="tips_ricoh_green">[Môi trường] Ánh sáng tự nhiên ngoài trời, rừng, đồng cỏ, cảnh nhiều cây xanh&#10;[Cảnh] Thực vật, đi dạo trong rừng, mùa xuân ngoài trời, chân dung tươi mát&#10;[Mẹo] Tông sáng làm nổi bật sự tươi mát. Màu xanh lá trông tự nhiên và trong trẻo. Rất hợp cho cây cối và thiên nhiên</string>
+    <string name="tips_ricoh_blue">[Môi trường] Trời nắng hoặc nền trời xanh&#10;[Cảnh] Bờ biển, kiến trúc đô thị, bầu trời, cảnh tông lạnh&#10;[Mẹo] Tông lạnh làm màu xanh nổi bật hơn. Rất hợp cho bầu trời, mặt nước và kiến trúc đô thị. Tạo không khí trong trẻo, điềm tĩnh</string>
+    <string name="tips_blue_hour">[Môi trường] 20 phút trước bình minh hoặc sau hoàng hôn&#10;[Cảnh] Cảnh đêm thành phố, ánh đèn rực rỡ, phản chiếu trên mặt nước&#10;[Mẹo] Tương phản ấm-lạnh mạnh. Rất hợp cho ánh đèn thành phố và cảnh đêm. Tìm mặt nước để có hiệu ứng phản chiếu</string>
+    <string name="tips_dreamy_blackmist">[Môi trường] Cảnh ngược sáng hoặc sáng bên&#10;[Cảnh] Chân dung, nhiếp ảnh cảm xúc, cảnh nghệ thuật, vẻ đẹp dịu dàng&#10;[Mẹo] Bộ lọc black mist tạo không khí mơ màng. Rất hợp cho chân dung đẹp. Dùng ngược sáng để tạo hiệu ứng quầng sáng</string>
+    <string name="tips_fuji_nc">[Môi trường] Ngoài trời ban ngày hoặc nhiều ánh sáng tự nhiên&#10;[Cảnh] Chân dung phong cách Nhật, đường phố, ghi lại đời thường, du lịch&#10;[Mẹo] Mô phỏng phim Fuji NC. Tông sáng, màu tự nhiên dịu nhẹ. Rất hợp để ghi lại đời thường và thẩm mỹ Nhật Bản</string>
+    <string name="tips_humanities">[Môi trường] Ánh sáng tự nhiên hoặc ánh sáng nhân tạo dịu&#10;[Cảnh] Phóng sự đường phố, nhiếp ảnh nhân văn, ghi lại cuộc sống, kể chuyện&#10;[Mẹo] Chế độ Pro với thông số cố định. ISO 50 đảm bảo chất lượng ảnh thuần khiết. Hơi thiếu sáng để giữ chi tiết. Rất hợp để ghi lại những khoảnh khắc đời thực</string>
+    <string name="tips_fresh_humanities">[Môi trường] Ngoài trời sáng hoặc ánh sáng tự nhiên trong nhà&#10;[Cảnh] Chân dung Nhật tươi mát, khuôn viên trường, du lịch, đời sống hằng ngày&#10;[Mẹo] Tông sáng, độ bão hòa cao hơn. Rất hợp cho chân dung và cảnh tươi sáng. Tìm nơi đủ sáng</string>
+    <string name="tips_snowy_night">[Môi trường] Cảnh có tuyết, âm u hoặc nhiệt độ màu thấp&#10;[Cảnh] Cảnh tuyết, phố mùa đông, trong nhà ấm áp, không khí lễ hội&#10;[Mẹo] Tông ấm cân bằng cái lạnh của tuyết. Tạo không khí ấm cúng. Rất hợp cho cảnh mùa đông và môi trường ánh sáng ấm</string>
+    <string name="tips_delicious">[Môi trường] Nhà hàng, nhà bếp, cảnh chụp ẩm thực&#10;[Cảnh] Chụp món ăn, đồ uống, bánh nướng, ẩm thực cao cấp&#10;[Mẹo] Tông tối làm nổi bật kết cấu món ăn. Độ bão hòa vừa phải giữ màu sắc thật của thức ăn. Rất hợp cho món ngon và đồ uống</string>
+    <string name="tips_mobile_leica">[Môi trường] Ngoài trời ban ngày hoặc đủ sáng&#10;[Cảnh] Đường phố, kiến trúc, phong cảnh, ghi lại đời thường&#10;[Mẹo] Mô phỏng phong cách Đức của Leica. Tông trầm, màu sắc tiết chế. Rất hợp cho người yêu nhiếp ảnh thích thẩm mỹ Leica</string>
+    <string name="tips_dreamy_fuji">[Môi trường] Ngoài trời ban ngày hoặc ánh sáng dịu&#10;[Cảnh] Chân dung, phong cảnh, cảnh Nhật Bản, nhiếp ảnh nghệ thuật&#10;[Mẹo] Chế độ Pro với phơi sáng tự động. Hơi dư sáng tạo cảm giác mơ màng. Tông cổ điển với ánh sáng mềm mơ màng. Rất hợp cho chân dung và phong cảnh đẹp</string>
+    <string name="tips_hasselblad_rich">[Môi trường] Ngoài trời hoặc trong nhà đủ sáng&#10;[Cảnh] Phong cảnh, kiến trúc, chân dung, nhiếp ảnh nghệ thuật&#10;[Mẹo] Mô phỏng Hasselblad Natural Color Solution. Màu đậm đà nhưng chân thực. Rất hợp cho chất lượng màu sắc cao cấp</string>
+    <string name="tips_holiday_fresh">[Môi trường] Trời nắng hoặc cảnh kỳ nghỉ sáng sủa&#10;[Cảnh] Bờ biển, nghỉ dưỡng, du lịch, ngoài trời mùa hè&#10;[Mẹo] Tông sáng và trong. Độ bão hòa thấp hơn tạo cảm giác tươi mát. Rất hợp cho cảnh nghỉ dưỡng và du lịch. Ghi lại những khoảnh khắc vui vẻ</string>
+    <string name="tips_dreamy_bw">[Môi trường] Ánh sáng dịu hoặc trời âm u&#10;[Cảnh] Chân dung cảm xúc, nhiếp ảnh nghệ thuật, tĩnh vật, kiến trúc&#10;[Mẹo] Giữ lại chút thông tin màu. Ánh sáng mềm mơ màng tạo cảm giác nghệ thuật. Rất hợp cho ảnh đen trắng giàu biểu cảm</string>
+    <string name="tips_delicious_dream">[Môi trường] Nhà hàng, quán cà phê, không gian trong nhà ấm cúng&#10;[Cảnh] Món ăn, món tráng miệng, đồ uống, vật phẩm tinh tế&#10;[Mẹo] Ánh sáng mềm mơ màng tạo không khí ấm áp. Tông tối làm nổi bật kết cấu. Rất hợp cho món ngon và cảnh ấm cúng</string>
+    <string name="tips_blue_clear">[Môi trường] Ngoài trời hoặc trong nhà ban ngày, bờ biển, bầu trời, mặt nước&#10;[Cảnh] Phong cảnh, kiến trúc, chân dung, tĩnh vật&#10;[Mẹo] Phong cách xanh trong vắt với tông lạnh tạo cảm giác tươi mát, trong trẻo. Hơi thiếu sáng để giữ chi tiết. Ánh sáng mềm mơ màng thêm không khí. Rất hợp cho phong cảnh và chân dung tươi mát</string>
+    <string name="tips_sunny_vintage">[Môi trường] Ngoài trời nắng, cảnh đủ sáng&#10;[Cảnh] Đường phố, chân dung, phong cảnh, cảnh cổ điển&#10;[Mẹo] Phong cách cổ điển nắng ấm với nhiệt độ màu 5000K cho màu sắc tự nhiên. Tông âm bản tạo cảm giác hoài cổ. Hơi thiếu sáng để giữ chi tiết vùng sáng. Ánh sáng mềm ấm thêm không khí retro. Rất hợp cho chân dung và phong cảnh ngoài trời nắng</string>
+    <string name="tips_neon_lights">[Môi trường] Thành phố về đêm, biển hiệu neon, phố xá nhộn nhịp&#10;[Cảnh] Cảnh đêm, đường phố, chân dung, phong cảnh đô thị&#10;[Mẹo] Phong cách ánh neon với bộ lọc đậm đà tăng độ bão hòa màu. Ánh sáng mềm nhẹ nhàng tạo cảm giác mơ màng. Hơi thiếu sáng để giữ chi tiết neon. Rất hợp cho cảnh neon thành phố về đêm</string>
+    <string name="tips_retro_nostalgia">[Môi trường] Khu phố cũ, cảnh cổ điển, không gian trong nhà hoài niệm&#10;[Cảnh] Đồ vật xưa, đường phố, chân dung, cảnh kể chuyện&#10;[Mẹo] Phong cách hoài niệm retro với bộ lọc cổ điển 65% cho cảm giác xưa cũ. Tông thấp thêm không khí retro. Giảm độ bão hòa để mô phỏng chất ảnh cũ. Rất hợp cho ảnh chủ đề hoài niệm</string>
+
+    <!-- About Page -->
+    <string name="about_title">Giới thiệu</string>
+    <string name="version_current">Phiên bản hiện tại: v%1$s</string>
+    <string name="version_check">Chạm để kiểm tra cập nhật</string>
+    <string name="version_checking">Đang kiểm tra cập nhật…</string>
+    <string name="version_new_found">Có phiên bản mới v%1$s</string>
+    <string name="version_latest">Đã là phiên bản mới nhất</string>
+    <string name="version_check_failed">Kiểm tra thất bại</string>
+    <string name="version_download">Tải xuống</string>
+    <string name="version_download_btn">Cập nhật</string>
+    <string name="version_is_latest">Đã cập nhật</string>
+    <string name="version_retry">Chạm để thử lại</string>
+    <string name="last_check">Kiểm tra lần cuối: %1$s</string>
+    <string name="time_just_now">Vừa xong</string>
+    <string name="time_minutes_ago">%1$d phút trước</string>
+    <string name="time_hours_ago">%1$d giờ trước</string>
+    <string name="time_days_ago">%1$d ngày trước</string>
+
+    <!-- Feature Intro -->
+    <string name="feature_title">Tính năng</string>
+    <string name="feature_custom_title">Cá nhân hóa</string>
+    <string name="feature_custom_desc">Thông số preset phong phú cho nhiều bối cảnh</string>
+    <string name="feature_cloud_title">Đăng ký đám mây</string>
+    <string name="feature_cloud_desc">Đăng ký thư viện preset trên đám mây, cập nhật thủ công</string>
+    <string name="feature_update_title">Cập nhật liên tục</string>
+    <string name="feature_update_desc">Preset do cộng đồng tạo, nội dung được cập nhật thường xuyên</string>
+    <string name="feature_safe_title">An toàn &amp; Đáng tin cậy</string>
+    <string name="feature_safe_desc">Ưu tiên lưu trữ cục bộ, bảo vệ quyền riêng tư người dùng</string>
+
+    <!-- Credits -->
+    <string name="credits_title">Ghi công</string>
+    <string name="developer">Nhà phát triển</string>
+    <string name="developer_name">Silas</string>
+    <string name="material_provider">Nhà cung cấp tư liệu</string>
+
+    <!-- Footer -->
+    <string name="footer_local">Hoạt động hoàn toàn cục bộ, dữ liệu lưu trên thiết bị</string>
+    <string name="user_agreement">Thỏa thuận người dùng</string>
+    <string name="privacy_policy">Chính sách quyền riêng tư</string>
+    <string name="open_source_license">Giấy phép mã nguồn mở</string>
+
+    <!-- Privacy Policy Page -->
+    <string name="privacy_title">Thỏa thuận người dùng &amp; Chính sách quyền riêng tư</string>
+    <string name="welcome_title">Chào mừng đến với OMaster</string>
+    <string name="welcome_desc">OMaster là công cụ quản lý thông số chỉnh màu dành cho người yêu nhiếp ảnh di động trên OPPO/OnePlus/Realme. Tại đây, bạn có thể xem, yêu thích và tái tạo các thông số chỉnh màu của chế độ chụp Master Mode.</string>
+    <string name="features_title">Tính năng</string>
+    <string name="features_list">• Xem thông số chỉnh màu Master Mode&#10;• Hỗ trợ nhiều phong cách preset&#10;• Hoạt động hoàn toàn cục bộ, dữ liệu lưu trên thiết bị&#10;• Không cần kết nối internet</string>
+    <string name="data_collection_title">Thu thập dữ liệu</string>
+    <string name="data_collection_desc">Để cung cấp dịch vụ tốt hơn, chúng tôi sử dụng Umeng Analytics SDK để thu thập dữ liệu sử dụng ứng dụng.</string>
+    <string name="local_storage_title">Lưu trữ dữ liệu cục bộ</string>
+    <string name="local_storage_desc">Ứng dụng lưu các dữ liệu sau trên thiết bị:&#10;&#10;• Cấu hình đăng ký (URL, phiên bản, v.v.)&#10;• Bộ nhớ đệm hình ảnh preset&#10;• Tùy chọn người dùng (chủ đề, ngôn ngữ, v.v.)&#10;• Danh sách preset yêu thích&#10;&#10;Toàn bộ dữ liệu được lưu trên thiết bị của bạn, chúng tôi không tải thông tin cá nhân của bạn lên.</string>
+    <string name="permission_title">Quyền truy cập</string>
+    <string name="permission_desc">Tính năng cửa sổ nổi cần quyền SYSTEM_ALERT_WINDOW để hiển thị thông số chụp trên các ứng dụng khác. Quyền này chỉ dùng để hiển thị thông số preset, không truy cập nội dung màn hình hay thu thập bất kỳ dữ liệu nào của bạn.</string>
+    <string name="sdk_info_title">Thông tin Umeng SDK</string>
+    <string name="sdk_name_label">Tên SDK</string>
+    <string name="sdk_name">Umeng SDK</string>
+    <string name="service_type_label">Loại dịch vụ</string>
+    <string name="service_type">Thống kê</string>
+    <string name="collect_info_label">Thông tin cá nhân được thu thập</string>
+    <string name="collect_info">Thông tin thiết bị (MAC/Android ID/IDFA/GUID/IP, v.v.)</string>
+    <string name="privacy_link_label">Liên kết chính sách quyền riêng tư:</string>
+    <string name="user_rights_title">Quyền của người dùng</string>
+    <string name="user_rights_desc">Bạn có quyền truy cập, chỉnh sửa và xóa thông tin cá nhân của mình. Để thực hiện các quyền này, vui lòng liên hệ với chúng tôi qua thông tin liên hệ trong ứng dụng.</string>
+
+    <!-- Floating Window Guide -->
+    <string name="guide_title">Bật quyền cửa sổ nổi</string>
+    <string name="guide_desc">Để tiện xem thông số khi chụp, OMaster cần quyền cửa sổ nổi</string>
+    <string name="guide_step_1">1. Tìm tùy chọn \"Cho phép hiển thị trên ứng dụng khác\" hoặc tương tự trong trang cài đặt</string>
+    <string name="guide_step_2">2. Bật công tắc</string>
+    <string name="guide_step_3">3. Quay lại OMaster</string>
+    <string name="guide_fail_title">Nếu bạn không bật được quyền:</string>
+    <string name="guide_fail_step_1">Vào \"Cài đặt -&gt; Quản lý ứng dụng\"</string>
+    <string name="guide_fail_step_2">Tìm ứng dụng OMaster</string>
+    <string name="guide_fail_step_3">Chạm vào menu ⋮ ở góc trên bên phải</string>
+    <string name="guide_fail_step_4">Chọn \"Gỡ tất cả hạn chế quyền\"</string>
+    <string name="guide_tip">Mẹo: Sau khi gỡ hạn chế, hãy đảm bảo chỉ cấp quyền \"Cửa sổ nổi\"</string>
+    <string name="guide_btn_open">Mở cấp quyền</string>
+    <string name="guide_later">Để sau</string>
+    <string name="contact_title">Liên hệ chúng tôi</string>
+    <string name="contact_info">Nếu bạn có bất kỳ câu hỏi nào về chính sách quyền riêng tư này, vui lòng liên hệ:&#10;Nhà phát triển: Silas&#10;Email: iboy66lee@qq.com</string>
+    <string name="last_updated">Cập nhật lần cuối: %1$s</string>
+    <string name="no_release_notes">Chưa có ghi chú phát hành</string>
+
+    <!-- Open Source License Page -->
+    <string name="open_source_license_title">Giấy phép mã nguồn mở</string>
+    <string name="app_license_section">Thỏa thuận giấy phép ứng dụng</string>
+    <string name="app_license_name">CC BY-NC-SA 4.0</string>
+    <string name="app_license_desc">Ứng dụng này được cấp phép theo Giấy phép Creative Commons Ghi công-Phi thương mại-Chia sẻ tương tự 4.0 Quốc tế (CC BY-NC-SA 4.0). Bạn được tự do chia sẻ và chỉnh sửa tác phẩm này, nhưng phải tuân thủ các điều kiện sau:</string>
+    <string name="license_terms_title">Điều khoản chính</string>
+    <string name="term_attribution">Ghi công</string>
+    <string name="term_attribution_desc">Bạn phải ghi công phù hợp và cung cấp liên kết đến giấy phép</string>
+    <string name="term_non_commercial">Phi thương mại</string>
+    <string name="term_non_commercial_desc">Bạn không được sử dụng tài liệu cho mục đích thương mại</string>
+    <string name="term_share_alike">Chia sẻ tương tự</string>
+    <string name="term_share_alike_desc">Nếu bạn phối lại, biến đổi hoặc phát triển từ tài liệu này, bạn phải phân phối các đóng góp của mình theo cùng giấy phép với bản gốc</string>
+    <string name="view_full_license">Xem giấy phép đầy đủ</string>
+    <string name="libraries_section">Thư viện mã nguồn mở</string>
+    <string name="libraries_desc">Ứng dụng này sử dụng các thư viện mã nguồn mở sau. Chúng tôi cảm ơn tất cả những người đóng góp mã nguồn mở:</string>
+    <string name="acknowledgements_section">Lời cảm ơn</string>
+    <string name="acknowledgements_desc">Cảm ơn tất cả các nhà phát triển đã đóng góp cho cộng đồng mã nguồn mở. Chính sự cống hiến vô tư của các bạn đã làm nên dự án này.</string>
+    <string name="acknowledgements_thanks">Xin kính chào tất cả các dự án mã nguồn mở!</string>
+
+    <!-- Welcome Dialog -->
+    <string name="welcome_dialog_title">Chào mừng đến với OMaster</string>
+    <string name="welcome_version">Thư viện chỉnh màu Master Mode v%1$s</string>
+    <string name="feature_1_title">Thông số chuyên nghiệp</string>
+    <string name="feature_1_desc">Xem các thông số chỉnh màu nhiếp ảnh chuyên nghiệp của Master Mode</string>
+    <string name="feature_2_title">Nhiều phong cách</string>
+    <string name="feature_2_desc">Hỗ trợ nhiều phong cách preset đáp ứng các nhu cầu chụp khác nhau</string>
+    <string name="feature_3_title">Cộng đồng</string>
+    <string name="feature_3_desc">Đăng ký preset của cộng đồng, được cập nhật liên tục</string>
+    <string name="agree_prefix">Tôi đã đọc và đồng ý với</string>
+    <string name="umeng_notice">• Chúng tôi sử dụng Umeng SDK để thống kê&#10;• Thu thập thông tin thiết bị để tối ưu trải nghiệm ứng dụng</string>
+    <string name="privacy_hint">Chạm vào Thỏa thuận người dùng &amp; Chính sách quyền riêng tư để xem chi tiết</string>
+    <string name="disagree">Thoát ứng dụng</string>
+    <string name="agree_and_start">Bắt đầu</string>
+
+    <!-- Floating Window Guide Dialog -->
+    <string name="floating_guide_title">Bật cửa sổ nổi</string>
+    <string name="floating_guide_desc">Để tiện xem thông số khi chụp, OMaster cần quyền cửa sổ nổi</string>
+    <string name="permission_trouble">Nếu bạn gặp sự cố về quyền:</string>
+    <string name="permission_step_1">Vào Cài đặt → Ứng dụng</string>
+    <string name="permission_step_2">Tìm ứng dụng OMaster</string>
+    <string name="permission_step_3">Chạm vào menu ⋮ ở góc trên bên phải</string>
+    <string name="permission_step_4">Chọn \"Gỡ tất cả hạn chế ủy quyền\"</string>
+    <string name="permission_tip">Mẹo: Sau khi gỡ hạn chế, hãy đảm bảo chỉ cấp quyền \"Cửa sổ nổi\"</string>
+    <string name="go_to_settings">Đến Cài đặt</string>
+    <string name="later">Để sau</string>
+
+    <!-- Floating Window Service -->
+    <string name="floating_preset">Preset</string>
+    <string name="floating_original">Gốc</string>
+    <string name="floating_basic_params">Thông số cơ bản</string>
+    <string name="floating_filter_icon">◈</string>
+    <string name="floating_filter_label">Lọc</string>
+    <string name="floating_soft_icon">✦</string>
+    <string name="floating_soft_label">Mềm</string>
+    <string name="floating_tone_icon">◐</string>
+    <string name="floating_tone_label">Tông</string>
+    <string name="floating_saturation_icon">◉</string>
+    <string name="floating_saturation_label">Bão hòa</string>
+    <string name="floating_warm_icon">◑</string>
+    <string name="floating_warm_label">Ấm</string>
+    <string name="floating_cyan_icon">◒</string>
+    <string name="floating_cyan_label">Lục lam</string>
+    <string name="floating_sharpness_icon">◆</string>
+    <string name="floating_sharpness_label">Nét</string>
+    <string name="floating_vignette_icon">◍</string>
+    <string name="floating_vignette_label">Tối góc</string>
+
+    <!-- Floating Window Mode -->
+    <string name="floating_window_mode">Chế độ cửa sổ nổi</string>
+    <string name="floating_window_mode_standard">Tiêu chuẩn</string>
+    <string name="floating_window_mode_compact">Thu gọn</string>
+    <string name="floating_window_mode_standard_desc">Bố cục thẻ với đầy đủ thông tin</string>
+    <string name="floating_window_mode_compact_desc">Thanh thông số thu gọn, phong cách gốc</string>
+    <string name="floating_window_mode_dialog_title">Chọn chế độ cửa sổ nổi</string>
+    <string name="floating_window_realme_tip">Lưu ý: Preset Realme sẽ tự động dùng cửa sổ nổi tiêu chuẩn (biểu tượng chế độ thu gọn không tương thích với giao diện camera Realme)</string>
+
+    <!-- Discover Page -->
+    <string name="discover_title">Khám phá</string>
+    <string name="discover_subtitle">Khám phá thêm các tính năng nhiếp ảnh</string>
+
+    <!-- Color Walk Feature Card -->
+    <string name="colorwalk_card_title">Color Walk</string>
+    <string name="colorwalk_card_desc">Thử thách màu sắc mỗi ngày, khám phá thành phố qua sắc màu</string>
+    <string name="colorwalk_card_button">Bắt đầu khám phá</string>
+
+    <!-- Color Walk Guide -->
+    <string name="colorwalk_guide_title">Color Walk là gì?</string>
+    <string name="colorwalk_guide_desc">Rút một thẻ màu, dạo quanh phố phường, tìm những màu tương ứng và ghi lại vẻ đẹp của thành phố</string>
+    <string name="colorwalk_guide_step1_title">Rút thẻ</string>
+    <string name="colorwalk_guide_step1_desc">3 lượt mỗi ngày, nhận nhiệm vụ màu sắc ngẫu nhiên</string>
+    <string name="colorwalk_guide_step2_title">Săn màu trên phố</string>
+    <string name="colorwalk_guide_step2_desc">Mang thẻ ra ngoài, tìm những màu tương ứng trong thành phố</string>
+    <string name="colorwalk_guide_step3_title">Chụp &amp; Ghi lại</string>
+    <string name="colorwalk_guide_step3_desc">Chụp lại những màu sắc đó, hoàn thành thử thách hôm nay</string>
+    <string name="colorwalk_guide_start">Bắt đầu khám phá</string>
+    <string name="colorwalk_guide_next">Tiếp theo</string>
+    <string name="colorwalk_guide_skip">Bỏ qua</string>
+
+    <!-- Color Walk Main Page -->
+    <string name="colorwalk_title">Color Walk</string>
+    <string name="colorwalk_subtitle">Thử thách thẻ màu mỗi ngày, khám phá thành phố qua sắc màu</string>
+    <string name="colorwalk_empty_title">Khám phá cảm hứng màu sắc hôm nay</string>
+    <string name="colorwalk_empty_subtitle">Chạm nút bên dưới để rút thẻ màu dành riêng cho bạn</string>
+    <string name="colorwalk_draw_button">Rút thẻ hôm nay</string>
+    <string name="colorwalk_draw_hint">3 lượt rút mỗi ngày, đặt lại lúc 0:00</string>
+    <string name="colorwalk_drawn_today">Đã rút hôm nay</string>
+    <string name="colorwalk_draw_count">Lượt rút #%d</string>
+    <string name="colorwalk_redraw_remaining">Rút lại (%d)</string>
+    <string name="colorwalk_no_more_draws">Hôm nay đã hết lượt rút</string>
+    <string name="colorwalk_redraw">Rút lại</string>
+    <string name="colorwalk_clear">Xóa thẻ</string>
+    <string name="colorwalk_hide_today_card">Ẩn thẻ hôm nay</string>
+    <string name="colorwalk_history">Lịch sử</string>
+    <string name="colorwalk_no_history">Chưa có lịch sử</string>
+    <string name="colorwalk_history_preview_title">Xem lại thẻ màu</string>
+    <string name="colorwalk_close_preview">Đóng</string>
+    <string name="colorwalk_clear_history">Xóa lịch sử</string>
+    <string name="colorwalk_clear_history_confirm">Bạn có chắc muốn xóa toàn bộ lịch sử không? Hành động này không thể hoàn tác.</string>
+    <string name="colorwalk_confirm_clear">Xóa</string>
+    <string name="colorwalk_cancel">Hủy</string>
+    <string name="colorwalk_today_challenge">Thử thách hôm nay</string>
+    <string name="colorwalk_best_scenes">Cảnh phù hợp nhất</string>
+    <string name="colorwalk_theme_primary">Chính</string>
+    <string name="colorwalk_theme_accent">Điểm nhấn</string>
+    <string name="colorwalk_shooting_tips">Mẹo chụp</string>
+    <string name="colorwalk_scene_architecture">Kiến trúc</string>
+    <string name="colorwalk_scene_street">Đường phố</string>
+    <string name="colorwalk_scene_light">Ánh sáng ấm</string>
+    <string name="colorwalk_scene_seaside">Bờ biển</string>
+    <string name="colorwalk_scene_sky">Bầu trời</string>
+    <string name="colorwalk_scene_minimal">Tối giản</string>
+    <string name="colorwalk_scene_park">Công viên</string>
+    <string name="colorwalk_scene_plants">Cây cối</string>
+    <string name="colorwalk_scene_nature">Thiên nhiên</string>
+    <string name="colorwalk_scene_industrial">Công nghiệp</string>
+    <string name="colorwalk_scene_geometry">Hình học</string>
+    <string name="colorwalk_scene_bridge">Cây cầu</string>
+    <string name="colorwalk_scene_sunset">Hoàng hôn</string>
+    <string name="colorwalk_scene_skyline">Đường chân trời</string>
+    <string name="colorwalk_scene_reflection">Phản chiếu</string>
+    <string name="colorwalk_scene_night">Ban đêm</string>
+    <string name="colorwalk_scene_neon">Neon</string>
+    <string name="colorwalk_scene_city">Thành phố</string>
+    <string name="colorwalk_scene_old_street">Phố cổ</string>
+    <string name="colorwalk_scene_cafe">Quán cà phê</string>
+    <string name="colorwalk_scene_story">Kể chuyện</string>
+    <string name="colorwalk_scene_black_white">Đen &amp; Trắng</string>
+    <string name="colorwalk_scene_shadow">Bóng đổ</string>
+    <string name="colorwalk_scene_flower">Hoa</string>
+    <string name="colorwalk_scene_soft_light">Ánh sáng mềm</string>
+    <string name="colorwalk_scene_still_life">Tĩnh vật</string>
+    <string name="colorwalk_scene_indoor">Trong nhà</string>
+    <string name="colorwalk_scene_water">Mặt nước</string>
+    <string name="colorwalk_scene_blue_hour">Giờ xanh</string>
+    <string name="colorwalk_scene_autumn">Mùa thu</string>
+    <string name="colorwalk_scene_backlight">Ngược sáng</string>
+
+    <!-- Color Walk Themes -->
+    <string name="colorwalk_theme_urban_warm">Ấm Áp Đô Thị</string>
+    <string name="colorwalk_theme_seaside_fresh">Bờ Biển Tươi Mát</string>
+    <string name="colorwalk_theme_forest_green">Xanh Rừng</string>
+    <string name="colorwalk_theme_industrial_cool">Lạnh Công Nghiệp</string>
+    <string name="colorwalk_theme_sunset_glow">Ráng Chiều</string>
+    <string name="colorwalk_theme_neon_night">Đêm Neon</string>
+    <string name="colorwalk_theme_vintage_film">Phim Cổ Điển</string>
+    <string name="colorwalk_theme_minimalist_bw">Đen Trắng Tối Giản</string>
+    <string name="colorwalk_theme_spring_blossom">Hoa Xuân</string>
+    <string name="colorwalk_theme_coffee_time">Giờ Cà Phê</string>
+    <string name="colorwalk_theme_ocean_deep">Đại Dương Sâu Thẳm</string>
+    <string name="colorwalk_theme_autumn_leaves">Lá Thu</string>
+
+    <!-- Color Walk Descriptions -->
+    <string name="colorwalk_desc_urban_warm">Tìm những tòa nhà gạch đỏ, cánh cửa gỗ, đèn đường ấm áp, ghi lại chất ấm của thành phố</string>
+    <string name="colorwalk_desc_seaside_fresh">Bờ biển, bầu trời, bãi cát, ghi lại sự yên bình và khoáng đạt của biển với tông xanh trắng tươi mát</string>
+    <string name="colorwalk_desc_forest_green">Công viên, cây cối, thảm cỏ, tìm sức sống và sự yên tĩnh trong màu xanh của thiên nhiên</string>
+    <string name="colorwalk_desc_industrial_cool">Kết cấu thép, nhà máy, cầu, thể hiện sức mạnh của thẩm mỹ công nghiệp bằng tông lạnh</string>
+    <string name="colorwalk_desc_sunset_glow">Hoàng hôn, đường chân trời, ghi lại nét lãng mạn và dịu dàng của thành phố dưới ráng chiều</string>
+    <string name="colorwalk_desc_neon_night">Chợ đêm, biển hiệu neon, tìm những màu sắc rực rỡ nhất của thành phố trong đêm</string>
+    <string name="colorwalk_desc_vintage_film">Phố cổ, đồ cổ điển, cảnh retro, ghi lại dấu vết thời gian bằng tông phim</string>
+    <string name="colorwalk_desc_minimalist_bw">Đường nét kiến trúc, tương phản sáng tối, thể hiện vẻ đẹp hình khối thuần khiết bằng đen trắng tối giản</string>
+    <string name="colorwalk_desc_spring_blossom">Lối hoa, công viên, cảnh xuân, ghi lại nét lãng mạn mùa xuân bằng tông hồng</string>
+    <string name="colorwalk_desc_coffee_time">Quán cà phê, hiệu sách, cửa hàng nghệ thuật, ghi lại thời gian thư thả bằng tông nâu ấm</string>
+    <string name="colorwalk_desc_ocean_deep">Biển sâu, thủy cung, công trình màu xanh, khám phá thế giới đại dương huyền bí bằng tông xanh thẫm</string>
+    <string name="colorwalk_desc_autumn_leaves">Lá rụng, rừng thu, con phố vàng, ghi lại chất thơ mùa thu bằng tông ấm</string>
+
+    <!-- Color Walk Tips -->
+    <string name="colorwalk_tips_urban_warm">[Tìm] Tường gạch đỏ, nhà cổ, khung gỗ, đèn đường ấm [Mẹo] Dùng tương phản sáng tối để tạo chiều sâu, tông ấm hợp với ngược sáng [Thời điểm tốt nhất] 3-5 giờ chiều, khi nắng xiên</string>
+    <string name="colorwalk_tips_seaside_fresh">[Tìm] Lối đi ven biển, bầu trời xanh, bãi cát, nhà trắng [Mẹo] Chừa nhiều khoảng trống để tạo cảm giác khoáng đạt, bố cục ngang [Thời điểm tốt nhất] Sáng nắng, khi trời xanh nhất</string>
+    <string name="colorwalk_tips_forest_green">[Tìm] Rừng cây công viên, cỏ, dây leo, rêu [Mẹo] Dùng lá tiền cảnh để tạo chiều sâu, tìm đốm sáng xuyên qua tán lá [Thời điểm tốt nhất] Sáng sớm hoặc chiều tà, ánh sáng dịu</string>
+    <string name="colorwalk_tips_industrial_cool">[Tìm] Cầu thép, tường nhà máy, đường ống, công trình bê tông [Mẹo] Nhấn mạnh đường nét hình học, chụp góc thấp để tạo sức mạnh [Thời điểm tốt nhất] Trời âm u, ánh sáng đều</string>
+    <string name="colorwalk_tips_sunset_glow">[Tìm] Đường chân trời thành phố, bóng các tòa nhà, phản chiếu trên mặt nước [Mẹo] Ngược sáng để chụp bóng đen, tận dụng phản chiếu trên nước [Thời điểm tốt nhất] 20 phút sau hoàng hôn, giờ xanh</string>
+    <string name="colorwalk_tips_neon_night">[Tìm] Biển hiệu neon, quầy hàng chợ đêm, vệt sáng [Mẹo] Hơi thiếu sáng để giữ chi tiết neon, tận dụng quầng sáng [Thời điểm tốt nhất] 8-10 giờ tối, khi đèn neon sáng hết</string>
+    <string name="colorwalk_tips_vintage_film">[Tìm] Phố cổ, hiệu sách, quán cà phê retro, đồ cổ điển [Mẹo] Tìm các yếu tố cũ kỹ, chừa khoảng trống cho câu chuyện [Thời điểm tốt nhất] Ánh sáng dịu buổi chiều, hoặc ánh sáng ấm trong nhà</string>
+    <string name="colorwalk_tips_minimalist_bw">[Tìm] Kiến trúc hiện đại, đường nét hình học, cảnh có sáng tối mạnh [Mẹo] Đơn giản hóa bố cục, nhấn mạnh hình khối và kết cấu [Thời điểm tốt nhất] Trời nắng, tương phản sáng tối mạnh nhất</string>
+    <string name="colorwalk_tips_spring_blossom">[Tìm] Lối hoa anh đào, cánh đồng hoa, công viên [Mẹo] Dùng hoa tiền cảnh mờ để tạo cảm giác mơ màng [Thời điểm tốt nhất] Sáng sớm hoặc chiều tà, ánh sáng dịu</string>
+    <string name="colorwalk_tips_coffee_time">[Tìm] Nội thất quán cà phê, giá sách, tách cà phê, cửa hàng nghệ thuật [Mẹo] Dùng ánh sáng bên cửa sổ, tông ấm cho tĩnh vật [Thời điểm tốt nhất] 2-4 giờ chiều, ánh sáng trong nhà đẹp nhất</string>
+    <string name="colorwalk_tips_ocean_deep">[Tìm] Thủy cung, tường xanh, hồ sâu, cảnh mưa [Mẹo] Tận dụng phản chiếu trên nước, nền tối [Thời điểm tốt nhất] Trời âm u hoặc trong nhà, ánh sáng dịu hơn</string>
+    <string name="colorwalk_tips_autumn_leaves">[Tìm] Lối đi phủ lá, cây phong, công viên mùa thu [Mẹo] Dùng lá rụng làm tiền cảnh, ngược sáng để lá trong suốt [Thời điểm tốt nhất] Chiều nắng, ánh sáng xuyên qua lá</string>
+    <string name="colorwalk_challenge_urban_warm">Tìm hai vật liệu xây dựng tông ấm và một nguồn sáng ấm trong cùng một khung hình.</string>
+    <string name="colorwalk_challenge_seaside_fresh">Để bầu trời hoặc biển chiếm hơn nửa khung hình và giữ lại một điểm nhấn sáng.</string>
+    <string name="colorwalk_challenge_forest_green">Dùng lá tiền cảnh làm khung cho một chủ thể xanh yên tĩnh với chiều sâu nhiều lớp.</string>
+    <string name="colorwalk_challenge_industrial_cool">Chụp bố cục góc thấp với các đường nét mạnh và một mảng màu kim loại lạnh.</string>
+    <string name="colorwalk_challenge_sunset_glow">Ghi lại sự chuyển từ ấm sang lạnh giữa đường chân trời và bầu trời.</string>
+    <string name="colorwalk_challenge_neon_night">Tìm một cảnh neon có một màu chủ đạo và một điểm sáng nhỏ tương phản.</string>
+    <string name="colorwalk_challenge_vintage_film">Chụp một đồ vật hoặc góc phố mang cảm giác như có câu chuyện từ một thập kỷ khác.</string>
+    <string name="colorwalk_challenge_minimalist_bw">Rút gọn khung hình còn các hình khối mạnh, đường nét sạch và chỉ một chủ thể.</string>
+    <string name="colorwalk_challenge_spring_blossom">Dùng ánh sáng mềm và tông hoa để tạo một bố cục thoáng đãng, lãng mạn.</string>
+    <string name="colorwalk_challenge_coffee_time">Dựng một tĩnh vật ấm cúng với tông cà phê, kết cấu giấy hoặc ánh sáng ấm từ cửa sổ.</string>
+    <string name="colorwalk_challenge_ocean_deep">Tìm các lớp xanh chồng lên nhau và thêm một bề mặt phản chiếu để tăng chiều sâu không khí.</string>
+    <string name="colorwalk_challenge_autumn_leaves">Dùng lá rụng hoặc tán lá vàng làm tiền cảnh để cảm nhận rõ mùa thu.</string>
+
+    <!-- Color Names -->
+    <string name="color_brick_red">Đỏ gạch</string>
+    <string name="color_dark_brown">Nâu đậm</string>
+    <string name="color_bisque">Be hồng</string>
+    <string name="color_dark_gray">Xám đậm</string>
+    <string name="color_sky_blue">Xanh da trời</string>
+    <string name="color_powder_blue">Xanh phấn</string>
+    <string name="color_white">Trắng</string>
+    <string name="color_wheat">Vàng lúa mì</string>
+    <string name="color_forest_green">Xanh rừng</string>
+    <string name="color_light_green">Xanh lá nhạt</string>
+    <string name="color_saddle_brown">Nâu yên ngựa</string>
+    <string name="color_beige">Be</string>
+    <string name="color_slate_gray">Xám đá phiến</string>
+    <string name="color_steel_blue">Xanh thép</string>
+    <string name="color_dark_slate_gray">Xám đá phiến đậm</string>
+    <string name="color_silver">Bạc</string>
+    <string name="color_coral">San hô</string>
+    <string name="color_light_pink">Hồng nhạt</string>
+    <string name="color_medium_purple">Tím vừa</string>
+    <string name="color_midnight_blue">Xanh nửa đêm</string>
+    <string name="color_deep_pink">Hồng đậm</string>
+    <string name="color_cyan">Lục lam</string>
+    <string name="color_gold">Vàng kim</string>
+    <string name="color_navy">Xanh navy</string>
+    <string name="color_tan">Nâu rám nắng</string>
+    <string name="color_sienna">Nâu đất sienna</string>
+    <string name="color_khaki">Kaki</string>
+    <string name="color_dark_olive_green">Xanh ô liu đậm</string>
+    <string name="color_black">Đen</string>
+    <string name="color_gray">Xám</string>
+    <string name="color_light_gray">Xám nhạt</string>
+    <string name="color_cherry_blossom">Hoa anh đào</string>
+    <string name="color_hot_pink">Hồng sáng</string>
+    <string name="color_pale_green">Xanh lá nhạt nhẹ</string>
+    <string name="color_lemon_chiffon">Vàng chanh nhạt</string>
+    <string name="color_coffee">Cà phê</string>
+    <string name="color_chocolate">Sô-cô-la</string>
+    <string name="color_cornsilk">Vàng tơ ngô</string>
+    <string name="color_ocean_blue">Xanh đại dương</string>
+    <string name="color_dark_blue">Xanh đậm</string>
+    <string name="color_turquoise">Xanh ngọc</string>
+    <string name="color_honeydew">Xanh dưa mật</string>
+    <string name="color_orange_red">Đỏ cam</string>
+    <string name="color_goldenrod">Vàng thanh cúc</string>
+    <string name="color_dark_red">Đỏ đậm</string>
+
+    <!-- Discover / Check-in -->
+    <string name="discover_more_coming">Nhiều tính năng khác đang được phát triển...</string>
+    <string name="discover_stay_tuned">Hãy đón chờ</string>
+    <string name="discover_checkin_title">Nhật ký màn trập</string>
+    <string name="discover_checkin_subtitle">Mỗi lần bấm máy là một kỷ niệm riêng của bạn</string>
+    <string name="discover_checkin_not_today">Hôm nay bạn chưa điểm danh</string>
+    <string name="discover_checkin_subtitle_active">Đã hoạt động %1$d ngày liên tiếp</string>
+    <string name="checkin_sheet_title">Nhật ký màn trập</string>
+    <string name="checkin_current_streak">Chuỗi hiện tại</string>
+    <string name="checkin_longest_streak">Chuỗi dài nhất</string>
+    <string name="checkin_month_total">Tháng này</string>
+    <string name="checkin_days_unit">%1$d ngày</string>
+    <string name="checkin_calendar_previous_month">Tháng trước</string>
+    <string name="checkin_calendar_next_month">Tháng sau</string>
+    <string name="checkin_no_record">Chưa có hoạt động nào được ghi lại cho ngày này.</string>
+    <string name="checkin_activity_draw">Đã rút thẻ màu</string>
+    <string name="checkin_activity_draw_default">Cảm hứng màu sắc hôm nay</string>
+    <string name="checkin_activity_challenge">Đã hoàn thành thử thách</string>
+    <string name="checkin_activity_challenge_desc">Nhiệm vụ chụp hôm nay đã được đánh dấu hoàn thành.</string>
+    <string name="checkin_activity_favorite">Đã lưu cảm hứng</string>
+    <string name="checkin_activity_favorite_desc">Một thẻ màu hoặc cảm hứng liên quan đã được lưu hôm nay.</string>
+    <string name="checkin_activity_visit">Đã điểm danh</string>
+    <string name="checkin_activity_visit_desc">Bạn đã mở Khám phá và để lại dấu ấn cho hôm nay.</string>
+    <string name="checkin_weekday_sun">CN</string>
+    <string name="checkin_weekday_mon">T2</string>
+    <string name="checkin_weekday_tue">T3</string>
+    <string name="checkin_weekday_wed">T4</string>
+    <string name="checkin_weekday_thu">T5</string>
+    <string name="checkin_weekday_fri">T6</string>
+    <string name="checkin_weekday_sat">T7</string>
+    <string name="checkin_mark_complete">Đánh dấu hoàn thành</string>
+    <string name="checkin_completed">Đã hoàn thành</string>
+    <string name="photoframe_card_title">Khung ảnh</string>
+    <string name="photoframe_card_desc">Tự động đọc thông tin chụp, đóng khung ảnh để chia sẻ</string>
+
+    <!-- Frame Art Screen -->
+    <string name="photoframe_permission_media_name">ảnh &amp; video</string>
+    <string name="photoframe_permission_storage_name">bộ nhớ</string>
+    <string name="photoframe_permission_denied">Cần quyền %1$s để chọn ảnh. Vui lòng cấp quyền trong cài đặt hệ thống.</string>
+    <string name="photoframe_saved">Đã lưu vào Thư viện</string>
+    <string name="photoframe_save_failed">Lưu thất bại</string>
+    <string name="photoframe_pick_photo">Chọn ảnh</string>
+    <string name="photoframe_pick_desc">Tự động đọc thời gian chụp để tạo ảnh đẹp có thể chia sẻ</string>
+    <string name="photoframe_preview">Xem trước</string>
+    <string name="photoframe_original">Gốc</string>
+    <string name="photoframe_aspect_ratio">Tỷ lệ khung hình</string>
+    <string name="photoframe_shoot_time">Thời gian chụp</string>
+    <string name="photoframe_time_placeholder">VD: 2024.03.15 14:30</string>
+    <string name="photoframe_image_style">Kiểu ảnh</string>
+    <string name="photoframe_rounded">Bo góc</string>
+    <string name="photoframe_sharp">Vuông góc</string>
+    <string name="photoframe_reselect">Chọn lại ảnh</string>
+
+    <!-- Color Theme -->
+    <string name="photoframe_color_theme">Màu nền</string>
+
+    <!-- Dark Mode Descriptions -->
+    <string name="dark_mode_system_desc">Tự động chuyển theo cài đặt hệ thống</string>
+    <string name="dark_mode_light_desc">Luôn dùng giao diện sáng</string>
+    <string name="dark_mode_dark_desc">Luôn dùng giao diện tối</string>
+    <string name="settings_dark_mode_dialog_title">Chọn chế độ tối</string>
+
+    <!-- Channel Descriptions (Detail) -->
+    <string name="channel_gitee_desc_detail">Truy cập nhanh hơn tại Trung Quốc</string>
+    <string name="channel_github_desc_detail">Truy cập quốc tế, có thể chậm hơn</string>
+
+    <!-- Version Check Hint -->
+    <string name="version_check_hint">Chạm để kiểm tra cập nhật</string>
+    <string name="new_version_available">Có phiên bản mới</string>
+    <string name="downloading">Đang tải xuống</string>
+
+    <!-- Holiday Greetings -->
+    <string name="holiday_new_year_title">Chúc mừng năm mới</string>
+    <string name="holiday_new_year_1">Chúc mỗi khung hình bạn chụp trong năm nay đều là một kiệt tác.</string>
+    <string name="holiday_new_year_2">2026, mong được cùng bạn đón thêm nhiều ánh sáng và bóng đổ.</string>
+    <string name="holiday_valentine_title">Chúc mừng Valentine</string>
+    <string name="holiday_valentine_1">Bộ lọc đẹp nhất chính là ánh sáng khi được ở bên em/anh.</string>
+    <string name="holiday_valentine_2">Tình yêu là phong cảnh duy nhất không cần chỉnh màu.</string>
+    <string name="holiday_labor_day_title">Chúc mừng Ngày Quốc tế Lao động</string>
+    <string name="holiday_labor_day_1">Mỗi khung hình đều xứng đáng với đam mê. Xin chào tất cả những người săn ánh sáng.</string>
+    <string name="holiday_national_day_title">Chúc mừng Quốc khánh</string>
+    <string name="holiday_national_day_1">Một miền đất rực rỡ, mỗi khung hình đều đáng trân trọng.</string>
+    <string name="holiday_national_day_2">9,6 triệu km², đang chờ ống kính của bạn.</string>
+    <string name="holiday_christmas_title">Giáng sinh an lành</string>
+    <string name="holiday_christmas_1">Dù không có tuyết, chúng tôi vẫn chúc bạn một mùa đông ấm áp.</string>
+    <string name="holiday_christmas_2">Tiếng màn trập là tiếng chuông leng keng của đêm nay.</string>
+    <string name="holiday_spring_festival_title">Chúc mừng Tết Nguyên đán</string>
+    <string name="holiday_spring_festival_1">Tiếng màn trập vang lên, khắc ghi không khí lễ hội từng khung hình.</string>
+    <string name="holiday_spring_festival_2">Một bức ảnh gia đình nói nhiều hơn ngàn lời.</string>
+    <string name="holiday_lantern_festival_title">Chúc mừng Tết Nguyên tiêu</string>
+    <string name="holiday_lantern_festival_1">Vạn ngọn đèn, nhưng không ngọn nào sáng hơn bạn trong khung ngắm.</string>
+    <string name="holiday_lantern_festival_2">Sau bát chè trôi nước, hãy bước ra ngoài và chụp trăng rằm.</string>
+    <string name="holiday_dragon_boat_title">Chúc mừng Tết Đoan Ngọ</string>
+    <string name="holiday_dragon_boat_1">Như chiếc bánh ú để lâu năm, mong tác phẩm của bạn đứng vững với thời gian.</string>
+    <string name="holiday_dragon_boat_2">Thuyền rồng đua nhau, ống kính bạn đuổi theo ánh sáng.</string>
+    <string name="holiday_qixi_title">Chúc mừng lễ Thất tịch</string>
+    <string name="holiday_qixi_1">Dải Ngân Hà rực cháy, nhưng cũng mờ đi bên cạnh bạn trong khung hình.</string>
+    <string name="holiday_qixi_2">Bộ lọc hôm nay là nhịp đập con tim.</string>
+    <string name="holiday_mid_autumn_title">Chúc mừng Tết Trung thu</string>
+    <string name="holiday_mid_autumn_1">Trăng sáng nhất nơi quê nhà, màu sắc do bậc thầy chỉnh.</string>
+    <string name="holiday_mid_autumn_2">Mong ánh trăng soi sáng từng khung hình của bạn.</string>
+    <string name="holiday_double_ninth_title">Chúc mừng Tết Trùng Cửu</string>
+    <string name="holiday_double_ninth_1">Lên cao nhìn xa, cảnh đẹp ngập tràn khung ngắm của bạn.</string>
+    <string name="holiday_double_ninth_2">Thời gian leo lên sườn đồi, nhẹ nhàng làm dịu ống kính của bạn.</string>
+    <string name="holiday_btn_start">Bắt đầu chụp</string>
+
+    <!-- User Submission -->
+    <string name="survey_title">Gửi preset của bạn</string>
+    <string name="survey_desc">Chia sẻ thông số bộ lọc và ảnh mẫu, giúp cộng đồng phát triển</string>
+</resources>

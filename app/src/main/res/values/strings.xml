@@ -74,6 +74,7 @@
     <string name="language_chinese">简体中文</string>
     <string name="language_english">English</string>
     <string name="language_japanese">日本語</string>
+    <string name="language_vietnamese">越南语</string>
 
     <!-- 更新设置 -->
     <string name="settings_section_update">更新设置</string>
@@ -115,6 +116,7 @@
     <string name="language_chinese_desc">Simplified Chinese</string>
     <string name="language_english_desc">英文</string>
     <string name="language_japanese_desc">日本語</string>
+    <string name="language_vietnamese_desc">Tiếng Việt</string>
 
     <!-- Toast 提示 -->
     <string name="toast_language_changed">语言已切换，正在重启应用…</string>

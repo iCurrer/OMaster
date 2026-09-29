@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.silas.omaster.data.config.ConfigCenter
 import com.silas.omaster.util.HapticSettings
+import com.silas.omaster.util.LanguageUtil
 import com.silas.omaster.util.Logger
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.analytics.MobclickAgent
@@ -19,6 +20,11 @@ class OMasterApplication : Application() {
 
         fun getInstance(): OMasterApplication = instance
         fun getPrefs(): SharedPreferences = prefs
+    }
+
+    override fun attachBaseContext(base: Context?) {
+        val context = base?.let { LanguageUtil.applyLanguage(it) }
+        super.attachBaseContext(context)
     }
 
     override fun onCreate() {

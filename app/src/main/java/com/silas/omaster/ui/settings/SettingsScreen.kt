@@ -286,6 +286,7 @@ fun SettingsScreen() {
                     AppLanguage.CHINESE -> stringResource(R.string.language_chinese)
                     AppLanguage.ENGLISH -> stringResource(R.string.language_english)
                     AppLanguage.JAPANESE -> stringResource(R.string.language_japanese)
+                    AppLanguage.VIETNAMESE -> stringResource(R.string.language_vietnamese)
                 },
                 onClick = { showLanguageDialog = true }
             )
@@ -1439,6 +1440,7 @@ fun LanguageSelectionDialog(
                                 AppLanguage.CHINESE -> context.getString(R.string.language_chinese)
                                 AppLanguage.ENGLISH -> context.getString(R.string.language_english)
                                 AppLanguage.JAPANESE -> context.getString(R.string.language_japanese)
+                                AppLanguage.VIETNAMESE -> context.getString(R.string.language_vietnamese)
                             },
                             style = MaterialTheme.typography.bodyLarge,
                             color = themedTextPrimary()
